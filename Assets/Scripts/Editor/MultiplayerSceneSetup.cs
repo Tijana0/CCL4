@@ -84,6 +84,11 @@ public class MultiplayerSceneSetup
         pickup.AddComponent<Rigidbody>();
         pickup.AddComponent<PickupObject>();
 
+        // Add Pickup Objects
+        CreatePickup("Gold Coin", new Vector3(-3, 0.5f, 3), Color.yellow, ItemType.Gold, 10, PrimitiveType.Cylinder);
+        CreatePickup("Energy Crystal", new Vector3(3, 0.5f, 3), Color.cyan, ItemType.Energy, 5, PrimitiveType.Cube);
+        CreatePickup("Secret Star", new Vector3(0, 0.5f, -3), Color.magenta, ItemType.Secret, 50, PrimitiveType.Sphere);
+
         // Ensure directories exist
         if (!AssetDatabase.IsValidFolder("Assets/Scenes"))
         {
@@ -102,5 +107,27 @@ public class MultiplayerSceneSetup
         {
             EditorGUIUtility.PingObject(sceneAsset);
         }
+    }
+
+    private static void CreatePickup(string name, Vector3 position, Color color, ItemType type, int value, PrimitiveType primitive)
+    {
+        GameObject item = GameObject.CreatePrimitive(primitive);
+        item.name = name;
+        item.transform.position = position;
+        item.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
+        
+        Renderer renderer = item.GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            Material mat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+            if (mat.shader == null) mat = new Material(Shader.Find("Standard"));
+            mat.color = color;
+            renderer.sharedMaterial = mat;
+        }
+        
+        item.AddComponent<Rigidbody>();
+        var pickup = item.AddComponent<PickupObject>();
+        pickup.itemType = type;
+        pickup.value = value;
     }
 }
