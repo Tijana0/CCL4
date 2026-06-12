@@ -4,7 +4,6 @@ stages:
 pages:
   stage: deploy
   image: alpine:latest
-  tags: ["docker"]
   script:
     - echo "Deploying GitLab Pages from ./public"
     - ls -la public
