@@ -1,0 +1,13 @@
+# Publishes the ePortfolio to GitLab Pages.
+# Keep index.html in the repository root; this copies it into the public/ folder GitLab serves.
+pages:
+  stage: deploy
+  image: alpine:latest
+  script:
+    - mkdir -p public
+    - cp index.html public/index.html
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
