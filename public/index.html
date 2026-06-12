@@ -1,23 +1,263 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="generator" content="GitLab Pages">
-    <title>Plain HTML site using GitLab Pages</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <div class="navbar">
-      <a href="https://pages.gitlab.io/plain-html/">Plain HTML Example</a>
-      <a href="https://gitlab.com/pages/plain-html/">Repository</a>
-      <a href="https://gitlab.com/pages/">Other Examples</a>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mischief Managed — ePortfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow">Creative Code Lab 4</p>
+    <h1>Mischief Managed</h1>
+    <p class="tagline">Magical classroom chaos at Hogwarts. Cut, brew, panic, repeat.</p>
+    <p class="meta">ePortfolio</p>
+    <p class="meta">Tijana Mijatovic · Diana Ivanova · Angelina Hess · Hajar Rhachi</p>
+  </div>
+</header>
+
+<nav aria-label="Sections">
+  <ul>
+    <li><a href="#mockup">Final Mockup</a></li>
+    <li><a href="#design">System Design</a></li>
+    <li><a href="#infra">System Infrastructure (TBD)</a></li>
+    <li><a href="#team">Team</a></li>
+  </ul>
+</nav>
+
+<main class="wrap">
+
+  <!-- ============ FINAL MOCKUP ============ -->
+  <section id="mockup">
+    <div class="sec-head">
+      <h2>Final Mockup</h2>
     </div>
 
-    <h1>Hello World!</h1>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>The Story</h3>
+        <p>You're a Hogwarts student trying to pass your classes. Your professors hand you tasks like brew this, read that, cast the other, and every task has to be finished before the bell rings.</p>
+        <p>Each classroom is its own level of chaos: bubbling cauldrons in Potions, tea leaves and crystal balls in Divination, and loose pixies in Defense Against the Dark Arts. Complete tickets, earn house points, and bring your house to the top before the end of the term.</p>
+        <p>It's a tight loop with intuitive mechanics and a clear goal.</p>
+      </div>
 
-    <p>
-      This is a simple plain-HTML website on GitLab Pages, without any fancy static site generator.
-    </p>
-  </body>
+      <div class="panel feat">
+        <h3>Features</h3>
+        <ul>
+          <li><b>Three classrooms</b> as levels: Potions, Divination, Defense Against the Dark Arts.</li>
+          <li><b>Procedurally generated task tickets</b> handed out each round.</li>
+          <li><b>Core actions</b>: pick up, put down, use (brew, cut, cast at stations), combine.</li>
+          <li>Complete all tasks before the timer runs out.</li>
+          <li><b>Fixed isometric camera</b> - the whole classroom is visible at a glance.</li>
+          <li><b>Pixie hazard</b> - Pixies that freezes the player on collision.</li>
+          <li><b>House points &amp; stars</b> tracked across all classrooms toward the end-of-term score.</li>
+          <li><b>Persistent game state</b> that survives every scene change.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="loop">
+      <strong>Game loop:</strong>&nbsp;
+      spawn <span class="arrow">→</span> receive ticket <span class="arrow">→</span> pick up + place + use + combine <span class="arrow">→</span> hand in <span class="arrow">→</span> get points <span class="arrow">→</span> timer runs out <span class="arrow">→</span> end of level <span class="arrow">→</span> score <span class="arrow">→</span> continue or repeat
+    </div>
+
+    <div class="rooms">
+      <div class="room">
+        <div class="body">
+          <h4>Potions Class</h4>
+          <p>Brew bubbling concoctions at the cauldron stations.</p>
+        </div>
+      </div>
+      <div class="room mine">
+        <div class="body">
+          <h4>Divination Class</h4>
+          <p>Read tea leaves, cards, and the crystal ball. Stations: séance table, teapot, card table, bookshelf, brazier, delivery desk. Over-steeped tea = chaos!</p>
+        </div>
+      </div>
+      <div class="room">
+        <div class="body">
+          <h4>Defense Against the Dark Arts</h4>
+          <p>Cast charms and wrangle loose pixies before the professor returns.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="rooms" style="grid-template-columns:1fr;margin-top:18px;">
+      <div class="room">
+        <div class="slot" style="aspect-ratio:16/5;">UI mockup - WILL BE ADDED LATER</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SYSTEM DESIGN ============ -->
+  <section id="design">
+    <div class="sec-head">
+      <h2>System Design</h2>
+    </div>
+    <p class="lead">How the scenes and characters connect. Inside a classroom, the professor hands out tickets, the player works the stations against the timer.</p>
+
+    <div class="diagram">
+            <pre class="mermaid">
+flowchart TD
+  MM(["Main Menu"]) --&gt; HUB
+
+  subgraph WORLD["Moving between classes"]
+    direction TB
+    HUB{{"Hogwarts corridor&lt;br/&gt;(hub)"}}
+    HUB &lt;--&gt;|"enter / leave"| POT["Potions&lt;br/&gt;classroom"]
+    HUB &lt;--&gt;|"enter / leave"| DIV["Divination&lt;br/&gt;classroom"]
+    HUB &lt;--&gt;|"enter / leave"| DADA["DADA&lt;br/&gt;classroom"]
+    POT --&gt; SP["Earn up to 3 stars"]
+    DIV --&gt; SD["Earn up to 3 stars"]
+    DADA --&gt; SA["Earn up to 3 stars"]
+  end
+
+  SP --&gt; GS
+  SD --&gt; GS
+  SA --&gt; GS
+  GS[("GameState&lt;br/&gt;house points · stars · progress")] --&gt;|"return to corridor"| HUB
+  GS --&gt; CHK{"End of term?"}
+  CHK --&gt;|"yes"| END(["Final score"])
+  CHK --&gt;|"no"| HUB
+
+  subgraph LOOP["Inside any classroom — the level loop"]
+    direction TB
+    TG[["Ticket Generator"]] --&gt; TQ[/"Ticket queue"/]
+    PROF(["Professor (NPC)"]) -. "hands out &amp; receives tasks" .-&gt; TQ
+    TQ --&gt; PLAY(("Player"))
+    PLAY --&gt;|"pick up · put down · use · combine"| ST["Stations &amp; items"]
+    ST --&gt; HAND{"Hand in&lt;br/&gt;before the bell"}
+    HAND --&gt; STARS["Stars earned"]
+    PIX["Cornish Pixie&lt;br/&gt;(only for DADA)"] -. "freezes on collision" .-&gt; PLAY
+  end
+
+  WORLD -. "each classroom runs this loop" .-&gt; LOOP
+      </pre>
+    </div>
+    <p class="cap">Scene flow and the characters inside each level.</p>
+
+    <div class="rel">
+      <h3>Scene ↔ character relationships</h3>
+      <ul>
+        <li><b>Student (Player)</b>: the only player-controlled character; present in the corridor hub and every classroom. Animations: Idle, Walk, Cast Spell.</li>
+        <li><b>Professor (NPC)</b>: lives inside a classroom; hands out task tickets and receives the finished products.</li>
+        <li><b>Cornish Pixie (only in DADA)</b>: moves through the classroom on a procedural pattern and freezes the player on collision; it remains only in DADA.</li>
+        <li><b>Hogwarts corridor (hub)</b>: connects the three classroom scenes; the player can go back and forth between them.</li>
+        <li><b>GameState</b>: not a scene but a persistent object (DontDestroyOnLoad) that every scene reads and writes: house points, stars earned, progress.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ SYSTEM INFRASTRUCTURE ============ -->
+  <section id="infra">
+    <div class="sec-head">
+      <h2>System Infrastructure (TBD)</h2>
+    </div>
+    <p class="lead">The class structure still needs to be discussed. Arrows show relationships only, inheritance, composition and use with variables and methods omitted, as allowed.</p>
+    <div class="diagram">
+      <pre class="mermaid">
+classDiagram
+  direction TB
+  class GameState {
+    &lt;&lt;persistent singleton&gt;&gt;
+  }
+  class Interactable {
+    &lt;&lt;abstract&gt;&gt;
+  }
+  class AudioManager {
+    &lt;&lt;WWise wrapper&gt;&gt;
+  }
+  class LevelManager
+  class TaskManager
+  class TicketGenerator
+  class Ticket
+  class Timer
+  class PlayerController
+  class Item
+  class Station
+  class HandInCounter
+  class Cauldron
+  class TeapotStation
+  class PixieAI
+  class HUD
+
+  GameState &lt;.. LevelManager : reads / writes
+  LevelManager *-- TaskManager
+  LevelManager *-- Timer
+  TicketGenerator --&gt; TaskManager : feeds tickets
+  TaskManager o-- Ticket
+  PlayerController --&gt; Interactable : interacts
+  PlayerController &lt;.. PixieAI : freezes on collision
+  Interactable &lt;|-- Item
+  Interactable &lt;|-- Station
+  Interactable &lt;|-- HandInCounter
+  Station &lt;|-- Cauldron
+  Station &lt;|-- TeapotStation
+  TaskManager ..&gt; AudioManager : triggers SFX
+  PlayerController ..&gt; AudioManager
+  TaskManager --&gt; HUD : tickets + score
+  Timer --&gt; HUD
+      </pre>
+    </div>
+    <p class="cap">(TBD) Planned class diagram - relationships only.</p>
+  </section>
+
+
+  <!-- ============ TEAM ============ -->
+  <section id="team">
+    <div class="sec-head">
+      <h2>Team &amp; responsibilities</h2>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Member</th><th>Owns</th></tr></thead>
+        <tbody>
+        <tr><td class="who">Tijana Mijatovic</td><td>Systems coding, Git, QA, diagrams</td></tr>
+        <tr><td class="who">Diana Ivanova</td><td>3D modeling, animation &amp; UI art</td></tr>
+        <tr><td class="who">Angelina Hess</td><td>Mechanics &amp; Unity implementation</td></tr>
+        <tr><td class="who">Hajar Rhachi</td><td>Audio engineering &amp; general support</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="swear">Mischief Managed</p>
+    <p class="small">CCL4 ePortfolio</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({
+    startOnLoad:true,
+    theme:'base',
+    securityLevel:'loose',
+    flowchart:{curve:'basis',htmlLabels:true},
+    themeVariables:{
+      background:'transparent',
+      fontFamily:'EB Garamond, Georgia, serif',
+      fontSize:'15px',
+      primaryColor:'#efe3c6',
+      primaryBorderColor:'#9c7320',
+      primaryTextColor:'#2b2118',
+      secondaryColor:'#e6d3a8',
+      tertiaryColor:'#f7efda',
+      lineColor:'#7a5a2a',
+      clusterBkg:'rgba(205,185,142,.14)',
+      clusterBorder:'#cdb98e',
+      edgeLabelBackground:'#f4ecd8',
+      nodeBorder:'#9c7320'
+    }
+  });
+</script>
+</body>
 </html>
-
