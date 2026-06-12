@@ -1,14 +1,15 @@
-# This file is a template, and might need editing before it works on your project.
-# Full project: https://gitlab.com/pages/plain-html
-
-image: busybox
+stages:
+  - deploy
 
 pages:
   stage: deploy
+  image: alpine:latest
+  tags: ["docker"]
   script:
-    - echo "The site will be deployed to $CI_PAGES_URL"
+    - echo "Deploying GitLab Pages from ./public"
+    - ls -la public
   artifacts:
     paths:
       - public
   rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
