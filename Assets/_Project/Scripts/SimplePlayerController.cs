@@ -1,13 +1,16 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class SimplePlayerController : MonoBehaviour
+public class SimplePlayerController : MonoBehaviour, IInteractable
 {
+    public static int activeGamepadPlayerIndex = 0;
+
     public int playerIndex = 0; 
     public float moveSpeed = 5f;
     
     [Header("Interaction")]
     public Transform holdPoint;
+    public GameObject selectionIndicator;
     [HideInInspector] public GameObject heldItem;
 
     private Rigidbody rb;
@@ -27,13 +30,49 @@ public class SimplePlayerController : MonoBehaviour
             hp.transform.localPosition = new Vector3(0, 0.5f, 0.5f);
             holdPoint = hp.transform;
         }
+
+        // Ensure indicator matches initial state
+        if (selectionIndicator != null)
+        {
+            selectionIndicator.SetActive(playerIndex == activeGamepadPlayerIndex);
+        }
+    }
+
+    public bool CanInteract()
+    {
+        // other players can interact with me if I am holding something
+        return heldItem != null;
+    }
+
+    public void Interact(SimplePlayerController interactingPlayer)
+    {
+        if (heldItem != null && interactingPlayer.heldItem == null)
+        {
+            // transfer the item to the other player
+            GameObject itemToTransfer = heldItem;
+            heldItem = null;
+
+            PickupObject pickup = itemToTransfer.GetComponent<PickupObject>();
+            if (pickup != null)
+            {
+                // we use the existing pickup logic to attach it to the new player
+                pickup.Interact(interactingPlayer);
+            }
+        }
     }
 
     private void Update()
     {
+        // Update indicator visibility based on static selection in GameManager
+        if (selectionIndicator != null)
+        {
+            selectionIndicator.SetActive(playerIndex == activeGamepadPlayerIndex);
+        }
+
         Vector2 moveInput = Vector2.zero;
         bool interactPressed = false;
 
+        // Keyboard inputs always work for their respective players
         if (playerIndex == 0)
         {
             if (Keyboard.current != null)
@@ -44,18 +83,6 @@ public class SimplePlayerController : MonoBehaviour
                 if (Keyboard.current.dKey.isPressed) moveInput.x += 1;
                 
                 if (Keyboard.current.eKey.wasPressedThisFrame) interactPressed = true;
-            }
-
-            if (Gamepad.all.Count > 0)
-            {
-                Vector2 gamepadInput = Gamepad.all[0].leftStick.ReadValue();
-                // prevent deadzone drift from overriding keyboard
-                if (gamepadInput.sqrMagnitude > moveInput.sqrMagnitude && gamepadInput.sqrMagnitude > 0.05f)
-                {
-                    moveInput = gamepadInput;
-                }
-                
-                if (Gamepad.all[0].buttonSouth.wasPressedThisFrame) interactPressed = true;
             }
         }
         else if (playerIndex == 1)
@@ -69,17 +96,19 @@ public class SimplePlayerController : MonoBehaviour
                 
                 if (Keyboard.current.rightShiftKey.wasPressedThisFrame) interactPressed = true;
             }
+        }
 
-            if (Gamepad.all.Count > 1)
+        // Gamepad only works for the active player
+        if (Gamepad.current != null && playerIndex == activeGamepadPlayerIndex)
+        {
+            Vector2 gamepadInput = Gamepad.current.leftStick.ReadValue();
+            // prevent deadzone drift from overriding keyboard
+            if (gamepadInput.sqrMagnitude > moveInput.sqrMagnitude && gamepadInput.sqrMagnitude > 0.05f)
             {
-                Vector2 gamepadInput = Gamepad.all[1].leftStick.ReadValue();
-                if (gamepadInput.sqrMagnitude > moveInput.sqrMagnitude && gamepadInput.sqrMagnitude > 0.05f)
-                {
-                    moveInput = gamepadInput;
-                }
-                
-                if (Gamepad.all[1].buttonSouth.wasPressedThisFrame) interactPressed = true;
+                moveInput = gamepadInput;
             }
+            
+            if (Gamepad.current.buttonSouth.wasPressedThisFrame) interactPressed = true;
         }
 
         if (moveInput.sqrMagnitude > 1)
@@ -127,18 +156,26 @@ public class SimplePlayerController : MonoBehaviour
         float snappedY = 0.5f; 
         
         Vector3 snappedTileCenter = new Vector3(snappedX, snappedY, snappedZ);
-        // check from y=-0.1 to y=1.1 to hit floor items and counters
+        // check from y=-0.1 to y=1.1 to hit floor items, players, and counters
         Vector3 halfExtents = new Vector3(0.4f, 0.6f, 0.4f);
         
         Collider[] hitColliders = Physics.OverlapBox(snappedTileCenter, halfExtents);
 
         bool interacted = false;
+
+        // prioritize interacting with something in the world (including other players)
         foreach (Collider hit in hitColliders)
         {
+            // Don't interact with yourself!
+            if (hit.gameObject == this.gameObject) continue;
+
             if (hit.TryGetComponent<IInteractable>(out var interactable))
             {
                 if (interactable.CanInteract())
                 {
+                    // If we are already holding something, we can only interact with certain things
+                    // (like a counter to swap/place). But for stealing, the victim's Interact
+                    // handles checking if the thief's hands are empty.
                     interactable.Interact(this);
                     interacted = true;
                     break;
@@ -146,7 +183,7 @@ public class SimplePlayerController : MonoBehaviour
             }
         }
 
-        // drop item on the floor if hitting empty space
+        // drop item on the floor if hitting empty space and we didn't interact
         if (!interacted && heldItem != null)
         {
             PickupObject pickup = heldItem.GetComponent<PickupObject>();
