@@ -62,3 +62,6 @@ crashlytics-build.properties
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Local Unity Rules
+UNITY_RULES.md
