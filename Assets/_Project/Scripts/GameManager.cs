@@ -3,6 +3,13 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 
+public enum GameState
+{
+    WaitingToStart,
+    Playing,
+    TimeUp
+}
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -15,8 +22,8 @@ public class GameManager : MonoBehaviour
     public GameObject gameOverPanel;
     public TextMeshProUGUI finalScoreText;
 
-    private float timeRemaining;
-    private bool isGameOver = false;
+    [HideInInspector] public float timeRemaining;
+    private GameState currentState = GameState.WaitingToStart;
 
     private void Awake()
     {
@@ -26,14 +33,16 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        Time.timeScale = 1f; // Ensure time is running
+        Time.timeScale = 1f; 
         timeRemaining = gameTime;
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
+        
+        currentState = GameState.Playing;
     }
 
     private void Update()
     {
-        if (isGameOver) return;
+        if (currentState != GameState.Playing) return;
 
         // Character switching logic (Handled here once per frame)
         if (Gamepad.current != null && Gamepad.current.leftShoulder.wasPressedThisFrame)
@@ -75,7 +84,7 @@ public class GameManager : MonoBehaviour
 
     private void GameOver()
     {
-        isGameOver = true;
+        currentState = GameState.TimeUp;
         Time.timeScale = 0f; // Freeze all physics and animations
         Debug.Log("Game Over!");
 
@@ -105,5 +114,20 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1f; // Important to reset before loading
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void LoadNextLevel()
+    {
+        Time.timeScale = 1f;
+        int nextIndex = SceneManager.GetActiveScene().buildIndex + 1;
+        if (nextIndex < SceneManager.sceneCountInBuildSettings)
+        {
+            SceneManager.LoadScene(nextIndex);
+        }
+        else
+        {
+            // If no more levels, just restart the first one or loop
+            SceneManager.LoadScene(0);
+        }
     }
 }

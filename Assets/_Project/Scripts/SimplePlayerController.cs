@@ -8,6 +8,11 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
     public int playerIndex = 0; 
     public float moveSpeed = 5f;
     
+    [Header("Boundaries")]
+    public bool useBoundaries = true;
+    public Vector2 minBounds = new Vector2(-5.5f, -9.5f);
+    public Vector2 maxBounds = new Vector2(10.5f, 2.5f);
+
     [Header("Interaction")]
     public Transform holdPoint;
     public GameObject selectionIndicator;
@@ -137,6 +142,16 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         }
     }
 
+    private void LateUpdate()
+    {
+        if (useBoundaries)
+        {
+            float clampedX = Mathf.Clamp(transform.position.x, minBounds.x, maxBounds.x);
+            float clampedZ = Mathf.Clamp(transform.position.z, minBounds.y, maxBounds.y);
+            transform.position = new Vector3(clampedX, transform.position.y, clampedZ);
+        }
+    }
+
     private void FixedUpdate()
     {
         if (rb != null)
@@ -189,7 +204,11 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             PickupObject pickup = heldItem.GetComponent<PickupObject>();
             if (pickup != null)
             {
-                Vector3 dropPos = new Vector3(snappedTileCenter.x, 0.5f, snappedTileCenter.z);
+                // Clamp drop position to stay within the ground area
+                float dX = Mathf.Clamp(snappedTileCenter.x, minBounds.x, maxBounds.x);
+                float dZ = Mathf.Clamp(snappedTileCenter.z, minBounds.y, maxBounds.y);
+                Vector3 dropPos = new Vector3(dX, 0.5f, dZ);
+
                 pickup.Drop(dropPos);
                 heldItem = null;
             }
