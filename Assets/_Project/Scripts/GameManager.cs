@@ -33,9 +33,26 @@ public class GameManager : MonoBehaviour
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
 
-        // Add generic joystick fallback
-        switchPlayerAction.AddBinding("<Joystick>/trigger");
-        switchPlayerAction.AddBinding("<HID::*>/button4"); // Common generic HID button
+        // Add generic joystick fallback for player switching
+        switchPlayerAction.AddBinding("<Joystick>/button4"); // Generic Left Bumper
+        switchPlayerAction.AddBinding("<Joystick>/button5"); // Generic Right Bumper
+        switchPlayerAction.AddBinding("<HID::*>/button4"); 
+        switchPlayerAction.AddBinding("<HID::*>/button5"); 
+
+        // Add generic joystick fallbacks for UI SUBMIT
+        // This ensures the A button on generic controllers works on the Game Over screen
+        var eventSystem = Object.FindFirstObjectByType<UnityEngine.EventSystems.EventSystem>();
+        if (eventSystem != null)
+        {
+            var module = eventSystem.GetComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
+            if (module != null && module.submit != null && module.submit.action != null)
+            {
+                module.submit.action.AddBinding("<Joystick>/trigger");
+                module.submit.action.AddBinding("<Joystick>/button0");
+                module.submit.action.AddBinding("<Joystick>/button1");
+                module.submit.action.AddBinding("<HID::*>/button2");
+            }
+        }
     }
 
     private void OnEnable()

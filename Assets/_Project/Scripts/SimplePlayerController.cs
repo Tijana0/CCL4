@@ -34,7 +34,9 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         // Add generic joystick fallbacks
         gamepadMoveAction.AddBinding("<Joystick>/stick");
         
-        gamepadInteractAction.AddBinding("<Joystick>/trigger");
+        gamepadInteractAction.AddBinding("<Joystick>/trigger"); // Usually Button 0 or A
+        gamepadInteractAction.AddBinding("<Joystick>/button0"); 
+        gamepadInteractAction.AddBinding("<Joystick>/button1"); 
         gamepadInteractAction.AddBinding("<HID::*>/button2"); // Common generic HID button
     }
 
