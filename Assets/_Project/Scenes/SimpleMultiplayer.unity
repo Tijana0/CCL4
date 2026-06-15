@@ -474,6 +474,41 @@ MonoBehaviour:
   holdPoint: {fileID: 0}
   selectionIndicator: {fileID: 0}
   heldItem: {fileID: 0}
+  gamepadMoveAction:
+    m_Name: GamepadMove
+    m_Type: 0
+    m_ExpectedControlType: Vector2
+    m_Id: 006bffe7-1d2d-4616-aeb5-6d00b64ad436
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: a362a716-9dee-4d25-bff5-7073bac78915
+      m_Path: <Gamepad>/leftStick
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: GamepadMove
+      m_Flags: 0
+    m_Flags: 0
+  gamepadInteractAction:
+    m_Name: GamepadInteract
+    m_Type: 1
+    m_ExpectedControlType: 
+    m_Id: 5cf27789-131c-4f61-933a-d2c1773855b0
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 61b10d98-5303-479a-bd76-b9cb24975cc6
+      m_Path: <Gamepad>/buttonSouth
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: GamepadInteract
+      m_Flags: 0
+    m_Flags: 0
+  invertGamepadY: 1
 --- !u!23 &92420243
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1845,6 +1880,23 @@ MonoBehaviour:
   gameOverPanel: {fileID: 781362460}
   finalScoreText: {fileID: 0}
   timeRemaining: 0
+  switchPlayerAction:
+    m_Name: SwitchPlayer
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 657e1501-183a-4522-b369-baeec038748d
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: f8aecb95-daba-48c9-b23d-1bb84672d3dc
+      m_Path: <Gamepad>/leftShoulder
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: SwitchPlayer
+      m_Flags: 0
+    m_Flags: 0
 --- !u!4 &551480186
 Transform:
   m_ObjectHideFlags: 0
@@ -4448,6 +4500,41 @@ MonoBehaviour:
   holdPoint: {fileID: 0}
   selectionIndicator: {fileID: 0}
   heldItem: {fileID: 0}
+  gamepadMoveAction:
+    m_Name: GamepadMove
+    m_Type: 0
+    m_ExpectedControlType: Vector2
+    m_Id: a1ba7158-fc52-4b2d-88dc-038b037dcf91
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 1b8f021f-8765-410c-929b-2e8fc2ae0c61
+      m_Path: <Gamepad>/leftStick
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: GamepadMove
+      m_Flags: 0
+    m_Flags: 0
+  gamepadInteractAction:
+    m_Name: GamepadInteract
+    m_Type: 1
+    m_ExpectedControlType: 
+    m_Id: 83546d10-03f8-488c-ad75-8b0d6a1b2db3
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 1acb2d44-ae5b-4238-ab57-9bb3c534ce80
+      m_Path: <Gamepad>/buttonSouth
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: GamepadInteract
+      m_Flags: 0
+    m_Flags: 0
+  invertGamepadY: 1
 --- !u!23 &1445775393
 MeshRenderer:
   m_ObjectHideFlags: 0

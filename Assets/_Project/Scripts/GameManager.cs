@@ -25,10 +25,27 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public float timeRemaining;
     private GameState currentState = GameState.WaitingToStart;
 
+    [Header("Controller Input")]
+    public InputAction switchPlayerAction = new InputAction("SwitchPlayer", binding: "<Gamepad>/leftShoulder");
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
+
+        // Add generic joystick fallback
+        switchPlayerAction.AddBinding("<Joystick>/trigger");
+        switchPlayerAction.AddBinding("<HID::*>/button4"); // Common generic HID button
+    }
+
+    private void OnEnable()
+    {
+        switchPlayerAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+        switchPlayerAction.Disable();
     }
 
     private void Start()
@@ -45,7 +62,7 @@ public class GameManager : MonoBehaviour
         if (currentState != GameState.Playing) return;
 
         // Character switching logic (Handled here once per frame)
-        if (Gamepad.current != null && Gamepad.current.leftShoulder.wasPressedThisFrame)
+        if (switchPlayerAction.WasPressedThisFrame())
         {
             SimplePlayerController.activeGamepadPlayerIndex = (SimplePlayerController.activeGamepadPlayerIndex == 0) ? 1 : 0;
         }

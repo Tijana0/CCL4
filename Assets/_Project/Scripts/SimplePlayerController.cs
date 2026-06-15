@@ -18,12 +18,36 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
     public GameObject selectionIndicator;
     [HideInInspector] public GameObject heldItem;
 
+    [Header("Controller Input")]
+    public InputAction gamepadMoveAction = new InputAction("GamepadMove", binding: "<Gamepad>/leftStick", expectedControlType: "Vector2");
+    public InputAction gamepadInteractAction = new InputAction("GamepadInteract", type: InputActionType.Button, binding: "<Gamepad>/buttonSouth");
+    [Tooltip("Check this if pulling down on the joystick moves the character up")]
+    public bool invertGamepadY = true;
+
     private Rigidbody rb;
     private Vector2 currentMoveInput;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+
+        // Add generic joystick fallbacks
+        gamepadMoveAction.AddBinding("<Joystick>/stick");
+        
+        gamepadInteractAction.AddBinding("<Joystick>/trigger");
+        gamepadInteractAction.AddBinding("<HID::*>/button2"); // Common generic HID button
+    }
+
+    private void OnEnable()
+    {
+        gamepadMoveAction.Enable();
+        gamepadInteractAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+        gamepadMoveAction.Disable();
+        gamepadInteractAction.Disable();
     }
 
     private void Start()
@@ -104,16 +128,23 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         }
 
         // Gamepad only works for the active player
-        if (Gamepad.current != null && playerIndex == activeGamepadPlayerIndex)
+        if (playerIndex == activeGamepadPlayerIndex)
         {
-            Vector2 gamepadInput = Gamepad.current.leftStick.ReadValue();
+            Vector2 gamepadInput = gamepadMoveAction.ReadValue<Vector2>();
+            
+            // Fix inverted axes common on generic/third-party controllers
+            if (invertGamepadY)
+            {
+                gamepadInput.y = -gamepadInput.y;
+            }
+
             // prevent deadzone drift from overriding keyboard
             if (gamepadInput.sqrMagnitude > moveInput.sqrMagnitude && gamepadInput.sqrMagnitude > 0.05f)
             {
                 moveInput = gamepadInput;
             }
             
-            if (Gamepad.current.buttonSouth.wasPressedThisFrame) interactPressed = true;
+            if (gamepadInteractAction.WasPressedThisFrame()) interactPressed = true;
         }
 
         if (moveInput.sqrMagnitude > 1)
