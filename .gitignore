@@ -6,9 +6,12 @@
 [Bb]uilds/
 [Ll]ogs/
 [Uu]ser[Ss]ettings/
-MemoryCaptures/
+[Mm]emoryCaptures/
+[Rr]ecordings/
 Recording/
 VideoEditor/
+.utmp/
+*.log
 
 # Asset Meta Data
 /[Aa]ssets/[Aa]llPlugins.meta
@@ -21,6 +24,7 @@ ExportedObj/
 .vs/
 .vscode/
 .vsconfig
+/[Aa]ssets/Plugins/Editor/JetBrains*
 *.csproj
 *.unityproj
 *.sln
@@ -41,6 +45,7 @@ ExportedObj/
 *.pidb.meta
 *.pdb.meta
 *.mdb.meta
+*.unitypackage.meta
 
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
@@ -53,6 +58,25 @@ sysinfo.txt
 
 # Crashlytics
 crashlytics-build.properties
+
+# Packed Addressables
+/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+
+# Temporary auto-generated Android Assets
+/[Aa]ssets/[Ss]treamingAssets/aa.meta
+/[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Wwise Ignore Rules
+.backup*
+.cache*
+*.akd
+*.prof
+*.validationcache
+*.wsettings
+AkWwiseProjectData.asset
+IncrementalSoundBankData.xml
+**/GeneratedSoundBanks/
+/[Aa]ssets/[Ss]treamingAssets/Audio/GeneratedSoundBanks.meta
 
 # OS generated
 .DS_Store
