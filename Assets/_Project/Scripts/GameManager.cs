@@ -34,13 +34,6 @@ public class GameManager : MonoBehaviour
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
 
-        // Ensure PersistentGameState exists
-        if (PersistentGameState.Instance == null)
-        {
-            GameObject pgsObj = new GameObject("PersistentGameState");
-            pgsObj.AddComponent<PersistentGameState>();
-        }
-
         // Add generic joystick fallback for player switching
         switchPlayerAction.AddBinding("<Joystick>/button4"); // Generic Left Bumper
         switchPlayerAction.AddBinding("<Joystick>/button5"); // Generic Right Bumper
@@ -216,6 +209,6 @@ public class GameManager : MonoBehaviour
     public void ReturnToHub()
     {
         Time.timeScale = 1f; // Important to reset before loading
-        SceneManager.LoadScene(0); // Hub is index 0
+        SceneManager.LoadScene(1); // Hub is now index 1
     }
 }

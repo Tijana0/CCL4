@@ -23,6 +23,16 @@ public class PersistentGameState : MonoBehaviour
         }
     }
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void Bootstrap()
+    {
+        if (Instance == null)
+        {
+            GameObject pgsObj = new GameObject("PersistentGameState (Auto-Bootstrapped)");
+            pgsObj.AddComponent<PersistentGameState>();
+        }
+    }
+
     public void AddPoints(int points)
     {
         sessionScore += points;

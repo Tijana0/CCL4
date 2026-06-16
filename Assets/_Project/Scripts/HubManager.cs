@@ -35,9 +35,9 @@ public class HubManager : MonoBehaviour
     private void Start()
     {
         // Build indices mapping (based on Build Settings)
-        // 0 = HubScene, 1 = Level 1 (MainDev_Scene), 2 = Level 2 (MainDev_Scene_2)
-        int level1Index = 1;
-        int level2Index = 2;
+        // 0 = Bootstrap, 1 = HubScene, 2 = Level 1, 3 = Level 2
+        int level1Index = 2;
+        int level2Index = 3;
 
         bool level1Completed = false;
 
