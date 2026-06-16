@@ -31,6 +31,12 @@ public class PersistentGameState : MonoBehaviour
             GameObject pgsObj = new GameObject("PersistentGameState (Auto-Bootstrapped)");
             pgsObj.AddComponent<PersistentGameState>();
         }
+
+        if (SceneLoader.Instance == null)
+        {
+            GameObject slObj = new GameObject("SceneLoader (Auto-Bootstrapped)");
+            slObj.AddComponent<SceneLoader>();
+        }
     }
 
     public void AddPoints(int points)

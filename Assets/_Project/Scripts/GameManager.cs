@@ -209,6 +209,13 @@ public class GameManager : MonoBehaviour
     public void ReturnToHub()
     {
         Time.timeScale = 1f; // Important to reset before loading
-        SceneManager.LoadScene(1); // Hub is now index 1
+        if (SceneLoader.Instance != null)
+        {
+            SceneLoader.Instance.LoadScene(1); // Hub is now index 1
+        }
+        else
+        {
+            SceneManager.LoadScene(1);
+        }
     }
 }

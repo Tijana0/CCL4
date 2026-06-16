@@ -94,6 +94,13 @@ public class HubManager : MonoBehaviour
 
     private void LoadLevel(int buildIndex)
     {
-        SceneManager.LoadScene(buildIndex);
+        if (SceneLoader.Instance != null)
+        {
+            SceneLoader.Instance.LoadScene(buildIndex);
+        }
+        else
+        {
+            SceneManager.LoadScene(buildIndex);
+        }
     }
 }

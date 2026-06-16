@@ -12,7 +12,14 @@ public class BootstrapManager : MonoBehaviour
             pgs.AddComponent<PersistentGameState>();
         }
 
-        // 2. Load the Hub Scene (Index 1)
-        SceneManager.LoadScene(1);
+        // 2. Initialize Scene Loader
+        if (SceneLoader.Instance == null)
+        {
+            GameObject sl = new GameObject("SceneLoader");
+            sl.AddComponent<SceneLoader>();
+        }
+
+        // 3. Load the Hub Scene (Index 1)
+        SceneLoader.Instance.LoadScene(1);
     }
 }
