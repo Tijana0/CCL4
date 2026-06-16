@@ -8,10 +8,8 @@ public class Recipe
     public string recipeName;
     public Sprite mainDishSprite;
     public Vector2 mainDishSize;
-    
     public bool ing1IsCircle;
     public Color ing1Color;
-    
     public bool ing2IsCircle;
     public Color ing2Color;
 }
@@ -22,32 +20,38 @@ public class OrderManager : MonoBehaviour
     public GameObject orderCardPrefab;
     public Transform orderContainer;
     public Sprite circleSprite;
-    
+
     [Header("Configuration")]
     public List<Recipe> availableRecipes;
-    public float spawnInterval = 9f; // Spawns a new order every 9 seconds
+    public float spawnInterval = 9f;
     public int maxOrders = 3;
-    
+
+    // Room recipes set by RoomManager at runtime
+    private List<RoomRecipe> roomRecipes = new List<RoomRecipe>();
+    private bool usingRoomRecipes = false;
+
     private float timeSinceLastSpawn = 0f;
+
+    /// <summary>Called by RoomManager to register this room's recipe list.</summary>
+    public void SetRoomRecipes(List<RoomRecipe> recipes)
+    {
+        roomRecipes = recipes ?? new List<RoomRecipe>();
+        usingRoomRecipes = roomRecipes.Count > 0;
+        Debug.Log($"[OrderManager] Registered {roomRecipes.Count} room recipes.");
+    }
 
     private void Start()
     {
-        // Clear any existing editor placeholders
         foreach (Transform child in orderContainer)
-        {
             Destroy(child.gameObject);
-        }
 
-        // Spawn the first order immediately
         SpawnRandomOrder();
     }
 
     private void Update()
     {
-        // Stop spawning if the game is over
         if (GameManager.Instance != null && GameManager.Instance.timeRemaining <= 0) return;
 
-        // Spawn new orders over time if we have room
         if (orderContainer.childCount < maxOrders)
         {
             timeSinceLastSpawn += Time.deltaTime;
@@ -61,16 +65,47 @@ public class OrderManager : MonoBehaviour
 
     public void SpawnRandomOrder()
     {
+        // Prefer room recipes if registered
+        if (usingRoomRecipes && roomRecipes.Count > 0)
+        {
+            SpawnRoomRecipeOrder();
+            return;
+        }
+
+        // Fallback to legacy visual recipes
         if (availableRecipes == null || availableRecipes.Count == 0 || orderCardPrefab == null || orderContainer == null) return;
 
-        // Pick a random recipe
         Recipe recipe = availableRecipes[Random.Range(0, availableRecipes.Count)];
-        
-        // Instantiate the card
+        SpawnLegacyOrderCard(recipe);
+    }
+
+    private void SpawnRoomRecipeOrder()
+    {
+        if (orderCardPrefab == null || orderContainer == null) return;
+
+        RoomRecipe recipe = roomRecipes[Random.Range(0, roomRecipes.Count)];
+
         GameObject newCard = Instantiate(orderCardPrefab, orderContainer);
         newCard.name = "ActiveOrder_" + recipe.recipeName;
-        
-        // Setup Main Dish
+
+        // Store recipe reference on the card for matching at hand-in
+        var tracker = newCard.AddComponent<ActiveOrderTracker>();
+        tracker.roomRecipe = recipe;
+
+        // Update card UI — use item icon if available
+        Transform mainDish = newCard.transform.Find("MainDish");
+        if (mainDish != null && recipe.requiredOutput?.icon != null)
+        {
+            Image img = mainDish.GetComponent<Image>();
+            if (img != null) img.sprite = recipe.requiredOutput.icon;
+        }
+    }
+
+    private void SpawnLegacyOrderCard(Recipe recipe)
+    {
+        GameObject newCard = Instantiate(orderCardPrefab, orderContainer);
+        newCard.name = "ActiveOrder_" + recipe.recipeName;
+
         Transform mainDish = newCard.transform.Find("MainDish");
         if (mainDish != null)
         {
@@ -80,11 +115,9 @@ public class OrderManager : MonoBehaviour
             rt.sizeDelta = recipe.mainDishSize;
         }
 
-        // Setup Ingredients
         Transform ings = newCard.transform.Find("Ingredients");
         if (ings != null)
         {
-            // Ingredient 1
             Transform ing1 = ings.GetChild(0);
             if (ing1 != null)
             {
@@ -92,8 +125,6 @@ public class OrderManager : MonoBehaviour
                 i1.sprite = recipe.ing1IsCircle ? circleSprite : null;
                 i1.color = recipe.ing1Color;
             }
-            
-            // Ingredient 2
             Transform ing2 = ings.GetChild(1);
             if (ing2 != null)
             {
@@ -103,4 +134,32 @@ public class OrderManager : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// Attempts to complete an order matching the given item.
+    /// Returns the score value if matched, 0 if no match found.
+    /// Called by InstantStation (HandIn) when a player submits an item.
+    /// </summary>
+    public int TryCompleteOrder(ItemData submittedItem)
+    {
+        foreach (Transform card in orderContainer)
+        {
+            var tracker = card.GetComponent<ActiveOrderTracker>();
+            if (tracker != null && tracker.roomRecipe.requiredOutput == submittedItem)
+            {
+                int score = tracker.roomRecipe.scoreValue;
+                Destroy(card.gameObject);
+                Debug.Log($"[OrderManager] Order complete! +{score} points for {submittedItem.itemName}");
+                return score;
+            }
+        }
+        Debug.Log($"[OrderManager] No active order matched {submittedItem.itemName}");
+        return 0;
+    }
+}
+
+/// <summary>Sits on an active order card to track which RoomRecipe it represents.</summary>
+public class ActiveOrderTracker : MonoBehaviour
+{
+    public RoomRecipe roomRecipe;
 }
