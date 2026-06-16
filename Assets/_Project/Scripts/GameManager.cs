@@ -82,16 +82,23 @@ public class GameManager : MonoBehaviour
         UnityEngine.GameObject canvas = UnityEngine.GameObject.Find("UI_Canvas");
         if (canvas != null)
         {
-            if (gameOverPanel == null)
+            UnityEngine.Transform goPanel = canvas.transform.Find("GameOverPanel");
+            if (goPanel != null)
             {
-                UnityEngine.Transform goPanel = canvas.transform.Find("GameOverPanel");
-                if (goPanel != null) gameOverPanel = goPanel.gameObject;
+                gameOverPanel = goPanel.gameObject;
+                
+                // Bind finalScoreText
+                UnityEngine.Transform scoreText = goPanel.Find("GameOverSubtitle");
+                if (scoreText != null)
+                {
+                    finalScoreText = scoreText.GetComponent<TextMeshProUGUI>();
+                }
             }
 
-            if (overallReportPanel == null)
+            UnityEngine.Transform repPanel = canvas.transform.Find("OverallReportPanel");
+            if (repPanel != null)
             {
-                UnityEngine.Transform repPanel = canvas.transform.Find("OverallReportPanel");
-                if (repPanel != null) overallReportPanel = repPanel.gameObject;
+                overallReportPanel = repPanel.gameObject;
             }
         }
 
