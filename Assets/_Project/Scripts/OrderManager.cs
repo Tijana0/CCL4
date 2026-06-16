@@ -32,10 +32,24 @@ public class OrderManager : MonoBehaviour
 
     private void Start()
     {
-        // Clear any existing editor placeholders
-        foreach (Transform child in orderContainer)
+        // Dynamically find UI elements to prevent prefab reference loss
+        if (orderContainer == null)
         {
-            Destroy(child.gameObject);
+            GameObject canvas = GameObject.Find("UI_Canvas");
+            if (canvas != null)
+            {
+                Transform container = canvas.transform.Find("TopLeftBoxes");
+                if (container != null) orderContainer = container;
+            }
+        }
+
+        // Clear any existing editor placeholders
+        if (orderContainer != null)
+        {
+            foreach (Transform child in orderContainer)
+            {
+                Destroy(child.gameObject);
+            }
         }
 
         // Spawn the first order immediately
