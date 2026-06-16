@@ -15,7 +15,6 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
     [Header("Interaction")]
     public Transform holdPoint;
-    public GameObject selectionIndicator;
     [HideInInspector] public GameObject heldItem;
 
     [Header("Controller Input")]
@@ -61,12 +60,6 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             hp.transform.localPosition = new Vector3(0, 0.5f, 0.5f);
             holdPoint = hp.transform;
         }
-
-        // Ensure indicator matches initial state
-        if (selectionIndicator != null)
-        {
-            selectionIndicator.SetActive(playerIndex == activeGamepadPlayerIndex);
-        }
     }
 
     public bool CanInteract()
@@ -103,21 +96,6 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
         int controllerCount = controllers.Count;
         bool isDualControllerMode = (controllerCount >= 2);
-        
-        // Update indicator visibility
-        if (selectionIndicator != null)
-        {
-            if (isDualControllerMode)
-            {
-                // In dual mode, if you have a physical controller assigned, you are active
-                selectionIndicator.SetActive(playerIndex < controllerCount);
-            }
-            else
-            {
-                // In single mode, follow the switching logic
-                selectionIndicator.SetActive(playerIndex == activeGamepadPlayerIndex);
-            }
-        }
 
         Vector2 moveInput = Vector2.zero;
         bool interactPressed = false;
