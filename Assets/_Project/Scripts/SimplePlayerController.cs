@@ -158,16 +158,12 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             if (playerIndex < controllerCount)
             {
                 InputDevice myDevice = cachedControllers[playerIndex];
-                
-                // Read stick/movement
-                if (myDevice is Gamepad g) gamepadInput = g.leftStick.ReadValue();
-                else if (myDevice is Joystick j) gamepadInput = j.stick.ReadValue();
+                gamepadInput = GetCorrectedInput(myDevice);
 
                 // Read Interaction
                 if (gamepadInteractAction.WasPressedThisFrame()) 
                 {
                     // Verify if THIS device triggered the action
-                    // (InputActions usually check all, so we verify source)
                     var lastControl = gamepadInteractAction.activeControl;
                     if (lastControl != null && lastControl.device == myDevice) gamepadInteract = true;
                 }
@@ -176,14 +172,14 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         else if (controllerCount == 1 && playerIndex == activeGamepadPlayerIndex)
         {
             // SINGLE MODE: Current player uses the only available device
-            gamepadInput = gamepadMoveAction.ReadValue<Vector2>();
+            InputDevice myDevice = cachedControllers[0];
+            gamepadInput = GetCorrectedInput(myDevice);
             if (gamepadInteractAction.WasPressedThisFrame()) gamepadInteract = true;
         }
 
         // Apply gamepad input if it exists
         if (gamepadInput.sqrMagnitude > 0.05f)
         {
-            if (invertGamepadY) gamepadInput.y = -gamepadInput.y;
             if (gamepadInput.sqrMagnitude > moveInput.sqrMagnitude) moveInput = gamepadInput;
         }
 
@@ -214,6 +210,27 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         {
             TryInteract();
         }
+    }
+
+    private Vector2 GetCorrectedInput(InputDevice device)
+    {
+        Vector2 raw = Vector2.zero;
+        if (device is Gamepad g) raw = g.leftStick.ReadValue();
+        else if (device is Joystick j) raw = j.stick.ReadValue();
+
+        float yMult = invertGamepadY ? -1f : 1f;
+
+        // --- Mac Wireless Xbox Specific Fix ---
+        // On Mac, Bluetooth Xbox controllers often report Y-axis inverted compared to wired ones
+        string dName = device.name.ToLower();
+        string dProduct = (device.description.product != null) ? device.description.product.ToLower() : "";
+        
+        if (dName.Contains("xbox") && (dName.Contains("wireless") || dProduct.Contains("wireless") || dName.Contains("bluetooth")))
+        {
+            yMult *= -1f; // Flip the inversion just for this device
+        }
+
+        return new Vector2(raw.x, raw.y * yMult);
     }
 
     private void LateUpdate()
