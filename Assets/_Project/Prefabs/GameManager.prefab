@@ -48,6 +48,7 @@ MonoBehaviour:
   gameTime: 30
   timerText: {fileID: 0}
   gameOverPanel: {fileID: 0}
+  overallReportPanel: {fileID: 0}
   finalScoreText: {fileID: 0}
   timeRemaining: 0
   switchPlayerAction:
