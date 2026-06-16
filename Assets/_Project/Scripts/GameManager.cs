@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector] public float timeRemaining;
     private GameState currentState = GameState.WaitingToStart;
+    private int lastProcessedSeconds = -1;
 
     [Header("Controller Input")]
     public InputAction switchPlayerAction = new InputAction("SwitchPlayer", binding: "<Gamepad>/leftShoulder");
@@ -140,7 +141,12 @@ public class GameManager : MonoBehaviour
             // Clamp to zero so we don't get negative numbers in the UI
             if (timeRemaining < 0) timeRemaining = 0;
             
-            UpdateTimerUI();
+            int currentSeconds = Mathf.FloorToInt(timeRemaining);
+            if (currentSeconds != lastProcessedSeconds)
+            {
+                lastProcessedSeconds = currentSeconds;
+                UpdateTimerUI(currentSeconds);
+            }
 
             if (timeRemaining <= 0)
             {
@@ -149,16 +155,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void UpdateTimerUI()
+    private void UpdateTimerUI(int totalSeconds)
     {
         if (timerText != null)
         {
-            int minutes = Mathf.FloorToInt(timeRemaining / 60);
-            int seconds = Mathf.FloorToInt(timeRemaining % 60);
+            int minutes = totalSeconds / 60;
+            int seconds = totalSeconds % 60;
             timerText.text = string.Format("Time: {0:00}:{1:00}", minutes, seconds);
             
             // Turn red in last 10 seconds
-            if (timeRemaining <= 10f)
+            if (totalSeconds <= 10)
             {
                 timerText.color = Color.red;
             }

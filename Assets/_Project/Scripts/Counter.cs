@@ -39,6 +39,10 @@ public class Counter : MonoBehaviour, IInteractable
             Collider col = itemToTake.GetComponent<Collider>();
             if (col != null) col.enabled = false;
 
+            // Ensure PickupObject script is disabled while held
+            PickupObject pickup = itemToTake.GetComponent<PickupObject>();
+            if (pickup != null) pickup.enabled = false;
+
             player.heldItem = itemToTake;
             itemToTake.transform.SetParent(player.holdPoint);
             itemToTake.transform.localPosition = Vector3.zero;
@@ -58,6 +62,10 @@ public class Counter : MonoBehaviour, IInteractable
         // Ensure Rigidbody is kinematic
         Rigidbody rb = item.GetComponent<Rigidbody>();
         if (rb != null) rb.isKinematic = true;
+
+        // Keep rotation active on counter
+        PickupObject pickup = item.GetComponent<PickupObject>();
+        if (pickup != null) pickup.enabled = true;
 
         // SIMPLE OFFSET: 
         // Based on your 1x1 grid and item scale, 0.2 is the exact half-height 

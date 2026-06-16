@@ -28,6 +28,7 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
     private static System.Collections.Generic.List<InputDevice> cachedControllers = new System.Collections.Generic.List<InputDevice>();
     private static bool controllersDirty = true;
+    private static bool isSubscribedToEvents = false;
 
     private void Awake()
     {
@@ -41,12 +42,11 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         gamepadInteractAction.AddBinding("<Joystick>/button1"); 
         gamepadInteractAction.AddBinding("<HID::*>/button2"); // Common generic HID button
 
-        InputSystem.onDeviceChange += OnDeviceChange;
-    }
-
-    private void OnDestroy()
-    {
-        InputSystem.onDeviceChange -= OnDeviceChange;
+        if (!isSubscribedToEvents)
+        {
+            InputSystem.onDeviceChange += OnDeviceChange;
+            isSubscribedToEvents = true;
+        }
     }
 
     private static void OnDeviceChange(InputDevice device, InputDeviceChange change)
