@@ -82,6 +82,13 @@ public class GameManager : MonoBehaviour
         UnityEngine.GameObject canvas = UnityEngine.GameObject.Find("UI_Canvas");
         if (canvas != null)
         {
+            if (timerText == null)
+            {
+                UnityEngine.Transform tText = canvas.transform.Find("TimerBackground/TimerText");
+                if (tText == null) tText = canvas.transform.Find("TimerText"); // Fallback
+                if (tText != null) timerText = tText.GetComponent<TextMeshProUGUI>();
+            }
+
             UnityEngine.Transform goPanel = canvas.transform.Find("GameOverPanel");
             if (goPanel != null)
             {
