@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     [Header("UI References")]
     public TextMeshProUGUI timerText;
     public GameObject gameOverPanel;
+    public GameObject overallReportPanel;
     public TextMeshProUGUI finalScoreText;
 
     [HideInInspector] public float timeRemaining;
@@ -32,6 +33,13 @@ public class GameManager : MonoBehaviour
     {
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
+
+        // Ensure PersistentGameState exists
+        if (PersistentGameState.Instance == null)
+        {
+            GameObject pgsObj = new GameObject("PersistentGameState");
+            pgsObj.AddComponent<PersistentGameState>();
+        }
 
         // Add generic joystick fallback for player switching
         switchPlayerAction.AddBinding("<Joystick>/button4"); // Generic Left Bumper
@@ -70,7 +78,24 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f; 
         timeRemaining = gameTime;
 
-        // Dynamically bind the Game Over buttons to prevent prefab reference loss
+        // Dynamically find UI elements to prevent prefab reference loss
+        UnityEngine.GameObject canvas = UnityEngine.GameObject.Find("UI_Canvas");
+        if (canvas != null)
+        {
+            if (gameOverPanel == null)
+            {
+                UnityEngine.Transform goPanel = canvas.transform.Find("GameOverPanel");
+                if (goPanel != null) gameOverPanel = goPanel.gameObject;
+            }
+
+            if (overallReportPanel == null)
+            {
+                UnityEngine.Transform repPanel = canvas.transform.Find("OverallReportPanel");
+                if (repPanel != null) overallReportPanel = repPanel.gameObject;
+            }
+        }
+
+        // Dynamically bind the Game Over buttons
         if (gameOverPanel != null)
         {
             UnityEngine.UI.Button restartBtn = gameOverPanel.transform.Find("RestartButton")?.GetComponent<UnityEngine.UI.Button>();
@@ -88,6 +113,11 @@ public class GameManager : MonoBehaviour
             }
 
             gameOverPanel.SetActive(false);
+        }
+
+        if (overallReportPanel != null)
+        {
+            overallReportPanel.SetActive(false);
         }
         
         currentState = GameState.Playing;
@@ -141,10 +171,23 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0f; // Freeze all physics and animations
         Debug.Log("Game Over!");
 
+        int currentBuildIndex = SceneManager.GetActiveScene().buildIndex;
+        if (PersistentGameState.Instance != null)
+        {
+            PersistentGameState.Instance.currentLevelIndex = currentBuildIndex;
+            // Temporarily award 3 stars automatically for completing the level
+            PersistentGameState.Instance.AwardStars(currentBuildIndex, 3);
+        }
+
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
             
+            if (finalScoreText != null)
+            {
+                finalScoreText.text = "Stars Earned: 3";
+            }
+
             // Auto-select the button for gamepad support
             UnityEngine.UI.Button restartBtn = gameOverPanel.GetComponentInChildren<UnityEngine.UI.Button>();
             if (restartBtn != null)
@@ -179,7 +222,57 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            // If no more levels, just restart the first one or loop
+            // Show overall report instead of looping
+            ShowOverallReport();
+        }
+    }
+
+    public void ShowOverallReport()
+    {
+        if (gameOverPanel != null) gameOverPanel.SetActive(false);
+
+        if (overallReportPanel != null)
+        {
+            overallReportPanel.SetActive(true);
+
+            float totalStars = 0;
+            int levelsPlayed = 0;
+            if (PersistentGameState.Instance != null)
+            {
+                foreach (var kvp in PersistentGameState.Instance.starsPerLevel)
+                {
+                    totalStars += kvp.Value;
+                    levelsPlayed++;
+                }
+            }
+
+            float avg = levelsPlayed > 0 ? totalStars / levelsPlayed : 0;
+            
+            // Find a text component in the report panel to show the score
+            TextMeshProUGUI[] texts = overallReportPanel.GetComponentsInChildren<TextMeshProUGUI>(true);
+            foreach (var t in texts)
+            {
+                if (t.name == "ReportText" || t.text.Contains("Score"))
+                {
+                    t.text = $"Overall Average Stars: {avg:F1}";
+                }
+            }
+
+            UnityEngine.UI.Button restartRunBtn = overallReportPanel.GetComponentInChildren<UnityEngine.UI.Button>();
+            if (restartRunBtn != null)
+            {
+                restartRunBtn.onClick.RemoveAllListeners();
+                restartRunBtn.onClick.AddListener(() => {
+                    if (PersistentGameState.Instance != null) PersistentGameState.Instance.ResetRun();
+                    SceneManager.LoadScene(0);
+                });
+                restartRunBtn.Select();
+            }
+        }
+        else
+        {
+            // Fallback if no report panel exists
+            if (PersistentGameState.Instance != null) PersistentGameState.Instance.ResetRun();
             SceneManager.LoadScene(0);
         }
     }
