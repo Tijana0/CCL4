@@ -1,0 +1,80 @@
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using UnityEngine.SceneManagement;
+
+public class HubManager : MonoBehaviour
+{
+    [Header("Level 1 UI")]
+    public Button level1Button;
+    public TextMeshProUGUI level1StarsText;
+
+    [Header("Level 2 UI")]
+    public Button level2Button;
+    public TextMeshProUGUI level2StarsText;
+
+    private void Start()
+    {
+        // Build indices mapping (based on Build Settings)
+        // 0 = HubScene, 1 = Level 1 (MainDev_Scene), 2 = Level 2 (MainDev_Scene_2)
+        int level1Index = 1;
+        int level2Index = 2;
+
+        bool level1Completed = false;
+
+        if (PersistentGameState.Instance != null)
+        {
+            // Check Level 1
+            if (PersistentGameState.Instance.starsPerLevel.ContainsKey(level1Index))
+            {
+                int stars = PersistentGameState.Instance.starsPerLevel[level1Index];
+                level1StarsText.text = $"Stars: {stars}";
+                level1Completed = true;
+            }
+            else
+            {
+                level1StarsText.text = ""; // Don't show anything if unplayed
+            }
+
+            // Check Level 2
+            if (PersistentGameState.Instance.starsPerLevel.ContainsKey(level2Index))
+            {
+                int stars = PersistentGameState.Instance.starsPerLevel[level2Index];
+                level2StarsText.text = $"Stars: {stars}";
+            }
+            else
+            {
+                level2StarsText.text = level1Completed ? "" : "Locked";
+            }
+        }
+        else
+        {
+            level1StarsText.text = "";
+            level2StarsText.text = "Locked";
+        }
+
+        // Setup Level 2 Lock State
+        level2Button.interactable = level1Completed;
+
+        // Bind Button Listeners
+        if (level1Button != null)
+        {
+            level1Button.onClick.RemoveAllListeners();
+            level1Button.onClick.AddListener(() => LoadLevel(level1Index));
+        }
+
+        if (level2Button != null)
+        {
+            level2Button.onClick.RemoveAllListeners();
+            level2Button.onClick.AddListener(() => LoadLevel(level2Index));
+        }
+
+        // Auto-select for gamepad support
+        if (level1Button != null) level1Button.Select();
+    }
+
+    private void LoadLevel(int buildIndex)
+    {
+        SceneManager.LoadScene(buildIndex);
+    }
+}

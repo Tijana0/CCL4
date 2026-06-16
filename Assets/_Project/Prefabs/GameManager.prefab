@@ -1,0 +1,101 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2508366964899477693
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4741254397534682517}
+  - component: {fileID: 4959255437028996412}
+  - component: {fileID: 5902144289190642632}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4741254397534682517
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2508366964899477693}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4959255437028996412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2508366964899477693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9cbc87c8508e4a20b1bb02f55a56190, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  gameTime: 30
+  timerText: {fileID: 0}
+  gameOverPanel: {fileID: 0}
+  finalScoreText: {fileID: 0}
+  timeRemaining: 0
+  switchPlayerAction:
+    m_Name: SwitchPlayer
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 657e1501-183a-4522-b369-baeec038748d
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: f8aecb95-daba-48c9-b23d-1bb84672d3dc
+      m_Path: <Gamepad>/leftShoulder
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: SwitchPlayer
+      m_Flags: 0
+    m_Flags: 0
+--- !u!114 &5902144289190642632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2508366964899477693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbde7aff9ab8e4e56bb6d5de1b694b01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OrderManager
+  orderCardPrefab: {fileID: 1177066682249617858, guid: 228c3a1a27ee64302aa3c63675a77725, type: 3}
+  orderContainer: {fileID: 0}
+  circleSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  availableRecipes:
+  - recipeName: RedBlue
+    mainDishSprite: {fileID: 21300000, guid: 551fdd6064cf1406ab46354e05be8330, type: 3}
+    mainDishSize: {x: 70, y: 70}
+    ing1IsCircle: 1
+    ing1Color: {r: 1, g: 0.2, b: 0.2, a: 1}
+    ing2IsCircle: 1
+    ing2Color: {r: 0.2, g: 0.6, b: 1, a: 1}
+  - recipeName: PurpleGreen
+    mainDishSprite: {fileID: 21300000, guid: d3dabf071f3db461e8d6a12d35f1463b, type: 3}
+    mainDishSize: {x: 80, y: 50}
+    ing1IsCircle: 0
+    ing1Color: {r: 0.6, g: 0.2, b: 1, a: 1}
+    ing2IsCircle: 0
+    ing2Color: {r: 0.2, g: 0.8, b: 0.2, a: 1}
+  spawnInterval: 9
+  maxOrders: 3

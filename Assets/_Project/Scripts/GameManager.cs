@@ -105,18 +105,11 @@ public class GameManager : MonoBehaviour
         // Dynamically bind the Game Over buttons
         if (gameOverPanel != null)
         {
-            UnityEngine.UI.Button restartBtn = gameOverPanel.transform.Find("RestartButton")?.GetComponent<UnityEngine.UI.Button>();
-            if (restartBtn != null)
+            UnityEngine.UI.Button returnBtn = gameOverPanel.transform.Find("ReturnHubButton")?.GetComponent<UnityEngine.UI.Button>();
+            if (returnBtn != null)
             {
-                restartBtn.onClick.RemoveAllListeners();
-                restartBtn.onClick.AddListener(RestartGame);
-            }
-
-            UnityEngine.UI.Button nextBtn = gameOverPanel.transform.Find("NextLevelButton")?.GetComponent<UnityEngine.UI.Button>();
-            if (nextBtn != null)
-            {
-                nextBtn.onClick.RemoveAllListeners();
-                nextBtn.onClick.AddListener(LoadNextLevel);
+                returnBtn.onClick.RemoveAllListeners();
+                returnBtn.onClick.AddListener(ReturnToHub);
             }
 
             gameOverPanel.SetActive(false);
@@ -213,74 +206,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void RestartGame()
+    public void ReturnToHub()
     {
         Time.timeScale = 1f; // Important to reset before loading
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-
-    public void LoadNextLevel()
-    {
-        Time.timeScale = 1f;
-        int nextIndex = SceneManager.GetActiveScene().buildIndex + 1;
-        if (nextIndex < SceneManager.sceneCountInBuildSettings)
-        {
-            SceneManager.LoadScene(nextIndex);
-        }
-        else
-        {
-            // Show overall report instead of looping
-            ShowOverallReport();
-        }
-    }
-
-    public void ShowOverallReport()
-    {
-        if (gameOverPanel != null) gameOverPanel.SetActive(false);
-
-        if (overallReportPanel != null)
-        {
-            overallReportPanel.SetActive(true);
-
-            float totalStars = 0;
-            int levelsPlayed = 0;
-            if (PersistentGameState.Instance != null)
-            {
-                foreach (var kvp in PersistentGameState.Instance.starsPerLevel)
-                {
-                    totalStars += kvp.Value;
-                    levelsPlayed++;
-                }
-            }
-
-            float avg = levelsPlayed > 0 ? totalStars / levelsPlayed : 0;
-            
-            // Find a text component in the report panel to show the score
-            TextMeshProUGUI[] texts = overallReportPanel.GetComponentsInChildren<TextMeshProUGUI>(true);
-            foreach (var t in texts)
-            {
-                if (t.name == "ReportText" || t.text.Contains("Score"))
-                {
-                    t.text = $"Overall Average Stars: {avg:F1}";
-                }
-            }
-
-            UnityEngine.UI.Button restartRunBtn = overallReportPanel.GetComponentInChildren<UnityEngine.UI.Button>();
-            if (restartRunBtn != null)
-            {
-                restartRunBtn.onClick.RemoveAllListeners();
-                restartRunBtn.onClick.AddListener(() => {
-                    if (PersistentGameState.Instance != null) PersistentGameState.Instance.ResetRun();
-                    SceneManager.LoadScene(0);
-                });
-                restartRunBtn.Select();
-            }
-        }
-        else
-        {
-            // Fallback if no report panel exists
-            if (PersistentGameState.Instance != null) PersistentGameState.Instance.ResetRun();
-            SceneManager.LoadScene(0);
-        }
+        SceneManager.LoadScene(0); // Hub is index 0
     }
 }

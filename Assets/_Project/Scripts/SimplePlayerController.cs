@@ -26,6 +26,9 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
     private Rigidbody rb;
     private Vector2 currentMoveInput;
 
+    private static System.Collections.Generic.List<InputDevice> cachedControllers = new System.Collections.Generic.List<InputDevice>();
+    private static bool controllersDirty = true;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -37,6 +40,21 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         gamepadInteractAction.AddBinding("<Joystick>/button0"); 
         gamepadInteractAction.AddBinding("<Joystick>/button1"); 
         gamepadInteractAction.AddBinding("<HID::*>/button2"); // Common generic HID button
+
+        InputSystem.onDeviceChange += OnDeviceChange;
+    }
+
+    private void OnDestroy()
+    {
+        InputSystem.onDeviceChange -= OnDeviceChange;
+    }
+
+    private static void OnDeviceChange(InputDevice device, InputDeviceChange change)
+    {
+        if (change == InputDeviceChange.Added || change == InputDeviceChange.Removed)
+        {
+            controllersDirty = true;
+        }
     }
 
     private void OnEnable()
@@ -87,14 +105,18 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
     private void Update()
     {
-        // Broadly identify any "gamepad-like" devices (Official pads or Generic HIDs/Joysticks)
-        System.Collections.Generic.List<InputDevice> controllers = new System.Collections.Generic.List<InputDevice>();
-        foreach (var device in InputSystem.devices)
+        // Allocation-free controller caching
+        if (controllersDirty)
         {
-            if (device is Gamepad || device is Joystick) controllers.Add(device);
+            cachedControllers.Clear();
+            foreach (var device in InputSystem.devices)
+            {
+                if (device is Gamepad || device is Joystick) cachedControllers.Add(device);
+            }
+            controllersDirty = false;
         }
 
-        int controllerCount = controllers.Count;
+        int controllerCount = cachedControllers.Count;
         bool isDualControllerMode = (controllerCount >= 2);
 
         Vector2 moveInput = Vector2.zero;
@@ -135,7 +157,7 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             // DUAL MODE: Each player gets their own physical device from the list
             if (playerIndex < controllerCount)
             {
-                InputDevice myDevice = controllers[playerIndex];
+                InputDevice myDevice = cachedControllers[playerIndex];
                 
                 // Read stick/movement
                 if (myDevice is Gamepad g) gamepadInput = g.leftStick.ReadValue();
