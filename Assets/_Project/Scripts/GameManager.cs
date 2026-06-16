@@ -69,7 +69,26 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1f; 
         timeRemaining = gameTime;
-        if (gameOverPanel != null) gameOverPanel.SetActive(false);
+
+        // Dynamically bind the Game Over buttons to prevent prefab reference loss
+        if (gameOverPanel != null)
+        {
+            UnityEngine.UI.Button restartBtn = gameOverPanel.transform.Find("RestartButton")?.GetComponent<UnityEngine.UI.Button>();
+            if (restartBtn != null)
+            {
+                restartBtn.onClick.RemoveAllListeners();
+                restartBtn.onClick.AddListener(RestartGame);
+            }
+
+            UnityEngine.UI.Button nextBtn = gameOverPanel.transform.Find("NextLevelButton")?.GetComponent<UnityEngine.UI.Button>();
+            if (nextBtn != null)
+            {
+                nextBtn.onClick.RemoveAllListeners();
+                nextBtn.onClick.AddListener(LoadNextLevel);
+            }
+
+            gameOverPanel.SetActive(false);
+        }
         
         currentState = GameState.Playing;
     }
