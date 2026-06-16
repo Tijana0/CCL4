@@ -94,10 +94,29 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
     private void Update()
     {
-        // Update indicator visibility based on static selection in GameManager
+        // Broadly identify any "gamepad-like" devices (Official pads or Generic HIDs/Joysticks)
+        System.Collections.Generic.List<InputDevice> controllers = new System.Collections.Generic.List<InputDevice>();
+        foreach (var device in InputSystem.devices)
+        {
+            if (device is Gamepad || device is Joystick) controllers.Add(device);
+        }
+
+        int controllerCount = controllers.Count;
+        bool isDualControllerMode = (controllerCount >= 2);
+        
+        // Update indicator visibility
         if (selectionIndicator != null)
         {
-            selectionIndicator.SetActive(playerIndex == activeGamepadPlayerIndex);
+            if (isDualControllerMode)
+            {
+                // In dual mode, if you have a physical controller assigned, you are active
+                selectionIndicator.SetActive(playerIndex < controllerCount);
+            }
+            else
+            {
+                // In single mode, follow the switching logic
+                selectionIndicator.SetActive(playerIndex == activeGamepadPlayerIndex);
+            }
         }
 
         Vector2 moveInput = Vector2.zero;
@@ -129,25 +148,47 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             }
         }
 
-        // Gamepad only works for the active player
-        if (playerIndex == activeGamepadPlayerIndex)
-        {
-            Vector2 gamepadInput = gamepadMoveAction.ReadValue<Vector2>();
-            
-            // Fix inverted axes common on generic/third-party controllers
-            if (invertGamepadY)
-            {
-                gamepadInput.y = -gamepadInput.y;
-            }
+        // --- Gamepad / Joystick Logic ---
+        Vector2 gamepadInput = Vector2.zero;
+        bool gamepadInteract = false;
 
-            // prevent deadzone drift from overriding keyboard
-            if (gamepadInput.sqrMagnitude > moveInput.sqrMagnitude && gamepadInput.sqrMagnitude > 0.05f)
+        if (isDualControllerMode)
+        {
+            // DUAL MODE: Each player gets their own physical device from the list
+            if (playerIndex < controllerCount)
             {
-                moveInput = gamepadInput;
+                InputDevice myDevice = controllers[playerIndex];
+                
+                // Read stick/movement
+                if (myDevice is Gamepad g) gamepadInput = g.leftStick.ReadValue();
+                else if (myDevice is Joystick j) gamepadInput = j.stick.ReadValue();
+
+                // Read Interaction
+                if (gamepadInteractAction.WasPressedThisFrame()) 
+                {
+                    // Verify if THIS device triggered the action
+                    // (InputActions usually check all, so we verify source)
+                    var lastControl = gamepadInteractAction.activeControl;
+                    if (lastControl != null && lastControl.device == myDevice) gamepadInteract = true;
+                }
             }
-            
-            if (gamepadInteractAction.WasPressedThisFrame()) interactPressed = true;
         }
+        else if (controllerCount == 1 && playerIndex == activeGamepadPlayerIndex)
+        {
+            // SINGLE MODE: Current player uses the only available device
+            gamepadInput = gamepadMoveAction.ReadValue<Vector2>();
+            if (gamepadInteractAction.WasPressedThisFrame()) gamepadInteract = true;
+        }
+
+        // Apply gamepad input if it exists
+        if (gamepadInput.sqrMagnitude > 0.05f)
+        {
+            if (invertGamepadY) gamepadInput.y = -gamepadInput.y;
+            if (gamepadInput.sqrMagnitude > moveInput.sqrMagnitude) moveInput = gamepadInput;
+        }
+
+        if (gamepadInteract) interactPressed = true;
+        // ---------------------
 
         if (moveInput.sqrMagnitude > 1)
         {
