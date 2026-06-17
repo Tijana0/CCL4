@@ -23,6 +23,11 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
     [Tooltip("Check this if pulling down on the joystick moves the character up")]
     public bool invertGamepadY = true;
 
+    [Header("Status Effects")]
+    public bool isFrozen = false;
+    public float freezeTimer = 0f;
+    public TMPro.TextMeshPro freezeLabel; // Assign in inspector or code
+
     private Rigidbody rb;
     private Vector2 currentMoveInput;
 
@@ -33,6 +38,7 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        if (freezeLabel != null) freezeLabel.gameObject.SetActive(false);
 
         // Add generic joystick fallbacks
         gamepadMoveAction.AddBinding("<Joystick>/stick");
@@ -105,6 +111,21 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
     private void Update()
     {
+        if (isFrozen)
+        {
+            freezeTimer -= Time.deltaTime;
+            if (freezeLabel != null)
+            {
+                freezeLabel.text = Mathf.CeilToInt(freezeTimer).ToString();
+            }
+
+            if (freezeTimer <= 0)
+            {
+                Unfreeze();
+            }
+            return; // Block all input/movement while frozen
+        }
+
         // Allocation-free controller caching
         if (controllersDirty)
         {
@@ -304,6 +325,28 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                 heldItem = null;
             }
         }
+    }
+
+    public void Freeze(float duration)
+    {
+        if (isFrozen) return; // Don't re-freeze if already frozen
+        
+        isFrozen = true;
+        freezeTimer = duration;
+        currentMoveInput = Vector2.zero;
+        if (rb != null) rb.linearVelocity = Vector3.zero;
+
+        if (freezeLabel != null)
+        {
+            freezeLabel.gameObject.SetActive(true);
+            freezeLabel.text = Mathf.CeilToInt(duration).ToString();
+        }
+    }
+
+    private void Unfreeze()
+    {
+        isFrozen = false;
+        if (freezeLabel != null) freezeLabel.gameObject.SetActive(false);
     }
 
     private void OnDrawGizmosSelected()

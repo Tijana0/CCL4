@@ -8,9 +8,12 @@ public class PixieAI : MonoBehaviour
 {
     [Header("Movement Settings")]
     public float moveSpeed = 1.5f;
-    public float heightMin = 1.5f;
-    public float heightMax = 4.0f;
+    public float heightMin = 0.5f; // Lowered to hit players
+    public float heightMax = 2.5f; 
     
+    [Header("Interaction Settings")]
+    public float freezeDuration = 3f;
+
     [Header("Wander Area")]
     public bool useRoomBounds = true;
     public Vector3 roomCenter = Vector3.zero;
@@ -25,6 +28,19 @@ public class PixieAI : MonoBehaviour
 
     private void Start()
     {
+        // Ensure there is a trigger collider for player detection
+        Collider col = GetComponent<Collider>();
+        if (col == null)
+        {
+            SphereCollider sc = gameObject.AddComponent<SphereCollider>();
+            sc.isTrigger = true;
+            sc.radius = 1.25f; // Slightly larger for easier "touching"
+        }
+        else
+        {
+            col.isTrigger = true;
+        }
+
         // Random seeds for unique patterns per pixie
         seedX = Random.value * 1000f;
         seedY = Random.value * 1000f;
@@ -74,6 +90,17 @@ public class PixieAI : MonoBehaviour
         {
             Quaternion targetRotation = Quaternion.LookRotation(movement);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * moveSpeed);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // Check if we hit a player
+        SimplePlayerController player = other.GetComponent<SimplePlayerController>();
+        if (player != null)
+        {
+            Debug.Log($"[Pixie] Touched Player {player.playerIndex}! Freezing for {freezeDuration}s.");
+            player.Freeze(freezeDuration);
         }
     }
 }
