@@ -70,7 +70,7 @@ public class RoomManager : MonoBehaviour
             return;
         }
 
-        orderManager.SetRoomRecipes(config.recipes);
+        orderManager.SetRoomRecipes(config.recipes, config.useProceduralGeneration, config.availableItems);
     }
 
     /// <summary>
