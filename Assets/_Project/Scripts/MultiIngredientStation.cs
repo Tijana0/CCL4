@@ -127,7 +127,7 @@ public class MultiIngredientStation : StationBase
                   && triggerMode == TriggerMode.HoldToProcess && player.heldItem == null)
         {
             // Player holds interact to start/continue cooking
-            if (!isCooking) RestartCooking(player);
+            if (stationState != StationState.Cooking) RestartCooking(player);
             else cookingPlayer = player; // Re-assign if player changed
         }
     }
