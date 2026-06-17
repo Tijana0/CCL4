@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: RedPotion
   icon: {fileID: 0}
-  prefab: {fileID: 6540012189298079678, guid: ad52c9e3f99b94a4b8452e2d62162d12, type: 3}
+  prefab: {fileID: 3481071676704410974, guid: 12500a593ee774c8ba412e91760360c2, type: 3}
   processingRules: []
   combineRules:
   - otherItem: {fileID: 11400000, guid: 267d71f9afd8c5d47bf74fbab29dc37e, type: 2}

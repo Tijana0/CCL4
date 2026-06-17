@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: WaterBowl
   icon: {fileID: 0}
-  prefab: {fileID: 1977527737391541243, guid: 1d9acb8007ab19344bdb1992567ac889, type: 3}
+  prefab: {fileID: 4412985955021958995, guid: 1ff4355408743474db22ecb2811f0762, type: 3}
   processingRules: []
   combineRules: []
-  allowedStationTypes: 
+  allowedStationTypes: 00000000010000000500000006000000
   requiresProcessingBeforeCauldron: 0

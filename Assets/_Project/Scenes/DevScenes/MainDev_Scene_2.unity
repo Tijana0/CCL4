@@ -2019,6 +2019,7 @@ MonoBehaviour:
   orderCardPrefab: {fileID: 1177066682249617858, guid: 228c3a1a27ee64302aa3c63675a77725, type: 3}
   orderContainer: {fileID: 0}
   circleSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  ingredientIconPrefab: {fileID: 0}
   availableRecipes:
   - recipeName: RedBlue
     mainDishSprite: {fileID: 21300000, guid: 551fdd6064cf1406ab46354e05be8330, type: 3}
@@ -3046,6 +3047,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ee991a983d1b4f54caa909010be4a5d5, type: 2}
   - {fileID: 11400000, guid: ef3018d747456b244ae47bea4dd8a975, type: 2}
   - {fileID: 11400000, guid: 35deb88b8ff2b491e999f07b2b83f08f, type: 2}
+  useProceduralGeneration: 1
   recipes:
   - recipeName: Purple Ball
     requiredOutput: {fileID: 11400000, guid: 35deb88b8ff2b491e999f07b2b83f08f, type: 2}
