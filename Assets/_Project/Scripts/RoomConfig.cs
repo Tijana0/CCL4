@@ -23,6 +23,7 @@ public class RoomConfig : MonoBehaviour
     public List<ItemData> availableItems = new List<ItemData>();
 
     [Header("Recipes (what orders can appear)")]
+    public bool useProceduralGeneration = true;
     public List<RoomRecipe> recipes = new List<RoomRecipe>();
 
     [Header("Station Configs")]

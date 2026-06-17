@@ -50,14 +50,8 @@ public class Counter : StationBase
         WorldItem combined = WorldItem.CreateCombined(result, spawnPos, anchor);
         if (combined != null)
         {
-            itemOnStation = combined.gameObject;
-            combined.transform.localPosition = new Vector3(0, 0.2f, 0);
-
-            Rigidbody rb = combined.GetComponent<Rigidbody>();
-            if (rb != null) rb.isKinematic = true;
-            Collider col = combined.GetComponent<Collider>();
-            if (col != null) col.enabled = false;
-
+            // Use the shared placement logic from StationBase to handle positioning/physics/colliders
+            PlaceItemOnStation(combined.gameObject, null);
             Debug.Log($"[Counter] Combined into {result.itemName}!");
         }
     }

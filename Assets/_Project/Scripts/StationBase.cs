@@ -72,12 +72,28 @@ public abstract class StationBase : MonoBehaviour, IInteractable
 
         Transform anchor = counterTopPoint != null ? counterTopPoint : transform;
         item.transform.SetParent(anchor);
-        item.transform.localPosition = new Vector3(0, 0.2f, 0);
         item.transform.localRotation = Quaternion.identity;
+
+        // DYNAMIC OFFSET: Calculate height to prevent sinking
+        float yOffset = 0.2f; // Default fallback
+        Collider col = item.GetComponent<Collider>();
+        if (col != null)
+        {
+            // Calculate how far the bottom of the collider is from the pivot in local space.
+            // col.bounds is in world space, so we convert the bottom point to local space.
+            Vector3 worldBottom = col.bounds.center - new Vector3(0, col.bounds.extents.y, 0);
+            Vector3 localBottom = item.transform.InverseTransformPoint(worldBottom);
+            
+            // To place the bottom at Y=0 local, the pivot must be at -localBottom.y
+            yOffset = -localBottom.y;
+        }
+        
+        item.transform.localPosition = new Vector3(0, yOffset, 0);
 
         Rigidbody rb = item.GetComponent<Rigidbody>();
         if (rb != null) rb.isKinematic = true;
-        Collider col = item.GetComponent<Collider>();
+        
+        // Re-use 'col' from above if it exists to disable it
         if (col != null) col.enabled = false;
 
         OnItemPlaced(item);

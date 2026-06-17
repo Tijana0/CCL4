@@ -21,7 +21,7 @@ MonoBehaviour:
     processingTime: 0
   combineRules:
   - otherItem: {fileID: 11400000, guid: ef3018d747456b244ae47bea4dd8a975, type: 2}
-    outputItem: {fileID: 11400000, guid: 267d71f9afd8c5d47bf74fbab29dc37e, type: 2}
+    outputItem: {fileID: 11400000, guid: 35deb88b8ff2b491e999f07b2b83f08f, type: 2}
   allowedStationTypes: 0000000001000000020000000300000004000000050000000600000007000000
   requiresProcessingBeforeCauldron: 0
   isDisposable: 1

@@ -20,6 +20,7 @@ public class OrderManager : MonoBehaviour
     public GameObject orderCardPrefab;
     public Transform orderContainer;
     public Sprite circleSprite;
+    public GameObject ingredientIconPrefab; // New prefab for dynamic icons
 
     [Header("Configuration")]
     public List<Recipe> availableRecipes;
@@ -29,15 +30,82 @@ public class OrderManager : MonoBehaviour
     // Room recipes set by RoomManager at runtime
     private List<RoomRecipe> roomRecipes = new List<RoomRecipe>();
     private bool usingRoomRecipes = false;
+    private bool useProcedural = false;
+
+    // Discovered procedural orders
+    private List<RoomRecipe> discoveredOrders = new List<RoomRecipe>();
 
     private float timeSinceLastSpawn = 0f;
 
     /// <summary>Called by RoomManager to register this room's recipe list.</summary>
-    public void SetRoomRecipes(List<RoomRecipe> recipes)
+    public void SetRoomRecipes(List<RoomRecipe> recipes, bool procedural, List<ItemData> roomItems)
     {
         roomRecipes = recipes ?? new List<RoomRecipe>();
-        usingRoomRecipes = roomRecipes.Count > 0;
-        Debug.Log($"[OrderManager] Registered {roomRecipes.Count} room recipes.");
+        useProcedural = procedural;
+        usingRoomRecipes = roomRecipes.Count > 0 || useProcedural;
+
+        if (useProcedural)
+        {
+            DiscoverProceduralOrders(roomItems);
+        }
+
+        Debug.Log($"[OrderManager] Initialized. Recipes: {roomRecipes.Count}, Procedural: {useProcedural} ({discoveredOrders.Count} discovered).");
+    }
+
+    private void DiscoverProceduralOrders(List<ItemData> items)
+    {
+        discoveredOrders.Clear();
+        if (items == null) return;
+
+        // 1. Add base ingredients as simple orders
+        foreach (var item in items)
+        {
+            discoveredOrders.Add(new RoomRecipe {
+                recipeName = item.itemName,
+                requiredOutput = item,
+                scoreValue = 5,
+                timeLimit = 45f
+            });
+        }
+
+        // 2. Discover combinations
+        foreach (var item in items)
+        {
+            foreach (var rule in item.combineRules)
+            {
+                // If both inputs and output exist in the room (or are valid results)
+                if (rule.outputItem != null)
+                {
+                    // Check if we already added this result to avoid duplicates
+                    if (!discoveredOrders.Exists(r => r.requiredOutput == rule.outputItem))
+                    {
+                        discoveredOrders.Add(new RoomRecipe {
+                            recipeName = rule.outputItem.itemName,
+                            requiredOutput = rule.outputItem,
+                            scoreValue = 15,
+                            timeLimit = 60f
+                        });
+                    }
+                }
+            }
+
+            // 3. Discover processing results
+            foreach (var rule in item.processingRules)
+            {
+                if (rule.outputItem != null)
+                {
+                    if (!discoveredOrders.Exists(r => r.requiredOutput == rule.outputItem))
+                    {
+                        discoveredOrders.Add(new RoomRecipe {
+                            recipeName = rule.outputItem.itemName,
+                            requiredOutput = rule.outputItem,
+                            scoreValue = 10,
+                            timeLimit = 50f
+                        });
+                    }
+                }
+            }
+        }
     }
 
     private void Start()
@@ -83,15 +151,30 @@ public class OrderManager : MonoBehaviour
 
     public void SpawnRandomOrder()
     {
-        // Prefer room recipes if registered
-        if (usingRoomRecipes && roomRecipes.Count > 0)
+        // Prefer room recipes or procedural if registered
+        if (usingRoomRecipes)
         {
             SpawnRoomRecipeOrder();
             return;
         }
 
         // Fallback to legacy visual recipes
-        if (availableRecipes == null || availableRecipes.Count == 0 || orderCardPrefab == null || orderContainer == null) return;
+        if (orderCardPrefab == null)
+        {
+            Debug.LogError("[OrderManager] orderCardPrefab is missing! Cannot spawn orders.");
+            return;
+        }
+        if (orderContainer == null)
+        {
+            Debug.LogError("[OrderManager] orderContainer is missing! Cannot spawn orders.");
+            return;
+        }
+
+        if (availableRecipes == null || availableRecipes.Count == 0)
+        {
+            Debug.LogWarning("[OrderManager] No availableRecipes or roomRecipes to spawn.");
+            return;
+        }
 
         Recipe recipe = availableRecipes[Random.Range(0, availableRecipes.Count)];
         SpawnLegacyOrderCard(recipe);
@@ -99,9 +182,30 @@ public class OrderManager : MonoBehaviour
 
     private void SpawnRoomRecipeOrder()
     {
-        if (orderCardPrefab == null || orderContainer == null) return;
+        if (orderCardPrefab == null)
+        {
+            Debug.LogError("[OrderManager] orderCardPrefab is missing! Cannot spawn room recipe orders.");
+            return;
+        }
+        if (orderContainer == null)
+        {
+            Debug.LogError("[OrderManager] orderContainer is missing! Cannot spawn room recipe orders.");
+            return;
+        }
 
-        RoomRecipe recipe = roomRecipes[Random.Range(0, roomRecipes.Count)];
+        RoomRecipe recipe;
+        if (useProcedural && discoveredOrders.Count > 0)
+        {
+            // Pick from discovered or manual recipes
+            List<RoomRecipe> pool = new List<RoomRecipe>(discoveredOrders);
+            pool.AddRange(roomRecipes);
+            recipe = pool[Random.Range(0, pool.Count)];
+        }
+        else
+        {
+            if (roomRecipes.Count == 0) return;
+            recipe = roomRecipes[Random.Range(0, roomRecipes.Count)];
+        }
 
         GameObject newCard = Instantiate(orderCardPrefab, orderContainer);
         newCard.name = "ActiveOrder_" + recipe.recipeName;
@@ -109,6 +213,10 @@ public class OrderManager : MonoBehaviour
         // Store recipe reference on the card for matching at hand-in
         var tracker = newCard.AddComponent<ActiveOrderTracker>();
         tracker.roomRecipe = recipe;
+        tracker.SetupTimer(recipe.timeLimit, () => {
+            Destroy(newCard);
+            Debug.Log($"[OrderManager] Order expired: {recipe.recipeName}");
+        });
 
         // Update card UI — use item icon if available
         Transform mainDish = newCard.transform.Find("MainDish");
@@ -117,6 +225,73 @@ public class OrderManager : MonoBehaviour
             Image img = mainDish.GetComponent<Image>();
             if (img != null) img.sprite = recipe.requiredOutput.icon;
         }
+
+        // Dynamic Ingredients UI
+        Transform ingredientsParent = newCard.transform.Find("Ingredients");
+        if (ingredientsParent != null)
+        {
+            // Clear existing placeholder icons
+            foreach (Transform child in ingredientsParent) Destroy(child.gameObject);
+
+            // Find ingredients for this output
+            List<ItemData> ings = GetIngredientsFor(recipe.requiredOutput);
+            foreach (var ing in ings)
+            {
+                if (ing.icon == null) continue;
+                
+                GameObject iconObj = ingredientIconPrefab != null 
+                    ? Instantiate(ingredientIconPrefab, ingredientsParent)
+                    : new GameObject("IngredientIcon", typeof(RectTransform), typeof(Image));
+                
+                iconObj.transform.SetParent(ingredientsParent);
+                Image img = iconObj.GetComponent<Image>();
+                img.sprite = ing.icon;
+                img.raycastTarget = false;
+            }
+        }
+    }
+
+    private List<ItemData> GetIngredientsFor(ItemData target)
+    {
+        List<ItemData> ings = new List<ItemData>();
+        if (target == null) return ings;
+
+        // Check combinations (looking for results in other items)
+        // Note: This is a simple 1-level search. 
+        // We'll search all items in the project or room to see who produces this target.
+        // For efficiency, we scan the room items.
+        
+        // This is a bit tricky because ItemData rules point forward (A+B=C).
+        // To find ingredients for C, we scan all items to see which rule results in C.
+        
+        // Let's use a simpler heuristic: if we are in a room, check all available items.
+        var roomManager = FindFirstObjectByType<RoomManager>();
+        List<ItemData> allRoomItems = roomManager != null ? roomManager.GetAvailableItems() : new List<ItemData>();
+
+        foreach (var item in allRoomItems)
+        {
+            foreach (var rule in item.combineRules)
+            {
+                if (rule.outputItem == target)
+                {
+                    ings.Add(item);
+                    ings.Add(rule.otherItem);
+                    return ings;
+                }
+            }
+            foreach (var rule in item.processingRules)
+            {
+                if (rule.outputItem == target)
+                {
+                    ings.Add(item);
+                    return ings;
+                }
+            }
+        }
+
+        // If no ingredients found, it's a base item
+        if (ings.Count == 0) ings.Add(target); 
+        return ings;
     }
 
     private void SpawnLegacyOrderCard(Recipe recipe)
@@ -182,4 +357,46 @@ public class OrderManager : MonoBehaviour
 public class ActiveOrderTracker : MonoBehaviour
 {
     public RoomRecipe roomRecipe;
+    
+    private float timeRemaining;
+    private float totalTime;
+    private System.Action onExpired;
+    private bool isInitialized = false;
+    
+    private Image timerBar;
+
+    public void SetupTimer(float duration, System.Action expirationCallback)
+    {
+        totalTime = duration;
+        timeRemaining = duration;
+        onExpired = expirationCallback;
+        
+        // Find timer bar (expecting a child named "TimerBar" with an Image component)
+        Transform tBar = transform.Find("TimerBar");
+        if (tBar != null) timerBar = tBar.GetComponent<Image>();
+        
+        isInitialized = true;
+    }
+
+    private void Update()
+    {
+        if (!isInitialized) return;
+
+        timeRemaining -= Time.deltaTime;
+        
+        if (timerBar != null)
+        {
+            timerBar.fillAmount = timeRemaining / totalTime;
+            
+            // Visual feedback: turn red when low
+            if (timeRemaining < totalTime * 0.25f)
+                timerBar.color = Color.red;
+        }
+
+        if (timeRemaining <= 0)
+        {
+            isInitialized = false;
+            onExpired?.Invoke();
+        }
+    }
 }
