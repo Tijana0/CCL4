@@ -15,7 +15,6 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
     [Header("Interaction")]
     public Transform holdPoint;
-    public GameObject selectionIndicator;
     [HideInInspector] public GameObject heldItem;
 
     [Header("Controller Input")]
@@ -26,6 +25,10 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
     private Rigidbody rb;
     private Vector2 currentMoveInput;
+
+    private static System.Collections.Generic.List<InputDevice> cachedControllers = new System.Collections.Generic.List<InputDevice>();
+    private static bool controllersDirty = true;
+    private static bool isSubscribedToEvents = false;
 
     private void Awake()
     {
@@ -38,6 +41,20 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         gamepadInteractAction.AddBinding("<Joystick>/button0"); 
         gamepadInteractAction.AddBinding("<Joystick>/button1"); 
         gamepadInteractAction.AddBinding("<HID::*>/button2"); // Common generic HID button
+
+        if (!isSubscribedToEvents)
+        {
+            InputSystem.onDeviceChange += OnDeviceChange;
+            isSubscribedToEvents = true;
+        }
+    }
+
+    private static void OnDeviceChange(InputDevice device, InputDeviceChange change)
+    {
+        if (change == InputDeviceChange.Added || change == InputDeviceChange.Removed)
+        {
+            controllersDirty = true;
+        }
     }
 
     private void OnEnable()
@@ -60,12 +77,6 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             hp.transform.SetParent(this.transform);
             hp.transform.localPosition = new Vector3(0, 0.5f, 0.5f);
             holdPoint = hp.transform;
-        }
-
-        // Ensure indicator matches initial state
-        if (selectionIndicator != null)
-        {
-            selectionIndicator.SetActive(playerIndex == activeGamepadPlayerIndex);
         }
     }
 
@@ -94,11 +105,19 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
     private void Update()
     {
-        // Update indicator visibility based on static selection in GameManager
-        if (selectionIndicator != null)
+        // Allocation-free controller caching
+        if (controllersDirty)
         {
-            selectionIndicator.SetActive(playerIndex == activeGamepadPlayerIndex);
+            cachedControllers.Clear();
+            foreach (var device in InputSystem.devices)
+            {
+                if (device is Gamepad || device is Joystick) cachedControllers.Add(device);
+            }
+            controllersDirty = false;
         }
+
+        int controllerCount = cachedControllers.Count;
+        bool isDualControllerMode = (controllerCount >= 2);
 
         Vector2 moveInput = Vector2.zero;
         bool interactPressed = false;
@@ -129,25 +148,43 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             }
         }
 
-        // Gamepad only works for the active player
-        if (playerIndex == activeGamepadPlayerIndex)
-        {
-            Vector2 gamepadInput = gamepadMoveAction.ReadValue<Vector2>();
-            
-            // Fix inverted axes common on generic/third-party controllers
-            if (invertGamepadY)
-            {
-                gamepadInput.y = -gamepadInput.y;
-            }
+        // --- Gamepad / Joystick Logic ---
+        Vector2 gamepadInput = Vector2.zero;
+        bool gamepadInteract = false;
 
-            // prevent deadzone drift from overriding keyboard
-            if (gamepadInput.sqrMagnitude > moveInput.sqrMagnitude && gamepadInput.sqrMagnitude > 0.05f)
+        if (isDualControllerMode)
+        {
+            // DUAL MODE: Each player gets their own physical device from the list
+            if (playerIndex < controllerCount)
             {
-                moveInput = gamepadInput;
+                InputDevice myDevice = cachedControllers[playerIndex];
+                gamepadInput = GetCorrectedInput(myDevice);
+
+                // Read Interaction
+                if (gamepadInteractAction.WasPressedThisFrame()) 
+                {
+                    // Verify if THIS device triggered the action
+                    var lastControl = gamepadInteractAction.activeControl;
+                    if (lastControl != null && lastControl.device == myDevice) gamepadInteract = true;
+                }
             }
-            
-            if (gamepadInteractAction.WasPressedThisFrame()) interactPressed = true;
         }
+        else if (controllerCount == 1 && playerIndex == activeGamepadPlayerIndex)
+        {
+            // SINGLE MODE: Current player uses the only available device
+            InputDevice myDevice = cachedControllers[0];
+            gamepadInput = GetCorrectedInput(myDevice);
+            if (gamepadInteractAction.WasPressedThisFrame()) gamepadInteract = true;
+        }
+
+        // Apply gamepad input if it exists
+        if (gamepadInput.sqrMagnitude > 0.05f)
+        {
+            if (gamepadInput.sqrMagnitude > moveInput.sqrMagnitude) moveInput = gamepadInput;
+        }
+
+        if (gamepadInteract) interactPressed = true;
+        // ---------------------
 
         if (moveInput.sqrMagnitude > 1)
         {
@@ -173,6 +210,27 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         {
             TryInteract();
         }
+    }
+
+    private Vector2 GetCorrectedInput(InputDevice device)
+    {
+        Vector2 raw = Vector2.zero;
+        if (device is Gamepad g) raw = g.leftStick.ReadValue();
+        else if (device is Joystick j) raw = j.stick.ReadValue();
+
+        float yMult = invertGamepadY ? -1f : 1f;
+
+        // --- Mac Wireless Xbox Specific Fix ---
+        // On Mac, Bluetooth Xbox controllers often report Y-axis inverted compared to wired ones
+        string dName = device.name.ToLower();
+        string dProduct = (device.description.product != null) ? device.description.product.ToLower() : "";
+        
+        if (dName.Contains("xbox") && (dName.Contains("wireless") || dProduct.Contains("wireless") || dName.Contains("bluetooth")))
+        {
+            yMult *= -1f; // Flip the inversion just for this device
+        }
+
+        return new Vector2(raw.x, raw.y * yMult);
     }
 
     private void LateUpdate()
