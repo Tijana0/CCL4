@@ -77,8 +77,19 @@ public abstract class StationBase : MonoBehaviour, IInteractable
 
         Transform anchor = counterTopPoint != null ? counterTopPoint : transform;
         item.transform.SetParent(anchor);
-        item.transform.localPosition = new Vector3(0, 0.2f, 0);
         item.transform.localRotation = Quaternion.identity;
+
+        // DYNAMIC OFFSET: Calculate height to prevent sinking
+        // Most primitives have pivots at the center, so we need half-height offset
+        float yOffset = 0.2f; // Default fallback
+        Collider col = item.GetComponent<Collider>();
+        if (col != null)
+        {
+            // Use bounds extents for a generic solution that works for any shape
+            yOffset = col.bounds.extents.y;
+        }
+        
+        item.transform.localPosition = new Vector3(0, yOffset, 0);
 
         Rigidbody rb = item.GetComponent<Rigidbody>();
         if (rb != null) rb.isKinematic = true;
