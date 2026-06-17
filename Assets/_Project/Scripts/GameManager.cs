@@ -3,12 +3,7 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 
-public enum GameState
-{
-    WaitingToStart,
-    Playing,
-    TimeUp
-}
+public enum GameState { WaitingToStart, Playing, TimeUp }
 
 public class GameManager : MonoBehaviour
 {
@@ -16,14 +11,16 @@ public class GameManager : MonoBehaviour
 
     [Header("Settings")]
     public float gameTime = 30f;
-    
+
     [Header("UI References")]
     public TextMeshProUGUI timerText;
+    public TextMeshProUGUI scoreText;
     public GameObject gameOverPanel;
     public GameObject overallReportPanel;
     public TextMeshProUGUI finalScoreText;
 
     [HideInInspector] public float timeRemaining;
+    private int score = 0;
     private GameState currentState = GameState.WaitingToStart;
     private int lastProcessedSeconds = -1;
 
@@ -42,7 +39,6 @@ public class GameManager : MonoBehaviour
         switchPlayerAction.AddBinding("<HID::*>/button5"); 
 
         // Add generic joystick fallbacks for UI SUBMIT
-        // This ensures the A button on generic controllers works on the Game Over screen
         var eventSystem = Object.FindFirstObjectByType<UnityEngine.EventSystems.EventSystem>();
         if (eventSystem != null)
         {
@@ -57,20 +53,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        switchPlayerAction.Enable();
-    }
-
-    private void OnDisable()
-    {
-        switchPlayerAction.Disable();
-    }
+    private void OnEnable() { switchPlayerAction.Enable(); }
+    private void OnDisable() { switchPlayerAction.Disable(); }
 
     private void Start()
     {
         Time.timeScale = 1f; 
         timeRemaining = gameTime;
+        score = 0;
 
         // Dynamically find UI elements to prevent prefab reference loss
         UnityEngine.GameObject canvas = UnityEngine.GameObject.Find("UI_Canvas");
@@ -79,8 +69,14 @@ public class GameManager : MonoBehaviour
             if (timerText == null)
             {
                 UnityEngine.Transform tText = canvas.transform.Find("TimerBackground/TimerText");
-                if (tText == null) tText = canvas.transform.Find("TimerText"); // Fallback
+                if (tText == null) tText = canvas.transform.Find("TimerText");
                 if (tText != null) timerText = tText.GetComponent<TextMeshProUGUI>();
+            }
+
+            if (scoreText == null)
+            {
+                UnityEngine.Transform sText = canvas.transform.Find("ScoreText");
+                if (sText != null) scoreText = sText.GetComponent<TextMeshProUGUI>();
             }
 
             UnityEngine.Transform goPanel = canvas.transform.Find("GameOverPanel");
@@ -89,10 +85,10 @@ public class GameManager : MonoBehaviour
                 gameOverPanel = goPanel.gameObject;
                 
                 // Bind finalScoreText
-                UnityEngine.Transform scoreText = goPanel.Find("GameOverSubtitle");
-                if (scoreText != null)
+                UnityEngine.Transform fScoreText = goPanel.Find("GameOverSubtitle");
+                if (fScoreText != null)
                 {
-                    finalScoreText = scoreText.GetComponent<TextMeshProUGUI>();
+                    finalScoreText = fScoreText.GetComponent<TextMeshProUGUI>();
                 }
             }
 
@@ -122,13 +118,14 @@ public class GameManager : MonoBehaviour
         }
         
         currentState = GameState.Playing;
+        UpdateScoreUI();
     }
 
     private void Update()
     {
         if (currentState != GameState.Playing) return;
 
-        // Character switching logic (Handled here once per frame)
+        // Character switching logic
         if (switchPlayerAction.WasPressedThisFrame())
         {
             SimplePlayerController.activeGamepadPlayerIndex = (SimplePlayerController.activeGamepadPlayerIndex == 0) ? 1 : 0;
@@ -137,8 +134,6 @@ public class GameManager : MonoBehaviour
         if (timeRemaining > 0)
         {
             timeRemaining -= Time.deltaTime;
-            
-            // Clamp to zero so we don't get negative numbers in the UI
             if (timeRemaining < 0) timeRemaining = 0;
             
             int currentSeconds = Mathf.FloorToInt(timeRemaining);
@@ -155,6 +150,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>Add points to the score. Called by InstantStation on successful hand-in.</summary>
+    public void AddScore(int points)
+    {
+        score += points;
+        UpdateScoreUI();
+        Debug.Log($"[GameManager] Score: {score}");
+    }
+
+    private void UpdateScoreUI()
+    {
+        if (scoreText != null)
+            scoreText.text = $"Score: {score}";
+    }
+
     private void UpdateTimerUI(int totalSeconds)
     {
         if (timerText != null)
@@ -163,7 +172,6 @@ public class GameManager : MonoBehaviour
             int seconds = totalSeconds % 60;
             timerText.text = string.Format("Time: {0:00}:{1:00}", minutes, seconds);
             
-            // Turn red in last 10 seconds
             if (totalSeconds <= 10)
             {
                 timerText.color = Color.red;
@@ -174,8 +182,7 @@ public class GameManager : MonoBehaviour
     private void GameOver()
     {
         currentState = GameState.TimeUp;
-        Time.timeScale = 0f; // Freeze all physics and animations
-        Debug.Log("Game Over!");
+        Time.timeScale = 0f;
 
         int currentBuildIndex = SceneManager.GetActiveScene().buildIndex;
         if (PersistentGameState.Instance != null)
@@ -191,10 +198,9 @@ public class GameManager : MonoBehaviour
             
             if (finalScoreText != null)
             {
-                finalScoreText.text = "Stars Earned: 3";
+                finalScoreText.text = $"Final Score: {score}";
             }
 
-            // Auto-select the button for gamepad support
             UnityEngine.UI.Button restartBtn = gameOverPanel.GetComponentInChildren<UnityEngine.UI.Button>();
             if (restartBtn != null)
             {
@@ -202,7 +208,6 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // Disable all player controllers and stop their movement
         SimplePlayerController[] players = FindObjectsByType<SimplePlayerController>(FindObjectsSortMode.None);
         foreach (var player in players)
         {
@@ -214,7 +219,7 @@ public class GameManager : MonoBehaviour
 
     public void ReturnToHub()
     {
-        Time.timeScale = 1f; // Important to reset before loading
+        Time.timeScale = 1f;
         if (SceneLoader.Instance != null)
         {
             SceneLoader.Instance.LoadScene(1); // Hub is now index 1

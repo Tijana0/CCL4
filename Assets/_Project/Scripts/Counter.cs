@@ -1,75 +1,64 @@
 using UnityEngine;
 
-public class Counter : MonoBehaviour, IInteractable
+/// <summary>
+/// Plain counter — holds one item, but supports combining two items into one
+/// if a CombineRule exists between them (e.g. red ball + blue ball = purple ball).
+/// </summary>
+public class Counter : StationBase
 {
-    public Transform counterTopPoint;
-    public GameObject itemOnCounter;
+    private void Awake()
+    {
+        stationType = StationType.Counter;
+    }
 
     private void Start()
     {
-        // If an item was placed on the counter in the editor, link it up
-        if (itemOnCounter != null)
-        {
-            SetupItemOnCounter(itemOnCounter);
-        }
+        if (itemOnStation != null)
+            PlaceItemOnStation(itemOnStation, null); // null player = editor pre-placed item
     }
 
-    public bool CanInteract()
+    protected override void TryCombineOrSwap(SimplePlayerController player)
     {
-        return true; 
-    }
+        WorldItem heldWI = player.heldItem.GetComponent<WorldItem>();
+        WorldItem stationWI = itemOnStation.GetComponent<WorldItem>();
 
-    public void Interact(SimplePlayerController player)
-    {
-        // place item on empty counter
-        if (player.heldItem != null && itemOnCounter == null)
+        if (heldWI == null || stationWI == null)
         {
-            itemOnCounter = player.heldItem;
-            player.heldItem = null;
-            SetupItemOnCounter(itemOnCounter);
+            Debug.Log("[Counter] One of the items has no WorldItem component — cannot combine.");
+            return;
         }
-        // take item from counter
-        else if (player.heldItem == null && itemOnCounter != null)
-        {
-            GameObject itemToTake = itemOnCounter;
-            itemOnCounter = null;
 
-            // CRITICAL: Ensure collider is disabled BEFORE parenting to player
-            // This prevents the "physics push" glitch
-            Collider col = itemToTake.GetComponent<Collider>();
+        // Check for a combine rule between the two items
+        ItemData result = heldWI.itemData.GetCombineResult(stationWI.itemData);
+
+        if (result == null)
+        {
+            Debug.Log($"[Counter] No combine rule between {heldWI.itemData.itemName} and {stationWI.itemData.itemName}");
+            return;
+        }
+
+        // Destroy both items
+        Destroy(player.heldItem);
+        Destroy(itemOnStation);
+        player.heldItem = null;
+        itemOnStation = null;
+
+        // Spawn result on the counter
+        Transform anchor = counterTopPoint != null ? counterTopPoint : transform;
+        Vector3 spawnPos = anchor.position + Vector3.up * 0.2f;
+
+        WorldItem combined = WorldItem.CreateCombined(result, spawnPos, anchor);
+        if (combined != null)
+        {
+            itemOnStation = combined.gameObject;
+            combined.transform.localPosition = new Vector3(0, 0.2f, 0);
+
+            Rigidbody rb = combined.GetComponent<Rigidbody>();
+            if (rb != null) rb.isKinematic = true;
+            Collider col = combined.GetComponent<Collider>();
             if (col != null) col.enabled = false;
 
-            // Ensure PickupObject script is disabled while held
-            PickupObject pickup = itemToTake.GetComponent<PickupObject>();
-            if (pickup != null) pickup.enabled = false;
-
-            player.heldItem = itemToTake;
-            itemToTake.transform.SetParent(player.holdPoint);
-            itemToTake.transform.localPosition = Vector3.zero;
-            itemToTake.transform.localRotation = Quaternion.identity;
+            Debug.Log($"[Counter] Combined into {result.itemName}!");
         }
-    }
-
-    private void SetupItemOnCounter(GameObject item)
-    {
-        item.transform.SetParent(counterTopPoint != null ? counterTopPoint : this.transform);
-        item.transform.localRotation = Quaternion.identity;
-        
-        // Disable collider so it doesn't block interaction or cause physics jitter
-        Collider itemCol = item.GetComponent<Collider>();
-        if (itemCol != null) itemCol.enabled = false;
-
-        // Ensure Rigidbody is kinematic
-        Rigidbody rb = item.GetComponent<Rigidbody>();
-        if (rb != null) rb.isKinematic = true;
-
-        // Keep rotation active on counter
-        PickupObject pickup = item.GetComponent<PickupObject>();
-        if (pickup != null) pickup.enabled = true;
-
-        // SIMPLE OFFSET: 
-        // Based on your 1x1 grid and item scale, 0.2 is the exact half-height 
-        // for most of your objects. This is much more reliable than bounds checks.
-        item.transform.localPosition = new Vector3(0, 0.2f, 0);
     }
 }
