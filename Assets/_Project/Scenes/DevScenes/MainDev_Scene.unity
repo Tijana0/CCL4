@@ -2030,6 +2030,75 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
+--- !u!1 &1127633986
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1127633989}
+  - component: {fileID: 1127633988}
+  - component: {fileID: 1127633987}
+  m_Layer: 0
+  m_Name: RoomManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1127633987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127633986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3716233294bcdda42a46b78c45fde079, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomManager
+  orderManager: {fileID: 0}
+--- !u!114 &1127633988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127633986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89d71286cbc67f4489378b4190a7f451, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomConfig
+  roomName: New Room
+  availableItems:
+  - {fileID: 11400000, guid: ee991a983d1b4f54caa909010be4a5d5, type: 2}
+  - {fileID: 11400000, guid: ef3018d747456b244ae47bea4dd8a975, type: 2}
+  - {fileID: 11400000, guid: 35deb88b8ff2b491e999f07b2b83f08f, type: 2}
+  recipes:
+  - recipeName: Purple Ball
+    requiredOutput: {fileID: 11400000, guid: 35deb88b8ff2b491e999f07b2b83f08f, type: 2}
+    scoreValue: 15
+    timeLimit: 60
+  stationConfigs: []
+--- !u!4 &1127633989
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127633986}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1278266151
 GameObject:
   m_ObjectHideFlags: 0
@@ -3110,3 +3179,4 @@ SceneRoots:
   - {fileID: 1723227142}
   - {fileID: 695058329}
   - {fileID: 1702023084}
+  - {fileID: 1127633989}

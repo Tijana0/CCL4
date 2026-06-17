@@ -91,7 +91,22 @@ public class OrderManager : MonoBehaviour
         }
 
         // Fallback to legacy visual recipes
-        if (availableRecipes == null || availableRecipes.Count == 0 || orderCardPrefab == null || orderContainer == null) return;
+        if (orderCardPrefab == null)
+        {
+            Debug.LogError("[OrderManager] orderCardPrefab is missing! Cannot spawn orders.");
+            return;
+        }
+        if (orderContainer == null)
+        {
+            Debug.LogError("[OrderManager] orderContainer is missing! Cannot spawn orders.");
+            return;
+        }
+
+        if (availableRecipes == null || availableRecipes.Count == 0)
+        {
+            Debug.LogWarning("[OrderManager] No availableRecipes or roomRecipes to spawn.");
+            return;
+        }
 
         Recipe recipe = availableRecipes[Random.Range(0, availableRecipes.Count)];
         SpawnLegacyOrderCard(recipe);
@@ -99,7 +114,16 @@ public class OrderManager : MonoBehaviour
 
     private void SpawnRoomRecipeOrder()
     {
-        if (orderCardPrefab == null || orderContainer == null) return;
+        if (orderCardPrefab == null)
+        {
+            Debug.LogError("[OrderManager] orderCardPrefab is missing! Cannot spawn room recipe orders.");
+            return;
+        }
+        if (orderContainer == null)
+        {
+            Debug.LogError("[OrderManager] orderContainer is missing! Cannot spawn room recipe orders.");
+            return;
+        }
 
         RoomRecipe recipe = roomRecipes[Random.Range(0, roomRecipes.Count)];
 
