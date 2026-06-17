@@ -19,3 +19,4 @@ MonoBehaviour:
   combineRules: []
   allowedStationTypes: 
   requiresProcessingBeforeCauldron: 0
+  isDisposable: 0
