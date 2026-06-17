@@ -73,7 +73,6 @@ public class MultiIngredientStation : StationBase
     private float cookingProgress = 0f;
     private float currentCookingTime = 5f;
     private float boilOverTimer = 0f;
-    private bool isCooking = false;
     private SimplePlayerController cookingPlayer = null;
     private GameObject resultItem = null;
 
@@ -194,7 +193,6 @@ public class MultiIngredientStation : StationBase
             return;
         }
 
-        isCooking = true;
         cookingProgress = 0f;
         cookingPlayer = player;
         currentCookingTime = match != null ? match.cookingTime : 5f;
@@ -223,7 +221,6 @@ public class MultiIngredientStation : StationBase
 
     private void CompleteCooking()
     {
-        isCooking = false;
         cookingPlayer = null;
         stationState = StationState.Done;
         boilOverTimer = 0f;
@@ -399,7 +396,6 @@ public class MultiIngredientStation : StationBase
         stationState = StationState.Empty;
         cookingProgress = 0f;
         boilOverTimer = 0f;
-        isCooking = false;
         cookingPlayer = null;
 
         if (progressBarContainer != null) progressBarContainer.SetActive(false);

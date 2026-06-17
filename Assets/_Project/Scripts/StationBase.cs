@@ -93,7 +93,8 @@ public abstract class StationBase : MonoBehaviour, IInteractable
 
         Rigidbody rb = item.GetComponent<Rigidbody>();
         if (rb != null) rb.isKinematic = true;
-        Collider col = item.GetComponent<Collider>();
+        
+        // Re-use 'col' from above if it exists to disable it
         if (col != null) col.enabled = false;
 
         OnItemPlaced(item);
