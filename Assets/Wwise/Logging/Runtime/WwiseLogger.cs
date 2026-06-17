@@ -59,7 +59,7 @@ namespace AK.Wwise.Unity.Logging
         /// <param name="message">Message to log</param>
         public static void Error(string message)
         {
-            Log(LogLevel.Error, message);
+             Log(LogLevel.Error, message);
         }
 
         /// <summary>

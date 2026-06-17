@@ -35,7 +35,7 @@ public class WwiseEventTester : MonoBehaviour
         if (kb.digit5Key.wasPressedThisFrame) Post(deliver,    "Deliver");
         if (kb.digit6Key.wasPressedThisFrame) Post(fail,       "Fail");
         if (kb.digit7Key.wasPressedThisFrame) Post(cardFlip,   "Card Flip");
-        if (kb.digit8Key.wasPressedThisFrame) Post(glassClink, "Glass Clink");
+        if (kb.digit8Key.wasPressedThisFrame) Post(glassClink, "Glass Clink"); 
     }
 
     void Post(AK.Wwise.Event ev, string label)
