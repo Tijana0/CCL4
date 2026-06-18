@@ -114,29 +114,15 @@ public class PauseManager : MonoBehaviour
         // Gamepad (Check all to support split screen or any active controller)
         foreach (var device in InputSystem.devices)
         {
-            if (device is Gamepad || device is Joystick)
-            {
-                // --- DIAGNOSTIC: Log ANY button press on this device ---
-                foreach (var control in device.allControls)
-                {
-                    if (control is UnityEngine.InputSystem.Controls.ButtonControl button && button.wasPressedThisFrame)
-                    {
-                        Debug.Log($"<color=orange>[PAUSE MGR] Hardware Button Pressed: {control.name} (Index/Path: {control.path})</color>");
-                    }
-                }
-            }
-
             if (device is Gamepad g && g.startButton.wasPressedThisFrame)
             {
                 pausePressed = true;
             }
-            else if (device is Joystick j)
+            
+            // Ultra-permissive alias checking for third-party macOS gamepads
+            if (CheckButton(device, new string[] { "start", "button9", "options", "menu" }))
             {
-                // Fallbacks for start button on generic joysticks (usually 7, 8, or 9)
-                if (CheckJoystickButton(j, 7) || CheckJoystickButton(j, 8) || CheckJoystickButton(j, 9))
-                {
-                    pausePressed = true;
-                }
+                pausePressed = true;
             }
         }
 
@@ -147,11 +133,24 @@ public class PauseManager : MonoBehaviour
         }
     }
 
-    private bool CheckJoystickButton(Joystick j, int index)
+    private bool CheckButton(InputDevice device, string[] aliases)
     {
-        if (j.allControls.Count > index && j.allControls[index] is UnityEngine.InputSystem.Controls.ButtonControl b)
-            return b.wasPressedThisFrame;
-        return false;
+        bool isDown = false;
+        foreach (var control in device.allControls)
+        {
+            if (control is UnityEngine.InputSystem.Controls.ButtonControl b)
+            {
+                if (b.wasPressedThisFrame)
+                {
+                    string cName = control.name.ToLower();
+                    foreach (var alias in aliases)
+                    {
+                        if (cName == alias.ToLower()) isDown = true;
+                    }
+                }
+            }
+        }
+        return isDown;
     }
 
     public void PauseGame()
