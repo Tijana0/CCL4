@@ -236,10 +236,24 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             {
                 gamepadInput = GetCorrectedInput(myDevice);
 
-                // Use the shared actions to check for presses on THIS specific device
-                if (IsActionPressedOnDevice(gamepadInteractAction, myDevice)) gamepadInteract = true;
-                if (IsActionHeldOnDevice(gamepadProcessAction, myDevice)) gamepadProcess = true;
-                if (IsActionPressedOnDevice(gamepadDashAction, myDevice)) gamepadDash = true;
+                // DIRECT DEVICE READING (More robust than shared actions)
+                if (myDevice is Gamepad g)
+                {
+                    if (g.buttonSouth.wasPressedThisFrame) gamepadInteract = true;
+                    if (g.buttonWest.isPressed) gamepadProcess = true;
+                    if (g.buttonEast.wasPressedThisFrame) 
+                    {
+                        gamepadDash = true;
+                        Debug.Log($"[Player {playerIndex}] Gamepad Dash Pressed (Button East/B)");
+                    }
+                }
+                else if (myDevice is Joystick j)
+                {
+                    // Generic fallbacks for HID controllers
+                    if (j.allControls[0] is UnityEngine.InputSystem.Controls.ButtonControl b0 && b0.wasPressedThisFrame) gamepadInteract = true;
+                    if (j.allControls[2] is UnityEngine.InputSystem.Controls.ButtonControl b2 && b2.isPressed) gamepadProcess = true;
+                    if (j.allControls[1] is UnityEngine.InputSystem.Controls.ButtonControl b1 && b1.wasPressedThisFrame) gamepadDash = true;
+                }
             }
         }
 
@@ -346,7 +360,15 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                 myDevice = cachedControllers[0];
             }
 
-            if (myDevice != null) return IsActionHeldOnDevice(gamepadProcessAction, myDevice);
+            if (myDevice != null)
+            {
+                if (myDevice is Gamepad g) return g.buttonWest.isPressed;
+                if (myDevice is Joystick j && j.allControls.Count > 2)
+                {
+                    var b2 = j.allControls[2] as UnityEngine.InputSystem.Controls.ButtonControl;
+                    return b2 != null && b2.isPressed;
+                }
+            }
         }
 
         return false;
