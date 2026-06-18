@@ -125,9 +125,19 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             if (col != null)
             {
                 Bounds bounds = col.bounds;
-                // Inset slightly by player radius (0.5m) to keep players completely on the room floor
-                minBounds = new Vector2(bounds.min.x + 0.5f, bounds.min.z + 0.5f);
-                maxBounds = new Vector2(bounds.max.x - 0.5f, bounds.max.z - 0.5f);
+                // Walls take up 0.1m on Left (min X), Right (max X), and Back (max Z)
+                // Front (min Z) has no wall.
+                float wallThickness = 0.1f;
+                float playerRadius = 0.5f;
+
+                float leftWallX = bounds.min.x + wallThickness;
+                float rightWallX = bounds.max.x - wallThickness;
+                float backWallZ = bounds.max.z - wallThickness;
+                float frontEdgeZ = bounds.min.z; // no wall!
+
+                // Clamp player positions inside walls, accounting for player radius
+                minBounds = new Vector2(leftWallX + playerRadius, frontEdgeZ + playerRadius);
+                maxBounds = new Vector2(rightWallX - playerRadius, backWallZ - playerRadius);
             }
         }
     }
@@ -482,11 +492,11 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             PickupObject pickup = heldItem.GetComponent<PickupObject>();
             if (pickup != null)
             {
-                // Snap dropping to grid centers (half-integers: 0.5, 1.5, etc.)
-                float dX = Mathf.Floor(interactionCenter.x) + 0.5f;
+                // Snap dropping to grid centers (X: integer, Z: half-integer)
+                float dX = Mathf.Round(interactionCenter.x);
                 float dZ = Mathf.Floor(interactionCenter.z) + 0.5f;
 
-                // Dynamically fetch room_base boundaries to prevent dropping over the edge
+                // Dynamically fetch room_base boundaries to prevent dropping over the edge/walls
                 GameObject roomBase = GameObject.Find("room_base");
                 if (roomBase != null)
                 {
@@ -494,11 +504,19 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                     if (col != null)
                     {
                         Bounds bounds = col.bounds;
-                        // Inset slightly to ensure the item stays well inside the room boundaries
-                        float minX = bounds.min.x + 0.3f;
-                        float maxX = bounds.max.x - 0.3f;
-                        float minZ = bounds.min.z + 0.3f;
-                        float maxZ = bounds.max.z - 0.3f;
+                        float wallThickness = 0.1f;
+                        
+                        // Inner boundaries of the room floor
+                        float leftWallX = bounds.min.x + wallThickness;
+                        float rightWallX = bounds.max.x - wallThickness;
+                        float backWallZ = bounds.max.z - wallThickness;
+                        float frontEdgeZ = bounds.min.z; // no wall
+
+                        // Clamp drop centers to stay within inner floor boundaries
+                        float minX = leftWallX + 0.3f;
+                        float maxX = rightWallX - 0.3f;
+                        float minZ = frontEdgeZ + 0.3f;
+                        float maxZ = backWallZ - 0.3f;
 
                         dX = Mathf.Clamp(dX, minX, maxX);
                         dZ = Mathf.Clamp(dZ, minZ, maxZ);
