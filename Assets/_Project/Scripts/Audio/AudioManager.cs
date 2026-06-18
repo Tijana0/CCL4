@@ -26,17 +26,22 @@ public class AudioManager : MonoBehaviour
     public AK.Wwise.Event teapotReady;
     public AK.Wwise.Event burnedItem;
     public AK.Wwise.Event boggart;
+    public AK.Wwise.Event waterPour;    // water pouring
+    public AK.Wwise.Event inventoryPop; // pop when taken from inventory
+    public AK.Wwise.Event throwOut;     // throwing something out
+    
 
     [Header("Scene events")]
     public AK.Wwise.Event musicStart;
     public AK.Wwise.Event musicStop;
     public AK.Wwise.Event levelStart;
+    public AK.Wwise.Event timerWarning; // sound when time is about to end
 
     void Awake()
     {
         if (Instance != null) { Destroy(gameObject); return; }
         Instance = this;
-        // DontDestroyOnLoad(gameObject); // enable if music must persist across scenes
+        DontDestroyOnLoad(gameObject); // enable if music must persist across scenes
     }
 
     // Generic helper: post any event on the object that made the sound,
@@ -57,7 +62,10 @@ public class AudioManager : MonoBehaviour
     public void PlayClickUI()                        => Play(clickUI, gameObject);
     public void PlayCrystalBall(GameObject o)        => Play(crystalBall, o);
     public void PlayTeapotReady(GameObject o)        => Play(teapotReady, o);
-
+    public void PlayWaterPour(GameObject o)    => Play(waterPour, o);
+    public void PlayInventoryPop(GameObject o) => Play(inventoryPop, o);
+    public void PlayThrowOut(GameObject o)     => Play(throwOut, o);
+    public void PlayTimerWarning()             => Play(timerWarning, gameObject);
     // Drop with a type, since you have 3 variants:
     public enum DropType { Glass, Liquid, Heavy }
     public void PlayDrop(GameObject o, DropType type)

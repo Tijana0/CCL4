@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e446663cef8f48559e112823dd19d9f, type: 3}
   m_Name: F17E6DC4-FB91-4488-993F-4CF052799D91
   m_EditorClassIdentifier: AK.Wwise.Unity.API.WwiseTypes::WwiseEventReference
-  objectName: play_Pickup
-  id: 3860455926
+  objectName: play_Pickup_Object
+  id: 3198472556
   guid: F17E6DC4-FB91-4488-993F-4CF052799D91
   IsInUserDefinedSoundBank: 0

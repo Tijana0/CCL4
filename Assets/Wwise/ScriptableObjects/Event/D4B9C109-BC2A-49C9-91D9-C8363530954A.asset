@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5e446663cef8f48559e112823dd19d9f, type: 3}
-  m_Name: 3E41BC62-0BA8-4378-9CBF-7EE77876D955
+  m_Name: D4B9C109-BC2A-49C9-91D9-C8363530954A
   m_EditorClassIdentifier: AK.Wwise.Unity.API.WwiseTypes::WwiseEventReference
-  objectName: play_Chopping_Object
-  id: 3716129260
-  guid: 3E41BC62-0BA8-4378-9CBF-7EE77876D955
+  objectName: play_Deliver
+  id: 4190536489
+  guid: D4B9C109-BC2A-49C9-91D9-C8363530954A
   IsInUserDefinedSoundBank: 0

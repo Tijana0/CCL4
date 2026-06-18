@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5e446663cef8f48559e112823dd19d9f, type: 3}
-  m_Name: 3E41BC62-0BA8-4378-9CBF-7EE77876D955
+  m_Name: 07087736-D070-40BC-9F32-29577374DABF
   m_EditorClassIdentifier: AK.Wwise.Unity.API.WwiseTypes::WwiseEventReference
-  objectName: play_Chopping_Object
-  id: 3716129260
-  guid: 3E41BC62-0BA8-4378-9CBF-7EE77876D955
+  objectName: play_Dropping_Liquid
+  id: 878511616
+  guid: 07087736-D070-40BC-9F32-29577374DABF
   IsInUserDefinedSoundBank: 0

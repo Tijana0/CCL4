@@ -8,12 +8,30 @@
 						<Reference Name="Conversion">
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
+						<Reference Name="DefaultSwitchOrState">
+							<ObjectRef Name="Stone" ID="{94C006FF-FD29-46EA-BCF5-47FB8A9A9005}" WorkUnitID="{50C0E260-9957-42AC-B1ED-A1EF1F62B3A1}"/>
+						</Reference>
 						<Reference Name="OutputBus">
 							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+						</Reference>
+						<Reference Name="SwitchGroupOrStateGroup">
+							<ObjectRef Name="SurfaceType" ID="{D90FF8D2-4E2B-4658-8672-693667FFA757}" WorkUnitID="{50C0E260-9957-42AC-B1ED-A1EF1F62B3A1}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
 						<RandomSequenceContainer Name="Carpet" ID="{03DF4AD3-4F55-4DC1-B40B-80FF15550328}" ShortID="793322711">
+							<PropertyList>
+								<Property Name="Pitch" Type="int32">
+									<ValueList>
+										<Value>400</Value>
+									</ValueList>
+								</Property>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>8</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Conversion">
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
@@ -23,191 +41,129 @@
 								</Reference>
 							</ReferenceList>
 							<ChildrenList>
-								<Sound Name="Carpet_1" ID="{CC8A8DD9-36D7-4A16-81CF-273422439D0B}" ShortID="97038534">
-									<PropertyList>
-										<Property Name="OverrideConversion" Type="bool" Value="True"/>
-										<Property Name="Volume" Type="Real64">
-											<ValueList>
-												<Value>-10</Value>
-											</ValueList>
-										</Property>
-									</PropertyList>
+								<Sound Name="Carpet_1" ID="{0669C7AB-4053-46AF-9DA9-C9D3B880166C}" ShortID="534358803">
 									<ReferenceList>
 										<Reference Name="Conversion">
-											<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
 										</Reference>
 										<Reference Name="OutputBus">
 											<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 										</Reference>
 									</ReferenceList>
 									<ChildrenList>
-										<AudioFileSource Name="Carpet_4" ID="{95071F1C-08CF-4252-93D3-11CAF000FA0A}">
-											<Language>SFX</Language>
-											<AudioFile>Carpet_4.wav</AudioFile>
-											<MediaIDList>
-												<MediaID ID="1065232252"/>
-											</MediaIDList>
-										</AudioFileSource>
-										<AudioFileSource Name="Carpet_1" ID="{1B519F31-FE04-4838-A4FF-38920A921C7C}">
-											<Language>SFX</Language>
-											<AudioFile>Carpet_1.wav</AudioFile>
-											<MediaIDList>
-												<MediaID ID="735589758"/>
-											</MediaIDList>
-										</AudioFileSource>
-										<AudioFileSource Name="Carpet_3" ID="{9E5C1CA0-9EA8-418D-B4B5-93EB0CBA6C9F}">
-											<Language>SFX</Language>
-											<AudioFile>Carpet_3.wav</AudioFile>
-											<MediaIDList>
-												<MediaID ID="132926365"/>
-											</MediaIDList>
-										</AudioFileSource>
-										<AudioFileSource Name="Carpet_2" ID="{09E834F6-EB93-4A98-963B-7447C52BF9C4}">
+										<AudioFileSource Name="Footsteps_Carpet" ID="{85C0B662-7225-4FFF-BA48-290E35B393BC}">
 											<PropertyList>
 												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-												<Property Name="TrimBegin" Type="Real64" Value="0.15502"/>
-												<Property Name="TrimEnd" Type="Real64" Value="0.58906"/>
+												<Property Name="TrimBegin" Type="Real64" Value="0.09336"/>
+												<Property Name="TrimEnd" Type="Real64" Value="0.11882"/>
 											</PropertyList>
 											<Language>SFX</Language>
-											<AudioFile>Carpet_2.wav</AudioFile>
+											<AudioFile>Footsteps_Carpet.wav</AudioFile>
 											<MediaIDList>
-												<MediaID ID="496873169"/>
+												<MediaID ID="655705812"/>
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
 									<ActiveSourceList>
-										<ActiveSource Name="Carpet_2" ID="{09E834F6-EB93-4A98-963B-7447C52BF9C4}" Platform="Linked"/>
+										<ActiveSource Name="Footsteps_Carpet" ID="{85C0B662-7225-4FFF-BA48-290E35B393BC}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
-								<Sound Name="Carpet_2" ID="{F911F82F-8658-48FF-AB6E-6637EAA9CD13}" ShortID="870805431">
-									<PropertyList>
-										<Property Name="OverrideConversion" Type="bool" Value="True"/>
-										<Property Name="Volume" Type="Real64">
-											<ValueList>
-												<Value>-10</Value>
-											</ValueList>
-										</Property>
-									</PropertyList>
+								<Sound Name="Carpet_2" ID="{A73D262D-D1CC-40F6-9659-55145EBFB91F}" ShortID="1035319588">
 									<ReferenceList>
 										<Reference Name="Conversion">
-											<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
 										</Reference>
 										<Reference Name="OutputBus">
 											<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 										</Reference>
 									</ReferenceList>
 									<ChildrenList>
-										<AudioFileSource Name="Carpet_4" ID="{B060FBB8-711C-428E-A267-52DD8D70BC15}">
-											<Language>SFX</Language>
-											<AudioFile>Carpet_4.wav</AudioFile>
-											<MediaIDList>
-												<MediaID ID="1065232252"/>
-											</MediaIDList>
-										</AudioFileSource>
-										<AudioFileSource Name="Carpet_1" ID="{970CE6C6-57B0-42EE-AEAD-93F98D93C281}">
-											<Language>SFX</Language>
-											<AudioFile>Carpet_1.wav</AudioFile>
-											<MediaIDList>
-												<MediaID ID="735589758"/>
-											</MediaIDList>
-										</AudioFileSource>
-										<AudioFileSource Name="Carpet_3" ID="{E1334BA6-F77B-40E5-80D6-36E8D0029062}">
-											<Language>SFX</Language>
-											<AudioFile>Carpet_3.wav</AudioFile>
-											<MediaIDList>
-												<MediaID ID="132926365"/>
-											</MediaIDList>
-										</AudioFileSource>
-										<AudioFileSource Name="Carpet_2" ID="{6A143830-4DB1-4ED4-9025-D66B188E0BC7}">
+										<AudioFileSource Name="Footsteps_Carpet" ID="{9561E31A-3387-40D0-B0B6-93F9D04ECE49}">
 											<PropertyList>
 												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-												<Property Name="TrimBegin" Type="Real64" Value="0.15027"/>
-												<Property Name="TrimEnd" Type="Real64" Value="0.477"/>
+												<Property Name="TrimBegin" Type="Real64" Value="0.21779"/>
+												<Property Name="TrimEnd" Type="Real64" Value="0.24038"/>
 											</PropertyList>
 											<Language>SFX</Language>
-											<AudioFile>Carpet_2.wav</AudioFile>
+											<AudioFile>Footsteps_Carpet.wav</AudioFile>
 											<MediaIDList>
-												<MediaID ID="293271688"/>
+												<MediaID ID="498211834"/>
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
 									<ActiveSourceList>
-										<ActiveSource Name="Carpet_2" ID="{6A143830-4DB1-4ED4-9025-D66B188E0BC7}" Platform="Linked"/>
+										<ActiveSource Name="Footsteps_Carpet" ID="{9561E31A-3387-40D0-B0B6-93F9D04ECE49}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
-								<Sound Name="Carpet_3" ID="{BFFFA4F1-F68D-436D-9C08-81BD40B498C8}" ShortID="351290568">
-									<PropertyList>
-										<Property Name="OverrideConversion" Type="bool" Value="True"/>
-										<Property Name="Volume" Type="Real64">
-											<ValueList>
-												<Value>-10</Value>
-											</ValueList>
-										</Property>
-									</PropertyList>
+								<Sound Name="Carpet_3" ID="{3380E320-1EA3-4EB5-962A-687F8FC27F77}" ShortID="30450021">
 									<ReferenceList>
 										<Reference Name="Conversion">
-											<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
 										</Reference>
 										<Reference Name="OutputBus">
 											<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 										</Reference>
 									</ReferenceList>
 									<ChildrenList>
-										<AudioFileSource Name="Carpet_3" ID="{A05FAE30-BD83-4EDE-BBAB-D008A8B51E3E}">
+										<AudioFileSource Name="Footsteps_Carpet" ID="{B05024CE-3646-4F8F-8C54-41F6147BB382}">
 											<PropertyList>
 												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-												<Property Name="TrimBegin" Type="Real64" Value="0.1372"/>
-												<Property Name="TrimEnd" Type="Real64" Value="0.33735"/>
+												<Property Name="TrimBegin" Type="Real64" Value="0.35923"/>
+												<Property Name="TrimEnd" Type="Real64" Value="0.39317"/>
 											</PropertyList>
 											<Language>SFX</Language>
-											<AudioFile>Carpet_3.wav</AudioFile>
+											<AudioFile>Footsteps_Carpet.wav</AudioFile>
 											<MediaIDList>
-												<MediaID ID="54779060"/>
+												<MediaID ID="187857623"/>
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
 									<ActiveSourceList>
-										<ActiveSource Name="Carpet_3" ID="{A05FAE30-BD83-4EDE-BBAB-D008A8B51E3E}" Platform="Linked"/>
+										<ActiveSource Name="Footsteps_Carpet" ID="{B05024CE-3646-4F8F-8C54-41F6147BB382}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
-								<Sound Name="Carpet_4" ID="{7F47F416-BD63-432C-982E-7E9D870C05B5}" ShortID="66829208">
-									<PropertyList>
-										<Property Name="OverrideConversion" Type="bool" Value="True"/>
-										<Property Name="Volume" Type="Real64">
-											<ValueList>
-												<Value>-10</Value>
-											</ValueList>
-										</Property>
-									</PropertyList>
+								<Sound Name="Carpet_4" ID="{6E8F2DFF-5A0C-4B76-B67F-5F73AC0D3861}" ShortID="670268149">
 									<ReferenceList>
 										<Reference Name="Conversion">
-											<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
 										</Reference>
 										<Reference Name="OutputBus">
 											<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 										</Reference>
 									</ReferenceList>
 									<ChildrenList>
-										<AudioFileSource Name="Carpet_4" ID="{CDCCFF61-2829-4DD1-8D68-132226E34403}">
+										<AudioFileSource Name="Footsteps_Carpet" ID="{FB538640-E348-4B5B-B76E-DC3D20B29891}">
 											<PropertyList>
 												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-												<Property Name="TrimBegin" Type="Real64" Value="0.13005"/>
-												<Property Name="TrimEnd" Type="Real64" Value="0.35603"/>
+												<Property Name="TrimBegin" Type="Real64" Value="0.68739"/>
+												<Property Name="TrimEnd" Type="Real64" Value="0.72131"/>
 											</PropertyList>
 											<Language>SFX</Language>
-											<AudioFile>Carpet_4.wav</AudioFile>
+											<AudioFile>Footsteps_Carpet.wav</AudioFile>
 											<MediaIDList>
-												<MediaID ID="607883265"/>
+												<MediaID ID="813075450"/>
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
 									<ActiveSourceList>
-										<ActiveSource Name="Carpet_4" ID="{CDCCFF61-2829-4DD1-8D68-132226E34403}" Platform="Linked"/>
+										<ActiveSource Name="Footsteps_Carpet" ID="{FB538640-E348-4B5B-B76E-DC3D20B29891}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
 							</ChildrenList>
 						</RandomSequenceContainer>
 						<RandomSequenceContainer Name="Wood" ID="{12C31720-1286-4ACE-B50B-5B7A262962E1}" ShortID="987660709">
+							<PropertyList>
+								<Property Name="Pitch" Type="int32">
+									<ValueList>
+										<Value>220</Value>
+									</ValueList>
+								</Property>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-2</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Conversion">
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
@@ -222,7 +178,7 @@
 										<Property Name="OverrideConversion" Type="bool" Value="True"/>
 										<Property Name="Volume" Type="Real64">
 											<ValueList>
-												<Value>-10</Value>
+												<Value>5</Value>
 											</ValueList>
 										</Property>
 									</PropertyList>
@@ -253,17 +209,29 @@
 												<MediaID ID="479448923"/>
 											</MediaIDList>
 										</AudioFileSource>
+										<AudioFileSource Name="Footsteps_Wood" ID="{AD1E8CA4-84C2-4B40-8273-9A25A6538D52}">
+											<PropertyList>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimBegin" Type="Real64" Value="0.55225"/>
+												<Property Name="TrimEnd" Type="Real64" Value="0.75938"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>Footsteps_Wood.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="460500236"/>
+											</MediaIDList>
+										</AudioFileSource>
 									</ChildrenList>
 									<ActiveSourceList>
-										<ActiveSource Name="Wood_2" ID="{92DCF193-582D-4496-A4D3-2340E9BBAEDB}" Platform="Linked"/>
+										<ActiveSource Name="Footsteps_Wood" ID="{AD1E8CA4-84C2-4B40-8273-9A25A6538D52}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
-								<Sound Name="Wood_2" ID="{7E518540-CDC5-4D74-B214-AE1FA8B15A42}" ShortID="871046720">
+								<Sound Name="Wood_4" ID="{2B793BFC-5538-4133-937F-2BF57E16485A}" ShortID="330856232">
 									<PropertyList>
 										<Property Name="OverrideConversion" Type="bool" Value="True"/>
 										<Property Name="Volume" Type="Real64">
 											<ValueList>
-												<Value>-10</Value>
+												<Value>5</Value>
 											</ValueList>
 										</Property>
 									</PropertyList>
@@ -276,29 +244,47 @@
 										</Reference>
 									</ReferenceList>
 									<ChildrenList>
-										<AudioFileSource Name="Wood_2" ID="{5602F11E-8D54-45B3-BD68-9D17887E1013}">
+										<AudioFileSource Name="Wood_1" ID="{6FF75898-9DAF-4887-8F93-5AF18A661503}">
+											<Language>SFX</Language>
+											<AudioFile>Wood_1.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="1045594166"/>
+											</MediaIDList>
+										</AudioFileSource>
+										<AudioFileSource Name="Wood_2" ID="{0347C0FA-3404-49AB-808B-19D258E13441}">
 											<PropertyList>
 												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-												<Property Name="TrimBegin" Type="Real64" Value="0.16665"/>
-												<Property Name="TrimEnd" Type="Real64" Value="0.29306"/>
+												<Property Name="TrimEnd" Type="Real64" Value="0.10017"/>
 											</PropertyList>
 											<Language>SFX</Language>
 											<AudioFile>Wood_2.wav</AudioFile>
 											<MediaIDList>
-												<MediaID ID="271058366"/>
+												<MediaID ID="479448923"/>
+											</MediaIDList>
+										</AudioFileSource>
+										<AudioFileSource Name="Footsteps_Wood" ID="{65352806-1B5C-4E47-9713-9821872F4838}">
+											<PropertyList>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimBegin" Type="Real64" Value="5.64602"/>
+												<Property Name="TrimEnd" Type="Real64" Value="5.92905"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>Footsteps_Wood.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="1058245806"/>
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
 									<ActiveSourceList>
-										<ActiveSource Name="Wood_2" ID="{5602F11E-8D54-45B3-BD68-9D17887E1013}" Platform="Linked"/>
+										<ActiveSource Name="Footsteps_Wood" ID="{65352806-1B5C-4E47-9713-9821872F4838}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
-								<Sound Name="Wood_3" ID="{73B09DD0-0220-495C-95F0-C2A2FC591E78}" ShortID="323171887">
+								<Sound Name="Wood_2" ID="{80F7159A-0958-41DF-8A78-C1A40CDF9B38}" ShortID="1063583209">
 									<PropertyList>
 										<Property Name="OverrideConversion" Type="bool" Value="True"/>
 										<Property Name="Volume" Type="Real64">
 											<ValueList>
-												<Value>-10</Value>
+												<Value>5</Value>
 											</ValueList>
 										</Property>
 									</PropertyList>
@@ -311,26 +297,157 @@
 										</Reference>
 									</ReferenceList>
 									<ChildrenList>
-										<AudioFileSource Name="Wood_3" ID="{20C4D911-7CFB-4ED7-A70B-9552E42CABA5}">
+										<AudioFileSource Name="Wood_1" ID="{F4998F86-F730-4161-AD22-3CA0937DB124}">
+											<Language>SFX</Language>
+											<AudioFile>Wood_1.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="1045594166"/>
+											</MediaIDList>
+										</AudioFileSource>
+										<AudioFileSource Name="Wood_2" ID="{D1BA98A6-7C28-4DE2-BEA1-B9570537914E}">
 											<PropertyList>
-												<Property Name="LoopBegin" Type="Real64" Value="0.0229"/>
 												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-												<Property Name="TrimBegin" Type="Real64" Value="0.0229"/>
+												<Property Name="TrimEnd" Type="Real64" Value="0.10017"/>
 											</PropertyList>
 											<Language>SFX</Language>
-											<AudioFile>Wood_3.wav</AudioFile>
+											<AudioFile>Wood_2.wav</AudioFile>
 											<MediaIDList>
-												<MediaID ID="356158072"/>
+												<MediaID ID="479448923"/>
+											</MediaIDList>
+										</AudioFileSource>
+										<AudioFileSource Name="Footsteps_Wood" ID="{06FCE8E4-78E2-4748-BC5B-FA157EB3AC8C}">
+											<PropertyList>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimBegin" Type="Real64" Value="11.75063"/>
+												<Property Name="TrimEnd" Type="Real64" Value="11.99321"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>Footsteps_Wood.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="562995588"/>
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
 									<ActiveSourceList>
-										<ActiveSource Name="Wood_3" ID="{20C4D911-7CFB-4ED7-A70B-9552E42CABA5}" Platform="Linked"/>
+										<ActiveSource Name="Footsteps_Wood" ID="{06FCE8E4-78E2-4748-BC5B-FA157EB3AC8C}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="Wood_3" ID="{767C8FF3-4925-4B67-A9F1-FB9CAD022700}" ShortID="219600063">
+									<PropertyList>
+										<Property Name="OverrideConversion" Type="bool" Value="True"/>
+										<Property Name="Volume" Type="Real64">
+											<ValueList>
+												<Value>5</Value>
+											</ValueList>
+										</Property>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="Wood_1" ID="{D4AC1127-38FB-476D-8723-1339E64D120E}">
+											<Language>SFX</Language>
+											<AudioFile>Wood_1.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="1045594166"/>
+											</MediaIDList>
+										</AudioFileSource>
+										<AudioFileSource Name="Wood_2" ID="{9BF67A6B-179A-475C-BB35-4A4DEFC4AE72}">
+											<PropertyList>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimEnd" Type="Real64" Value="0.10017"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>Wood_2.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="479448923"/>
+											</MediaIDList>
+										</AudioFileSource>
+										<AudioFileSource Name="Footsteps_Wood" ID="{769A037F-CE69-4C6E-8E6D-E684B3D9CCE9}">
+											<PropertyList>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimBegin" Type="Real64" Value="1.32039"/>
+												<Property Name="TrimEnd" Type="Real64" Value="1.48211"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>Footsteps_Wood.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="833065230"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="Footsteps_Wood" ID="{769A037F-CE69-4C6E-8E6D-E684B3D9CCE9}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="Wood_5" ID="{E29CC5EF-044D-43F2-AF73-FCD46C111FD0}" ShortID="294573014">
+									<PropertyList>
+										<Property Name="OverrideConversion" Type="bool" Value="True"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="Wood_1" ID="{9FCCE53C-C1C2-4D49-90A1-2F4182917E12}">
+											<Language>SFX</Language>
+											<AudioFile>Wood_1.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="1045594166"/>
+											</MediaIDList>
+										</AudioFileSource>
+										<AudioFileSource Name="Wood_2" ID="{400D0B38-ECCA-4F1A-A8CA-8CF3A3626B24}">
+											<PropertyList>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimEnd" Type="Real64" Value="0.10017"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>Wood_2.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="479448923"/>
+											</MediaIDList>
+										</AudioFileSource>
+										<AudioFileSource Name="Footsteps_Wood" ID="{4B0A3450-8DFC-42DB-93BC-AA5709E1CC52}">
+											<PropertyList>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimBegin" Type="Real64" Value="7.06105"/>
+												<Property Name="TrimEnd" Type="Real64" Value="7.22271"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>Footsteps_Wood.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="704400612"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="Footsteps_Wood" ID="{4B0A3450-8DFC-42DB-93BC-AA5709E1CC52}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
 							</ChildrenList>
 						</RandomSequenceContainer>
 						<RandomSequenceContainer Name="Stone" ID="{587E25DA-856B-4E32-9C43-46060DB45735}" ShortID="954070107">
+							<PropertyList>
+								<Property Name="Pitch" Type="int32">
+									<ValueList>
+										<Value>100</Value>
+									</ValueList>
+								</Property>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-2</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Conversion">
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
@@ -343,11 +460,6 @@
 								<Sound Name="Stone_1" ID="{929BEF16-8839-4406-B01E-5E1A52FB5C3B}" ShortID="100046708">
 									<PropertyList>
 										<Property Name="OverrideConversion" Type="bool" Value="True"/>
-										<Property Name="Volume" Type="Real64">
-											<ValueList>
-												<Value>-10</Value>
-											</ValueList>
-										</Property>
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
@@ -370,17 +482,155 @@
 												<MediaID ID="505782274"/>
 											</MediaIDList>
 										</AudioFileSource>
+										<AudioFileSource Name="Footsteps_Stone" ID="{40B4AE32-90CE-4694-B6D9-FBF55BBF2E53}">
+											<PropertyList>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimBegin" Type="Real64" Value="1.19778"/>
+												<Property Name="TrimEnd" Type="Real64" Value="1.35739"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>Footsteps_Stone.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="244528894"/>
+											</MediaIDList>
+										</AudioFileSource>
 									</ChildrenList>
 									<ActiveSourceList>
-										<ActiveSource Name="Stone_1" ID="{E5C25230-53F9-40B4-937D-1CDEDEF19D53}" Platform="Linked"/>
+										<ActiveSource Name="Footsteps_Stone" ID="{40B4AE32-90CE-4694-B6D9-FBF55BBF2E53}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
-								<Sound Name="Stone_2" ID="{4DAFDDCA-3259-4E41-A2AF-6DE34E179342}" ShortID="679367549">
+								<Sound Name="Stone_4" ID="{AD6C55AF-7A6E-494B-9182-FBF0C4E59DFC}" ShortID="1061151241">
+									<PropertyList>
+										<Property Name="OverrideConversion" Type="bool" Value="True"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="Stone_1" ID="{68F7E725-7081-4CAF-92F9-054B64289DD5}">
+											<PropertyList>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimBegin" Type="Real64" Value="0.06418"/>
+												<Property Name="TrimEnd" Type="Real64" Value="0.23844"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>Stone_1.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="505782274"/>
+											</MediaIDList>
+										</AudioFileSource>
+										<AudioFileSource Name="Footsteps_Stone" ID="{8CC7351D-7BC5-4BB9-9379-F90E657310C7}">
+											<PropertyList>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimBegin" Type="Real64" Value="2.78054"/>
+												<Property Name="TrimEnd" Type="Real64" Value="2.87365"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>Footsteps_Stone.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="282533458"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="Footsteps_Stone" ID="{8CC7351D-7BC5-4BB9-9379-F90E657310C7}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="Stone_2" ID="{20B5BD05-E858-4392-A0CB-803003B2C90A}" ShortID="623151066">
+									<PropertyList>
+										<Property Name="OverrideConversion" Type="bool" Value="True"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="Stone_1" ID="{CDB59D02-A26A-4A0C-9B71-184FBE4107A6}">
+											<PropertyList>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimBegin" Type="Real64" Value="0.06418"/>
+												<Property Name="TrimEnd" Type="Real64" Value="0.23844"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>Stone_1.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="505782274"/>
+											</MediaIDList>
+										</AudioFileSource>
+										<AudioFileSource Name="Footsteps_Stone" ID="{7D242060-4968-4939-9D46-FA7E44360E62}">
+											<PropertyList>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimBegin" Type="Real64" Value="1.46865"/>
+												<Property Name="TrimEnd" Type="Real64" Value="1.5533"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>Footsteps_Stone.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="911543931"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="Footsteps_Stone" ID="{7D242060-4968-4939-9D46-FA7E44360E62}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="Stone_3" ID="{040196C1-E1BA-4E45-A146-ADA86493CAB1}" ShortID="758011510">
+									<PropertyList>
+										<Property Name="OverrideConversion" Type="bool" Value="True"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="Stone_1" ID="{E366B879-0CE0-4905-ABDD-014D0D1E4E21}">
+											<PropertyList>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimBegin" Type="Real64" Value="0.06418"/>
+												<Property Name="TrimEnd" Type="Real64" Value="0.23844"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>Stone_1.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="505782274"/>
+											</MediaIDList>
+										</AudioFileSource>
+										<AudioFileSource Name="Footsteps_Stone" ID="{C5551550-AAA7-4674-9C86-B61132847FEA}">
+											<PropertyList>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimBegin" Type="Real64" Value="2.12888"/>
+												<Property Name="TrimEnd" Type="Real64" Value="2.23046"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>Footsteps_Stone.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="355206822"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="Footsteps_Stone" ID="{C5551550-AAA7-4674-9C86-B61132847FEA}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="Stone_5" ID="{3F0449B8-AF15-4338-8CA5-A3CFCECFABAF}" ShortID="143781736">
 									<PropertyList>
 										<Property Name="OverrideConversion" Type="bool" Value="True"/>
 										<Property Name="Volume" Type="Real64">
 											<ValueList>
-												<Value>-10</Value>
+												<Value>5</Value>
 											</ValueList>
 										</Property>
 									</PropertyList>
@@ -393,91 +643,33 @@
 										</Reference>
 									</ReferenceList>
 									<ChildrenList>
-										<AudioFileSource Name="Stone_2" ID="{B2CE50D5-4364-4A06-A391-596D3A927829}">
+										<AudioFileSource Name="Stone_1" ID="{E289C9E5-5CD2-4AA9-B068-B77DCE7064BA}">
 											<PropertyList>
 												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-												<Property Name="TrimBegin" Type="Real64" Value="0.08563"/>
-												<Property Name="TrimEnd" Type="Real64" Value="0.27499"/>
+												<Property Name="TrimBegin" Type="Real64" Value="0.06418"/>
+												<Property Name="TrimEnd" Type="Real64" Value="0.23844"/>
 											</PropertyList>
 											<Language>SFX</Language>
-											<AudioFile>Stone_2.wav</AudioFile>
+											<AudioFile>Stone_1.wav</AudioFile>
 											<MediaIDList>
-												<MediaID ID="276656327"/>
+												<MediaID ID="505782274"/>
+											</MediaIDList>
+										</AudioFileSource>
+										<AudioFileSource Name="Footsteps_Stone" ID="{65DAFE72-8A60-423A-A131-80B30E195939}">
+											<PropertyList>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimBegin" Type="Real64" Value="3.35778"/>
+												<Property Name="TrimEnd" Type="Real64" Value="3.48812"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>Footsteps_Stone.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="736382411"/>
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
 									<ActiveSourceList>
-										<ActiveSource Name="Stone_2" ID="{B2CE50D5-4364-4A06-A391-596D3A927829}" Platform="Linked"/>
-									</ActiveSourceList>
-								</Sound>
-								<Sound Name="Stone_3" ID="{33C84812-50CD-4884-A28C-3382D84845E9}" ShortID="42362891">
-									<PropertyList>
-										<Property Name="OverrideConversion" Type="bool" Value="True"/>
-										<Property Name="Volume" Type="Real64">
-											<ValueList>
-												<Value>-10</Value>
-											</ValueList>
-										</Property>
-									</PropertyList>
-									<ReferenceList>
-										<Reference Name="Conversion">
-											<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
-										</Reference>
-										<Reference Name="OutputBus">
-											<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
-										</Reference>
-									</ReferenceList>
-									<ChildrenList>
-										<AudioFileSource Name="Stone_3" ID="{1A91D633-BB82-48D5-AF81-2CD1397C9C9D}">
-											<PropertyList>
-												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-												<Property Name="TrimBegin" Type="Real64" Value="0.06954"/>
-												<Property Name="TrimEnd" Type="Real64" Value="0.25681"/>
-											</PropertyList>
-											<Language>SFX</Language>
-											<AudioFile>Stone_3.wav</AudioFile>
-											<MediaIDList>
-												<MediaID ID="130689025"/>
-											</MediaIDList>
-										</AudioFileSource>
-									</ChildrenList>
-									<ActiveSourceList>
-										<ActiveSource Name="Stone_3" ID="{1A91D633-BB82-48D5-AF81-2CD1397C9C9D}" Platform="Linked"/>
-									</ActiveSourceList>
-								</Sound>
-								<Sound Name="Stone_4" ID="{0D17D719-E86D-4261-8462-5589368A0F92}" ShortID="582849907">
-									<PropertyList>
-										<Property Name="OverrideConversion" Type="bool" Value="True"/>
-										<Property Name="Volume" Type="Real64">
-											<ValueList>
-												<Value>-10</Value>
-											</ValueList>
-										</Property>
-									</PropertyList>
-									<ReferenceList>
-										<Reference Name="Conversion">
-											<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
-										</Reference>
-										<Reference Name="OutputBus">
-											<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
-										</Reference>
-									</ReferenceList>
-									<ChildrenList>
-										<AudioFileSource Name="Stone_4" ID="{F4EDAEB3-EFFD-4A71-B2FE-5F28DBCA2E0C}">
-											<PropertyList>
-												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-												<Property Name="TrimBegin" Type="Real64" Value="0.10694"/>
-												<Property Name="TrimEnd" Type="Real64" Value="0.40771"/>
-											</PropertyList>
-											<Language>SFX</Language>
-											<AudioFile>Stone_4.wav</AudioFile>
-											<MediaIDList>
-												<MediaID ID="840578431"/>
-											</MediaIDList>
-										</AudioFileSource>
-									</ChildrenList>
-									<ActiveSourceList>
-										<ActiveSource Name="Stone_4" ID="{F4EDAEB3-EFFD-4A71-B2FE-5F28DBCA2E0C}" Platform="Linked"/>
+										<ActiveSource Name="Footsteps_Stone" ID="{65DAFE72-8A60-423A-A131-80B30E195939}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
 							</ChildrenList>
@@ -495,10 +687,139 @@
 								<ItemRef Name="Stone" ID="{587E25DA-856B-4E32-9C43-46060DB45735}"/>
 							</GroupingBehavior>
 						</GroupingBehaviorList>
+						<GroupingList>
+							<Grouping>
+								<SwitchRef Name="Wood" ID="{6FDC1153-6547-4DD9-995F-F9FC1A4E6A6E}"/>
+								<ItemList>
+									<ItemRef Name="Wood" ID="{12C31720-1286-4ACE-B50B-5B7A262962E1}"/>
+								</ItemList>
+							</Grouping>
+							<Grouping>
+								<SwitchRef Name="Carpet" ID="{30CF4CDD-98B8-41A4-9CEB-09CC4CED6E6B}"/>
+								<ItemList>
+									<ItemRef Name="Carpet" ID="{03DF4AD3-4F55-4DC1-B40B-80FF15550328}"/>
+								</ItemList>
+							</Grouping>
+							<Grouping>
+								<SwitchRef Name="Stone" ID="{94C006FF-FD29-46EA-BCF5-47FB8A9A9005}"/>
+								<ItemList>
+									<ItemRef Name="Stone" ID="{587E25DA-856B-4E32-9C43-46060DB45735}"/>
+								</ItemList>
+							</Grouping>
+						</GroupingList>
 					</GroupingInfo>
 				</SwitchContainer>
 				<BlendContainer Name="Pixie" ID="{93C2DDD3-D7FF-48D5-A60C-3C829BFB2EFD}" ShortID="217632775">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="2"/>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value>-10</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
 					<ReferenceList>
+						<Reference Name="Attenuation">
+							<Custom>
+								<Attenuation Name="Attenuation (Custom)" ID="{CF7388E1-85BE-43EF-A2C3-F4A0607316AD}" ShortID="993124362">
+									<PropertyList>
+										<Property Name="RadiusMax" Type="Real64" Value="20"/>
+									</PropertyList>
+									<CurveUsageInfoList>
+										<VolumeDryUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
+												<Curve Name="VolumeDry" ID="{95A37FD7-8BD4-4061-9100-779438204CFE}">
+													<PropertyList>
+														<Property Name="Flags" Type="int32" Value="3"/>
+													</PropertyList>
+													<PointList>
+														<Point>
+															<XPos>0</XPos>
+															<YPos>0</YPos>
+															<Flags>5</Flags>
+														</Point>
+														<Point>
+															<XPos>20</XPos>
+															<YPos>-200</YPos>
+															<Flags>37</Flags>
+														</Point>
+													</PointList>
+												</Curve>
+											</CurveUsageInfo>
+										</VolumeDryUsage>
+										<VolumeWetGameUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+										</VolumeWetGameUsage>
+										<VolumeWetUserUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+										</VolumeWetUserUsage>
+										<LowPassFilterUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+										</LowPassFilterUsage>
+										<HighPassFilterUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+										</HighPassFilterUsage>
+										<DualShelfUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+										</DualShelfUsage>
+										<SpreadUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+										</SpreadUsage>
+										<FocusUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+										</FocusUsage>
+										<ObstructionVolumeUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</ObstructionVolumeUsage>
+										<ObstructionLPFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</ObstructionLPFUsage>
+										<ObstructionHPFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</ObstructionHPFUsage>
+										<ObstructionDSFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</ObstructionDSFUsage>
+										<OcclusionVolumeUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</OcclusionVolumeUsage>
+										<OcclusionLPFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</OcclusionLPFUsage>
+										<OcclusionHPFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</OcclusionHPFUsage>
+										<OcclusionDSFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</OcclusionDSFUsage>
+										<DiffractionVolumeUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</DiffractionVolumeUsage>
+										<DiffractionLPFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</DiffractionLPFUsage>
+										<DiffractionHPFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</DiffractionHPFUsage>
+										<DiffractionDSFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</DiffractionDSFUsage>
+										<TransmissionVolumeUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</TransmissionVolumeUsage>
+										<TransmissionLPFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</TransmissionLPFUsage>
+										<TransmissionHPFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</TransmissionHPFUsage>
+										<TransmissionDSFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</TransmissionDSFUsage>
+									</CurveUsageInfoList>
+								</Attenuation>
+							</Custom>
+						</Reference>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
@@ -512,7 +833,7 @@
 								<Property Name="OverrideConversion" Type="bool" Value="True"/>
 								<Property Name="Volume" Type="Real64">
 									<ValueList>
-										<Value>-15</Value>
+										<Value>-10</Value>
 									</ValueList>
 								</Property>
 							</PropertyList>
@@ -552,11 +873,6 @@
 						<Sound Name="Magic" ID="{9FB9197D-F68B-4B3D-A509-3D88999E4666}" ShortID="592755605">
 							<PropertyList>
 								<Property Name="OverrideConversion" Type="bool" Value="True"/>
-								<Property Name="Volume" Type="Real64">
-									<ValueList>
-										<Value>-10</Value>
-									</ValueList>
-								</Property>
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Conversion">
@@ -600,7 +916,7 @@
 							<Custom>
 								<Attenuation Name="Attenuation (Custom)" ID="{03B5D8F6-9162-4820-9416-302B8DA7B8BE}" ShortID="341383509">
 									<PropertyList>
-										<Property Name="RadiusMax" Type="Real64" Value="10"/>
+										<Property Name="RadiusMax" Type="Real64" Value="20"/>
 									</PropertyList>
 									<CurveUsageInfoList>
 										<VolumeDryUsage>
@@ -616,7 +932,7 @@
 															<Flags>5</Flags>
 														</Point>
 														<Point>
-															<XPos>10</XPos>
+															<XPos>20</XPos>
 															<YPos>-200</YPos>
 															<Flags>37</Flags>
 														</Point>
@@ -786,7 +1102,7 @@
 					<PropertyList>
 						<Property Name="Volume" Type="Real64">
 							<ValueList>
-								<Value>-20</Value>
+								<Value>-10</Value>
 							</ValueList>
 						</Property>
 					</PropertyList>
@@ -823,7 +1139,7 @@
 						<Property Name="PlayMechanismStepOrContinuous" Type="int16" Value="0"/>
 						<Property Name="Volume" Type="Real64">
 							<ValueList>
-								<Value>-15</Value>
+								<Value>-10</Value>
 							</ValueList>
 						</Property>
 					</PropertyList>
@@ -832,7 +1148,7 @@
 							<Custom>
 								<Attenuation Name="Attenuation (Custom)" ID="{3806347D-6895-46F1-BD7A-F9346F933902}" ShortID="221377742">
 									<PropertyList>
-										<Property Name="RadiusMax" Type="Real64" Value="10"/>
+										<Property Name="RadiusMax" Type="Real64" Value="20"/>
 									</PropertyList>
 									<CurveUsageInfoList>
 										<VolumeDryUsage>
@@ -848,7 +1164,7 @@
 															<Flags>5</Flags>
 														</Point>
 														<Point>
-															<XPos>10</XPos>
+															<XPos>20</XPos>
 															<YPos>-200</YPos>
 															<Flags>37</Flags>
 														</Point>
@@ -1063,7 +1379,7 @@
 					<PropertyList>
 						<Property Name="Volume" Type="Real64">
 							<ValueList>
-								<Value>10</Value>
+								<Value>-10</Value>
 							</ValueList>
 						</Property>
 					</PropertyList>
@@ -1290,6 +1606,13 @@
 					</ActiveSourceList>
 				</Sound>
 				<BlendContainer Name="Fail_Action" ID="{1903E69D-28DD-4B24-A83B-C854312067FF}" ShortID="870370903">
+					<PropertyList>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value>-10</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
 					<ReferenceList>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
@@ -1324,9 +1647,16 @@
 										<MediaID ID="496237860"/>
 									</MediaIDList>
 								</AudioFileSource>
+								<AudioFileSource Name="Fail1" ID="{599E2BEA-C09B-4513-A369-AE5CE0833034}">
+									<Language>SFX</Language>
+									<AudioFile>Fail1.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="344108798"/>
+									</MediaIDList>
+								</AudioFileSource>
 							</ChildrenList>
 							<ActiveSourceList>
-								<ActiveSource Name="Wrong_Action" ID="{7885749A-DEB7-4236-B6B1-2277B92FF644}" Platform="Linked"/>
+								<ActiveSource Name="Fail1" ID="{599E2BEA-C09B-4513-A369-AE5CE0833034}" Platform="Linked"/>
 							</ActiveSourceList>
 						</Sound>
 						<Sound Name="Intensity" ID="{DF3CAE54-92F4-4343-AE76-A9E006A695E3}" ShortID="635292044">
@@ -1364,9 +1694,16 @@
 										<MediaID ID="189757224"/>
 									</MediaIDList>
 								</AudioFileSource>
+								<AudioFileSource Name="Fail2" ID="{85D2789B-2065-421F-87B9-CE544C1C19C3}">
+									<Language>SFX</Language>
+									<AudioFile>Fail2.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="644755227"/>
+									</MediaIDList>
+								</AudioFileSource>
 							</ChildrenList>
 							<ActiveSourceList>
-								<ActiveSource Name="Failed_action" ID="{B2F9B9EF-2A86-4077-9EFF-7B47A8CD04E4}" Platform="Linked"/>
+								<ActiveSource Name="Fail2" ID="{85D2789B-2065-421F-87B9-CE544C1C19C3}" Platform="Linked"/>
 							</ActiveSourceList>
 						</Sound>
 					</ChildrenList>
@@ -1374,6 +1711,11 @@
 				<BlendContainer Name="Deliver" ID="{66EA96F1-0E7E-4D34-8792-E71835994C19}" ShortID="620745943">
 					<PropertyList>
 						<Property Name="Pitch" Type="int32">
+							<ValueList>
+								<Value>-10</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Volume" Type="Real64">
 							<ValueList>
 								<Value>-10</Value>
 							</ValueList>
@@ -1482,6 +1824,13 @@
 					</ChildrenList>
 				</BlendContainer>
 				<BlendContainer Name="Boggart" ID="{319DF905-3E1F-47E4-BAC2-D446E0BB3FBD}" ShortID="289543242">
+					<PropertyList>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value>-5</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
 					<ReferenceList>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
@@ -1697,18 +2046,6 @@
 					</ChildrenList>
 				</BlendContainer>
 				<Sound Name="Cards" ID="{0EE4503D-9EE6-421D-8BBD-483752E34369}" ShortID="111863087">
-					<PropertyList>
-						<Property Name="Pitch" Type="int32">
-							<ValueList>
-								<Value>-50</Value>
-							</ValueList>
-						</Property>
-						<Property Name="Volume" Type="Real64">
-							<ValueList>
-								<Value>5</Value>
-							</ValueList>
-						</Property>
-					</PropertyList>
 					<ReferenceList>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
@@ -1721,8 +2058,8 @@
 						<AudioFileSource Name="cards" ID="{B812C4B2-3699-4EDD-9FC3-06C740A018D5}">
 							<PropertyList>
 								<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-								<Property Name="TrimBegin" Type="Real64" Value="0.05655"/>
-								<Property Name="TrimEnd" Type="Real64" Value="0.58835"/>
+								<Property Name="TrimBegin" Type="Real64" Value="3.74838"/>
+								<Property Name="TrimEnd" Type="Real64" Value="5.14285"/>
 							</PropertyList>
 							<Language>SFX</Language>
 							<AudioFile>cards.wav</AudioFile>
@@ -1806,6 +2143,13 @@
 					</ChildrenList>
 				</BlendContainer>
 				<SwitchContainer Name="Dropping" ID="{24CB8AD4-08DF-4C5B-8A15-648BCCA01F88}" ShortID="519119315">
+					<PropertyList>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value>-10</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
 					<ReferenceList>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
@@ -1849,7 +2193,7 @@
 								<ActiveSource Name="Glass_Breaking" ID="{6E24BEA3-1960-433C-BD09-C4AC7F80C426}" Platform="Linked"/>
 							</ActiveSourceList>
 						</Sound>
-						<Sound Name="Liquuid_dropping" ID="{2C693D81-5EEF-427D-AB32-F7B3C1EE9C6D}" ShortID="552278626">
+						<Sound Name="Liquid_dropping" ID="{2C693D81-5EEF-427D-AB32-F7B3C1EE9C6D}" ShortID="552278626">
 							<ReferenceList>
 								<Reference Name="Conversion">
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
@@ -1910,7 +2254,7 @@
 								<ItemRef Name="Heavy_dropping" ID="{9F85D17E-8C37-4BF5-89B1-3004B2D1D676}"/>
 							</GroupingBehavior>
 							<GroupingBehavior>
-								<ItemRef Name="Liquuid_dropping" ID="{2C693D81-5EEF-427D-AB32-F7B3C1EE9C6D}"/>
+								<ItemRef Name="Liquid_dropping" ID="{2C693D81-5EEF-427D-AB32-F7B3C1EE9C6D}"/>
 							</GroupingBehavior>
 							<GroupingBehavior>
 								<ItemRef Name="Glass_Breaking" ID="{1C687988-BA26-4FA2-92D2-5BA9E525C237}"/>
@@ -1994,6 +2338,13 @@
 					</ChildrenList>
 				</BlendContainer>
 				<SwitchContainer Name="Chopping" ID="{A87A1835-1CE6-44A9-A5DA-36BBD2F6C1A3}" ShortID="778778556">
+					<PropertyList>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value>10</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
 					<ReferenceList>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
@@ -2003,16 +2354,11 @@
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
-						<Sound Name="Chopping_Ingredient" ID="{B3EAAD05-7A93-4405-9A73-B297E6F1B128}" ShortID="69087133">
+						<Sound Name="Chopping_Object" ID="{B3EAAD05-7A93-4405-9A73-B297E6F1B128}" ShortID="69087133">
 							<PropertyList>
 								<Property Name="Pitch" Type="int32">
 									<ValueList>
 										<Value>900</Value>
-									</ValueList>
-								</Property>
-								<Property Name="Volume" Type="Real64">
-									<ValueList>
-										<Value>10</Value>
 									</ValueList>
 								</Property>
 							</PropertyList>
@@ -2044,14 +2390,11 @@
 						</Sound>
 						<Sound Name="Chopping_Herb" ID="{237D9DF7-574F-4C76-8FBD-A630323CF7D9}" ShortID="212268424">
 							<PropertyList>
+								<Property Name="IsLoopingInfinite" Type="bool" Value="False"/>
+								<Property Name="LoopCount" Type="int32" Value="4"/>
 								<Property Name="Pitch" Type="int32">
 									<ValueList>
-										<Value>900</Value>
-									</ValueList>
-								</Property>
-								<Property Name="Volume" Type="Real64">
-									<ValueList>
-										<Value>10</Value>
+										<Value>1330</Value>
 									</ValueList>
 								</Property>
 							</PropertyList>
@@ -2066,9 +2409,9 @@
 							<ChildrenList>
 								<AudioFileSource Name="chopping" ID="{93207054-39B1-4561-8843-2E26B1541A6C}">
 									<PropertyList>
-										<Property Name="LoopBegin" Type="Real64" Value="0"/>
 										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-										<Property Name="TrimEnd" Type="Real64" Value="8.7755"/>
+										<Property Name="TrimBegin" Type="Real64" Value="0.97386"/>
+										<Property Name="TrimEnd" Type="Real64" Value="8.63636"/>
 									</PropertyList>
 									<Language>SFX</Language>
 									<AudioFile>chopping.wav</AudioFile>
@@ -2085,7 +2428,7 @@
 					<GroupingInfo>
 						<GroupingBehaviorList>
 							<GroupingBehavior>
-								<ItemRef Name="Chopping_Ingredient" ID="{B3EAAD05-7A93-4405-9A73-B297E6F1B128}"/>
+								<ItemRef Name="Chopping_Object" ID="{B3EAAD05-7A93-4405-9A73-B297E6F1B128}"/>
 							</GroupingBehavior>
 							<GroupingBehavior>
 								<ItemRef Name="Chopping_Herb" ID="{237D9DF7-574F-4C76-8FBD-A630323CF7D9}"/>
@@ -2162,6 +2505,13 @@
 					</ActiveSourceList>
 				</Sound>
 				<SwitchContainer Name="Pickup" ID="{A5583F61-7590-4D32-A928-C3C6BF6B8848}" ShortID="466974328">
+					<PropertyList>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value>10</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
 					<ReferenceList>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
@@ -2172,13 +2522,6 @@
 					</ReferenceList>
 					<ChildrenList>
 						<BlendContainer Name="Pickup_Object" ID="{A6DE6D28-D99C-42A1-AD3A-492066355B52}" ShortID="28336795">
-							<PropertyList>
-								<Property Name="Volume" Type="Real64">
-									<ValueList>
-										<Value>10</Value>
-									</ValueList>
-								</Property>
-							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Conversion">
 									<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
@@ -2357,6 +2700,275 @@
 						<ActiveSource Name="Fail" ID="{EA91953C-443E-4C65-81C1-8163CD48E01D}" Platform="Linked"/>
 					</ActiveSourceList>
 				</Sound>
+				<Sound Name="Throw_Out" ID="{E2454D9D-AB28-4B63-A3BE-831F521DCF70}" ShortID="667690110">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="Throw_Out" ID="{57CAA1F6-8FA1-46BD-A39E-C72C2DAAC55D}">
+							<PropertyList>
+								<Property Name="LoopBegin" Type="Real64" Value="0"/>
+								<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+								<Property Name="TrimEnd" Type="Real64" Value="0.22957"/>
+							</PropertyList>
+							<Language>SFX</Language>
+							<AudioFile>Throw_Out.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="425991980"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="Throw_Out" ID="{57CAA1F6-8FA1-46BD-A39E-C72C2DAAC55D}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="Water_Filling" ID="{E2AEF85D-2C49-476D-A3CC-C30E8A40E2FE}" ShortID="68849564">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="Water_Filling" ID="{C6CE376D-90E8-40A2-B9AA-80D2D6CC2576}">
+							<PropertyList>
+								<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+								<Property Name="TrimBegin" Type="Real64" Value="0.03109"/>
+								<Property Name="TrimEnd" Type="Real64" Value="0.58202"/>
+							</PropertyList>
+							<Language>SFX</Language>
+							<AudioFile>Water_Filling.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="315618961"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="Water_Filling" ID="{C6CE376D-90E8-40A2-B9AA-80D2D6CC2576}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="Pop" ID="{F0AB55C0-90FC-4CBB-BA07-26A306DD111D}" ShortID="742519956">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="Pop" ID="{2417BD73-C732-49E6-A16C-98E65B9E6E81}">
+							<PropertyList>
+								<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+								<Property Name="TrimBegin" Type="Real64" Value="0.60167"/>
+								<Property Name="TrimEnd" Type="Real64" Value="0.68964"/>
+							</PropertyList>
+							<Language>SFX</Language>
+							<AudioFile>Pop.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="46551555"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="Pop" ID="{2417BD73-C732-49E6-A16C-98E65B9E6E81}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<BlendContainer Name="Timer" ID="{2962EF01-6A7A-42C3-BA9E-B5FA3A87D6E6}" ShortID="696800377">
+					<PropertyList>
+						<Property Name="3DSpatialization" Type="int16" Value="2"/>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value>-15</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Attenuation">
+							<Custom>
+								<Attenuation Name="Attenuation (Custom)" ID="{2D80532D-4F35-4363-A292-7467EA62BC6B}" ShortID="294994425">
+									<PropertyList>
+										<Property Name="RadiusMax" Type="Real64" Value="20"/>
+									</PropertyList>
+									<CurveUsageInfoList>
+										<VolumeDryUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
+												<Curve Name="VolumeDry" ID="{BC7A3E8C-95DE-486E-955F-21E340993B5A}">
+													<PropertyList>
+														<Property Name="Flags" Type="int32" Value="3"/>
+													</PropertyList>
+													<PointList>
+														<Point>
+															<XPos>0</XPos>
+															<YPos>0</YPos>
+															<Flags>5</Flags>
+														</Point>
+														<Point>
+															<XPos>20</XPos>
+															<YPos>-200</YPos>
+															<Flags>37</Flags>
+														</Point>
+													</PointList>
+												</Curve>
+											</CurveUsageInfo>
+										</VolumeDryUsage>
+										<VolumeWetGameUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+										</VolumeWetGameUsage>
+										<VolumeWetUserUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+										</VolumeWetUserUsage>
+										<LowPassFilterUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+										</LowPassFilterUsage>
+										<HighPassFilterUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+										</HighPassFilterUsage>
+										<DualShelfUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+										</DualShelfUsage>
+										<SpreadUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+										</SpreadUsage>
+										<FocusUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+										</FocusUsage>
+										<ObstructionVolumeUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</ObstructionVolumeUsage>
+										<ObstructionLPFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</ObstructionLPFUsage>
+										<ObstructionHPFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</ObstructionHPFUsage>
+										<ObstructionDSFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</ObstructionDSFUsage>
+										<OcclusionVolumeUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</OcclusionVolumeUsage>
+										<OcclusionLPFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</OcclusionLPFUsage>
+										<OcclusionHPFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</OcclusionHPFUsage>
+										<OcclusionDSFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</OcclusionDSFUsage>
+										<DiffractionVolumeUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</DiffractionVolumeUsage>
+										<DiffractionLPFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</DiffractionLPFUsage>
+										<DiffractionHPFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</DiffractionHPFUsage>
+										<DiffractionDSFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</DiffractionDSFUsage>
+										<TransmissionVolumeUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</TransmissionVolumeUsage>
+										<TransmissionLPFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</TransmissionLPFUsage>
+										<TransmissionHPFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</TransmissionHPFUsage>
+										<TransmissionDSFUsage>
+											<CurveUsageInfo Platform="Linked" CurveToUse="UseProject"/>
+										</TransmissionDSFUsage>
+									</CurveUsageInfoList>
+								</Attenuation>
+							</Custom>
+						</Reference>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="Bell" ID="{FCDE1A83-C42C-473C-895A-331B71071E95}" ShortID="871352501">
+							<PropertyList>
+								<Property Name="InitialDelay" Type="Real64">
+									<ValueList>
+										<Value>1.7</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="Bell" ID="{173BAE46-BDD1-46AC-BDF4-69AB4FD22F83}">
+									<PropertyList>
+										<Property Name="FadeOutDuration" Type="Real64" Value="0.42259"/>
+										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+										<Property Name="TrimBegin" Type="Real64" Value="0.31695"/>
+										<Property Name="TrimEnd" Type="Real64" Value="2.9581"/>
+									</PropertyList>
+									<Language>SFX</Language>
+									<AudioFile>Bell.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="913300369"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="Bell" ID="{173BAE46-BDD1-46AC-BDF4-69AB4FD22F83}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="Whistle" ID="{462CF04F-67ED-4A8C-B2D6-E18CAA917BFE}" ShortID="19448922">
+							<PropertyList>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-5</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="Whistle" ID="{F6E92878-587F-4E46-B5AC-9BF9467785F8}">
+									<PropertyList>
+										<Property Name="TrimEnd" Type="Real64" Value="1.97843"/>
+									</PropertyList>
+									<Language>SFX</Language>
+									<AudioFile>Whistle.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="131342600"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="Whistle" ID="{F6E92878-587F-4E46-B5AC-9BF9467785F8}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+				</BlendContainer>
 			</ChildrenList>
 		</WorkUnit>
 	</Containers>
