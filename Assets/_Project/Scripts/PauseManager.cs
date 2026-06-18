@@ -114,6 +114,18 @@ public class PauseManager : MonoBehaviour
         // Gamepad (Check all to support split screen or any active controller)
         foreach (var device in InputSystem.devices)
         {
+            if (device is Gamepad || device is Joystick)
+            {
+                // --- DIAGNOSTIC: Log ANY button press on this device ---
+                foreach (var control in device.allControls)
+                {
+                    if (control is UnityEngine.InputSystem.Controls.ButtonControl button && button.wasPressedThisFrame)
+                    {
+                        Debug.Log($"<color=orange>[PAUSE MGR] Hardware Button Pressed: {control.name} (Index/Path: {control.path})</color>");
+                    }
+                }
+            }
+
             if (device is Gamepad g && g.startButton.wasPressedThisFrame)
             {
                 pausePressed = true;
