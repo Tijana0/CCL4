@@ -117,6 +117,12 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             if (freezeLabel != null)
             {
                 freezeLabel.text = Mathf.CeilToInt(freezeTimer).ToString();
+                
+                // BILLBOARDING: Always face the camera
+                if (Camera.main != null)
+                {
+                    freezeLabel.transform.rotation = Camera.main.transform.rotation;
+                }
             }
 
             if (freezeTimer <= 0)
