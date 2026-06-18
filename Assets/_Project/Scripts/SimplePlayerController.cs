@@ -382,7 +382,9 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                     string cName = control.name.ToLower();
                     foreach (var alias in aliases)
                     {
-                        if (cName.Contains(alias.ToLower())) isDown = true;
+                        // MUST be exact match to prevent "b" from matching "rightBumper"
+                        // or "button" from matching "startButton"
+                        if (cName == alias.ToLower()) isDown = true;
                     }
                 }
             }
