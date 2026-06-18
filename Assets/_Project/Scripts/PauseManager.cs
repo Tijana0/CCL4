@@ -93,9 +93,21 @@ public class PauseManager : MonoBehaviour
         btnRect.sizeDelta = new Vector2(300, 60);
 
         Image btnImage = btnObj.AddComponent<Image>();
-        btnImage.color = new Color(0.2f, 0.2f, 0.2f, 1f);
+        btnImage.color = Color.white; // Base image color must be white for ColorBlock tinting to work properly
         
         Button button = btnObj.AddComponent<Button>();
+        button.transition = Selectable.Transition.ColorTint;
+
+        // Configure vivid highlight colors for gamepad navigation
+        ColorBlock colors = button.colors;
+        colors.normalColor = new Color(0.2f, 0.2f, 0.2f, 1f); // Dark Gray
+        colors.highlightedColor = new Color(0.8f, 0.4f, 0.1f, 1f); // Orange highlight
+        colors.pressedColor = new Color(0.5f, 0.2f, 0.05f, 1f); // Darker orange
+        colors.selectedColor = new Color(0.8f, 0.4f, 0.1f, 1f); // Orange highlight stays when selected
+        colors.disabledColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+        colors.colorMultiplier = 1f;
+        colors.fadeDuration = 0.1f;
+        button.colors = colors;
 
         GameObject textObj = new GameObject("Text");
         textObj.transform.SetParent(btnObj.transform, false);
