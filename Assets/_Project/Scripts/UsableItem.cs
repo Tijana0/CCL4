@@ -168,8 +168,23 @@ public class UsableItem : MonoBehaviour
             return Keyboard.current.fKey.isPressed;
         if (player.playerIndex == 1 && Keyboard.current != null)
             return Keyboard.current.enterKey.isPressed;
-        if (player.playerIndex == SimplePlayerController.activeGamepadPlayerIndex && Gamepad.current != null)
-            return Gamepad.current.rightTrigger.isPressed;
+
+        // Gamepad logic
+        InputDevice myDevice = GetMyDevice(player);
+        if (myDevice != null)
+        {
+            if (myDevice is Gamepad g && g.rightTrigger.isPressed) return true;
+            if (myDevice is Joystick j)
+            {
+                if (CheckJoystickButton(j, 5, true)) return true;
+                if (CheckJoystickButton(j, 7, true)) return true;
+            }
+            foreach(var control in myDevice.allControls)
+            {
+                if (control.name.ToLower().Contains("righttrigger") || control.name.ToLower().Contains("rt"))
+                    if (control is UnityEngine.InputSystem.Controls.ButtonControl b && b.isPressed) return true;
+            }
+        }
         return false;
     }
 
@@ -180,8 +195,47 @@ public class UsableItem : MonoBehaviour
             return Keyboard.current.fKey.wasPressedThisFrame;
         if (player.playerIndex == 1 && Keyboard.current != null)
             return Keyboard.current.enterKey.wasPressedThisFrame;
-        if (player.playerIndex == SimplePlayerController.activeGamepadPlayerIndex && Gamepad.current != null)
-            return Gamepad.current.rightTrigger.wasPressedThisFrame;
+
+        // Gamepad logic
+        InputDevice myDevice = GetMyDevice(player);
+        if (myDevice != null)
+        {
+            if (myDevice is Gamepad g && g.rightTrigger.wasPressedThisFrame) return true;
+            if (myDevice is Joystick j)
+            {
+                if (CheckJoystickButton(j, 5, false)) return true;
+                if (CheckJoystickButton(j, 7, false)) return true;
+            }
+            foreach(var control in myDevice.allControls)
+            {
+                if (control.name.ToLower().Contains("righttrigger") || control.name.ToLower().Contains("rt"))
+                    if (control is UnityEngine.InputSystem.Controls.ButtonControl b && b.wasPressedThisFrame) return true;
+            }
+        }
+        return false;
+    }
+
+    private InputDevice GetMyDevice(SimplePlayerController player)
+    {
+        var controllers = new System.Collections.Generic.List<InputDevice>();
+        foreach (var device in InputSystem.devices)
+            if (device is Gamepad || device is Joystick) controllers.Add(device);
+
+        if (controllers.Count >= 2)
+        {
+            if (player.playerIndex < controllers.Count) return controllers[player.playerIndex];
+        }
+        else if (controllers.Count == 1 && player.playerIndex == SimplePlayerController.activeGamepadPlayerIndex)
+        {
+            return controllers[0];
+        }
+        return null;
+    }
+
+    private bool CheckJoystickButton(Joystick j, int index, bool hold)
+    {
+        if (j.allControls.Count > index && j.allControls[index] is UnityEngine.InputSystem.Controls.ButtonControl b)
+            return hold ? b.isPressed : b.wasPressedThisFrame;
         return false;
     }
 }

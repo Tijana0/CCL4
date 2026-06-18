@@ -236,24 +236,30 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             {
                 gamepadInput = GetCorrectedInput(myDevice);
 
-                // DIRECT DEVICE READING (More robust than shared actions)
+                // --- DIAGNOSTIC: Log ANY button press on this device ---
+                foreach (var control in myDevice.allControls)
+                {
+                    if (control is UnityEngine.InputSystem.Controls.ButtonControl button && button.wasPressedThisFrame)
+                    {
+                        Debug.Log($"<color=white>[HARDWARE] Player {playerIndex} pressed button: {control.name} (Index/Path: {control.path})</color>");
+                    }
+                }
+
                 if (myDevice is Gamepad g)
                 {
                     if (g.buttonSouth.wasPressedThisFrame) gamepadInteract = true;
                     if (g.buttonWest.isPressed) gamepadProcess = true;
-                    if (g.buttonEast.wasPressedThisFrame) 
-                    {
-                        gamepadDash = true;
-                        Debug.Log($"[Player {playerIndex}] Gamepad Dash Pressed (Button East/B)");
-                    }
+                    if (g.buttonEast.wasPressedThisFrame) gamepadDash = true;
+                    
+                    // Specific mapping for RT (Wand)
+                    // We'll read RT here and pass it to WandController or just use it
                 }
-                else if (myDevice is Joystick j)
-                {
-                    // Generic fallbacks for HID controllers
-                    if (j.allControls[0] is UnityEngine.InputSystem.Controls.ButtonControl b0 && b0.wasPressedThisFrame) gamepadInteract = true;
-                    if (j.allControls[2] is UnityEngine.InputSystem.Controls.ButtonControl b2 && b2.isPressed) gamepadProcess = true;
-                    if (j.allControls[1] is UnityEngine.InputSystem.Controls.ButtonControl b1 && b1.wasPressedThisFrame) gamepadDash = true;
-                }
+                
+                // --- UNIVERSAL MAPPING (Works for Joystick/HID/Third-party) ---
+                // We use standard indices but check multiple variants for Mac compatibility
+                if (CheckButton(myDevice, "buttonSouth", 0)) gamepadInteract = true;
+                if (CheckButton(myDevice, "buttonWest", 2, true)) gamepadProcess = true;
+                if (CheckButton(myDevice, "buttonEast", 1)) gamepadDash = true;
             }
         }
 
@@ -282,11 +288,12 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         }
 
         // Dash Trigger
-        if (dashPressed && currentDashCooldown <= 0 && moveInput.sqrMagnitude > 0.1f)
+        if (dashPressed && currentDashCooldown <= 0)
         {
             isDashing = true;
             dashTimer = dashDuration;
             currentDashCooldown = dashCooldown;
+            Debug.Log($"<color=green>[DASH] Player {playerIndex} Triggered!</color>");
         }
 
         // fallback translation if no rigidbody
@@ -309,35 +316,9 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         }
     }
 
-    private bool IsActionPressedOnDevice(InputAction action, InputDevice device)
-    {
-        if (!action.WasPressedThisFrame()) return false;
-        
-        // If multiple devices are mapped, we must check if the one that fired matches
-        var control = action.activeControl;
-        return control != null && control.device == device;
-    }
-
-    private bool IsActionHeldOnDevice(InputAction action, InputDevice device)
-    {
-        if (!action.IsPressed()) return false;
-        
-        // IsPressed is state-based, so we check if any control on the target device is currently down
-        foreach (var control in action.controls)
-        {
-            if (control.device == device && control is UnityEngine.InputSystem.Controls.ButtonControl button)
-            {
-                if (button.isPressed) return true;
-            }
-        }
-        return false;
-    }
-
     private void TryProcess()
     {
-        // Many stations check if the player is "holding interact"
-        // This method can be called or the processPressed bool can be checked by stations.
-        // For now, we reuse the logic where stations check player interaction state.
+        // Stations check player.IsProcessing() directly
     }
 
     public bool IsProcessing() 
@@ -360,14 +341,35 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                 myDevice = cachedControllers[0];
             }
 
-            if (myDevice != null)
+            if (myDevice != null) return CheckButton(myDevice, "buttonWest", 2, true);
+        }
+
+        return false;
+    }
+
+    private bool CheckButton(InputDevice device, string gamepadName, int joystickIndex, bool hold = false)
+    {
+        // 1. Try standard Gamepad names
+        if (device is Gamepad g)
+        {
+            var control = g[gamepadName] as UnityEngine.InputSystem.Controls.ButtonControl;
+            if (control != null) return hold ? control.isPressed : control.wasPressedThisFrame;
+        }
+
+        // 2. Try by index (Joystick/HID)
+        if (device is Joystick j && j.allControls.Count > joystickIndex)
+        {
+            var control = j.allControls[joystickIndex] as UnityEngine.InputSystem.Controls.ButtonControl;
+            if (control != null) return hold ? control.isPressed : control.wasPressedThisFrame;
+        }
+        
+        // 3. Last ditch: Search by name string for third-party mappings
+        foreach(var control in device.allControls)
+        {
+            if (control.name.ToLower().Contains(gamepadName.ToLower()) || control.name == "button" + joystickIndex)
             {
-                if (myDevice is Gamepad g) return g.buttonWest.isPressed;
-                if (myDevice is Joystick j && j.allControls.Count > 2)
-                {
-                    var b2 = j.allControls[2] as UnityEngine.InputSystem.Controls.ButtonControl;
-                    return b2 != null && b2.isPressed;
-                }
+                if (control is UnityEngine.InputSystem.Controls.ButtonControl b)
+                    return hold ? b.isPressed : b.wasPressedThisFrame;
             }
         }
 
