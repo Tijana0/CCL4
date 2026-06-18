@@ -411,18 +411,14 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
     private void TryInteract()
     {
-        Vector3 pointInFront = transform.position + transform.forward;
+        // Instead of strict grid snapping, use a hitbox directly in front of the player
+        Vector3 interactionCenter = transform.position + transform.forward * 0.6f;
+        interactionCenter.y = 0.5f; // Keep it low to hit floor items
         
-        // snap to the center of the 1x1 grid tile
-        float snappedX = Mathf.Round(pointInFront.x);
-        float snappedZ = Mathf.Round(pointInFront.z);
-        float snappedY = 0.5f; 
+        // Expanded hitbox (1.2m wide, 1.2m deep, 1m tall)
+        Vector3 halfExtents = new Vector3(0.6f, 0.5f, 0.6f);
         
-        Vector3 snappedTileCenter = new Vector3(snappedX, snappedY, snappedZ);
-        // check from y=-0.1 to y=1.1 to hit floor items, players, and counters
-        Vector3 halfExtents = new Vector3(0.4f, 0.6f, 0.4f);
-        
-        Collider[] hitColliders = Physics.OverlapBox(snappedTileCenter, halfExtents);
+        Collider[] hitColliders = Physics.OverlapBox(interactionCenter, halfExtents, transform.rotation);
 
         bool interacted = false;
 
@@ -436,9 +432,6 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             {
                 if (interactable.CanInteract())
                 {
-                    // If we are already holding something, we can only interact with certain things
-                    // (like a counter to swap/place). But for stealing, the victim's Interact
-                    // handles checking if the thief's hands are empty.
                     interactable.Interact(this);
                     interacted = true;
                     break;
@@ -453,8 +446,13 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             if (pickup != null)
             {
                 // Clamp drop position to stay within the ground area
-                float dX = Mathf.Clamp(snappedTileCenter.x, minBounds.x, maxBounds.x);
-                float dZ = Mathf.Clamp(snappedTileCenter.z, minBounds.y, maxBounds.y);
+                float dX = Mathf.Clamp(interactionCenter.x, minBounds.x, maxBounds.x);
+                float dZ = Mathf.Clamp(interactionCenter.z, minBounds.y, maxBounds.y);
+                
+                // Snap dropping to grid (keep things tidy even if pickup is loose)
+                dX = Mathf.Round(dX);
+                dZ = Mathf.Round(dZ);
+                
                 Vector3 dropPos = new Vector3(dX, 0.5f, dZ);
 
                 pickup.Drop(dropPos);
@@ -488,10 +486,10 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        Vector3 pointInFront = transform.position + transform.forward;
-        float snappedX = Mathf.Round(pointInFront.x);
-        float snappedZ = Mathf.Round(pointInFront.z);
-        Vector3 snappedTileCenter = new Vector3(snappedX, 0.5f, snappedZ);
-        Gizmos.DrawWireCube(snappedTileCenter, new Vector3(0.8f, 1.2f, 0.8f));
+        Vector3 interactionCenter = transform.position + transform.forward * 0.6f;
+        interactionCenter.y = 0.5f;
+        
+        Gizmos.matrix = Matrix4x4.TRS(interactionCenter, transform.rotation, Vector3.one);
+        Gizmos.DrawWireCube(Vector3.zero, new Vector3(1.2f, 1f, 1.2f)); // Double the halfExtents
     }
 }
