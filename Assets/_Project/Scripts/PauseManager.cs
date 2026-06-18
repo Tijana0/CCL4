@@ -68,15 +68,17 @@ public class PauseManager : MonoBehaviour
         Button hubBtn = CreateButton(pausePanel.transform, "HubButton", "Return to Hub", new Vector2(0.5f, 0.35f));
         hubBtn.onClick.AddListener(ReturnToHub);
 
-        // Setup Explicit Navigation so they know they are above/below each other
+        // Setup Explicit Navigation reversed to counteract inverted Y-axis Gamepads
         Navigation resNav = resumeBtn.navigation;
         resNav.mode = Navigation.Mode.Explicit;
-        resNav.selectOnDown = hubBtn;
+        resNav.selectOnUp = hubBtn;    // Inverted: Up goes to bottom button
+        resNav.selectOnDown = hubBtn;  // Also map Down just in case
         resumeBtn.navigation = resNav;
 
         Navigation hubNav = hubBtn.navigation;
         hubNav.mode = Navigation.Mode.Explicit;
-        hubNav.selectOnUp = resumeBtn;
+        hubNav.selectOnUp = resumeBtn;   // Also map Up just in case
+        hubNav.selectOnDown = resumeBtn; // Inverted: Down goes to top button
         hubBtn.navigation = hubNav;
 
         pausePanel.SetActive(false);
