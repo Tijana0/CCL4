@@ -32,10 +32,8 @@ public class GameManager : MonoBehaviour
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
 
-        // Add generic joystick fallback for player switching
-        switchPlayerAction.AddBinding("<Joystick>/button4"); // Generic Left Bumper
-        switchPlayerAction.AddBinding("<Joystick>/button5"); // Generic Right Bumper
-        switchPlayerAction.AddBinding("<HID::*>/button4"); 
+        // LB (Left Bumper) is button5 on this Mac gamepad
+        switchPlayerAction.AddBinding("<Joystick>/button5"); 
         switchPlayerAction.AddBinding("<HID::*>/button5"); 
 
         // Add generic joystick fallbacks for UI SUBMIT

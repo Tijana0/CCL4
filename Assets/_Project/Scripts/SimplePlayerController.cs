@@ -254,10 +254,13 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                 }
                 
                 // --- UNIVERSAL MAPPING (Works for Joystick/HID/Third-party) ---
-                // Check all possible aliases for the buttons
-                gamepadInteract |= CheckButton(myDevice, new string[] { "buttonSouth", "button0", "button11", "a", "cross", "trigger" });
-                gamepadProcess |= CheckButton(myDevice, new string[] { "buttonWest", "button2", "button13", "x", "square" }, true);
-                gamepadDash |= CheckButton(myDevice, new string[] { "buttonEast", "button1", "button12", "b", "circle" });
+                // Based on exact Mac Diagnostic Hardware Logs:
+                // A (Interact) = trigger / button0
+                // B (Dash) = button2
+                // X (Process) = button3 (Assuming standard HID layout since B=2)
+                gamepadInteract |= CheckButton(myDevice, new string[] { "buttonSouth", "button0", "a", "cross", "trigger" });
+                gamepadProcess |= CheckButton(myDevice, new string[] { "buttonWest", "button3", "x", "square", "button13" }, true);
+                gamepadDash |= CheckButton(myDevice, new string[] { "buttonEast", "button2", "b", "circle", "button12" });
             }
         }
 
@@ -362,7 +365,7 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
             if (myDevice != null) 
             {
-                return CheckButton(myDevice, new string[] { "buttonWest", "button2", "button13", "x", "square" }, true);
+                return CheckButton(myDevice, new string[] { "buttonWest", "button3", "x", "square", "button13" }, true);
             }
         }
 
