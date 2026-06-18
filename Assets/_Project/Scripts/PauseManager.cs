@@ -10,6 +10,7 @@ public class PauseManager : MonoBehaviour
 
     public bool isPaused = false;
     private GameObject pausePanel;
+    private GameObject firstSelectedButton;
 
     private void Awake()
     {
@@ -61,10 +62,22 @@ public class PauseManager : MonoBehaviour
         // Resume Button
         Button resumeBtn = CreateButton(pausePanel.transform, "ResumeButton", "Resume", new Vector2(0.5f, 0.5f));
         resumeBtn.onClick.AddListener(ResumeGame);
+        firstSelectedButton = resumeBtn.gameObject;
 
         // Hub Button
         Button hubBtn = CreateButton(pausePanel.transform, "HubButton", "Return to Hub", new Vector2(0.5f, 0.35f));
         hubBtn.onClick.AddListener(ReturnToHub);
+
+        // Setup Explicit Navigation so they know they are above/below each other
+        Navigation resNav = resumeBtn.navigation;
+        resNav.mode = Navigation.Mode.Explicit;
+        resNav.selectOnDown = hubBtn;
+        resumeBtn.navigation = resNav;
+
+        Navigation hubNav = hubBtn.navigation;
+        hubNav.mode = Navigation.Mode.Explicit;
+        hubNav.selectOnUp = resumeBtn;
+        hubBtn.navigation = hubNav;
 
         pausePanel.SetActive(false);
     }
@@ -158,6 +171,12 @@ public class PauseManager : MonoBehaviour
         isPaused = true;
         Time.timeScale = 0f;
         if (pausePanel != null) pausePanel.SetActive(true);
+
+        if (firstSelectedButton != null && UnityEngine.EventSystems.EventSystem.current != null)
+        {
+            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(firstSelectedButton);
+        }
     }
 
     public void ResumeGame()

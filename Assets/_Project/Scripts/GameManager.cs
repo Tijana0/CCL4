@@ -36,17 +36,24 @@ public class GameManager : MonoBehaviour
         switchPlayerAction.AddBinding("<Joystick>/button5"); 
         switchPlayerAction.AddBinding("<HID::*>/button5"); 
 
-        // Add generic joystick fallbacks for UI SUBMIT
+        // Add generic joystick fallbacks for UI SUBMIT and NAVIGATE
         var eventSystem = Object.FindFirstObjectByType<UnityEngine.EventSystems.EventSystem>();
         if (eventSystem != null)
         {
             var module = eventSystem.GetComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
-            if (module != null && module.submit != null && module.submit.action != null)
+            if (module != null)
             {
-                module.submit.action.AddBinding("<Joystick>/trigger");
-                module.submit.action.AddBinding("<Joystick>/button0");
-                module.submit.action.AddBinding("<Joystick>/button1");
-                module.submit.action.AddBinding("<HID::*>/button2");
+                if (module.submit != null && module.submit.action != null)
+                {
+                    module.submit.action.AddBinding("<Joystick>/trigger");
+                    module.submit.action.AddBinding("<Joystick>/button0");
+                    module.submit.action.AddBinding("<Joystick>/button11"); // Mac alias
+                    module.submit.action.AddBinding("<HID::*>/button0");
+                }
+                if (module.move != null && module.move.action != null)
+                {
+                    module.move.action.AddBinding("<Joystick>/stick");
+                }
             }
         }
 
