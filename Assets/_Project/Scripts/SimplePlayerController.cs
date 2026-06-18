@@ -7,6 +7,7 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
     public int playerIndex = 0; 
     public float moveSpeed = 5f;
+    public float rotationSpeed = 15f;
     
     [Header("Boundaries")]
     public bool useBoundaries = true;
@@ -281,7 +282,8 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         if (moveInput.sqrMagnitude > 0.01f)
         {
             Vector3 lookDirection = new Vector3(moveInput.x, 0f, moveInput.y);
-            transform.rotation = Quaternion.LookRotation(lookDirection);
+            Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
         }
 
         // Dash Trigger
