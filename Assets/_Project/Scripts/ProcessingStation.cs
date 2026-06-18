@@ -38,8 +38,8 @@ public class ProcessingStation : StationBase
     {
         if (!isProcessing) return;
 
-        bool holdingInteract = CheckPlayerHoldingInteract();
-        if (!holdingInteract)
+        bool holdingProcess = processingPlayer != null && processingPlayer.IsProcessing();
+        if (!holdingProcess)
         {
             CancelProcessing();
             return;
@@ -153,22 +153,6 @@ public class ProcessingStation : StationBase
 
         if (progressBarContainer != null) progressBarContainer.SetActive(false);
         if (progressBarFill != null) progressBarFill.fillAmount = 0f;
-    }
-
-    private bool CheckPlayerHoldingInteract()
-    {
-        if (processingPlayer == null) return false;
-
-        if (processingPlayer.playerIndex == 0 && Keyboard.current != null)
-            return Keyboard.current.eKey.isPressed;
-
-        if (processingPlayer.playerIndex == 1 && Keyboard.current != null)
-            return Keyboard.current.rightShiftKey.isPressed;
-
-        if (processingPlayer.playerIndex == SimplePlayerController.activeGamepadPlayerIndex && Gamepad.current != null)
-            return Gamepad.current.buttonSouth.isPressed;
-
-        return false;
     }
 
     private ProcessingRule GetRule(ItemData data)

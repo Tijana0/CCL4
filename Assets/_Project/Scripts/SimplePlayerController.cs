@@ -56,12 +56,16 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         
         // South = A/Cross (Pick Up)
         gamepadInteractAction.AddBinding("<Joystick>/button0"); 
-        
+        gamepadInteractAction.AddBinding("<Joystick>/trigger"); // Generic South/A
+        gamepadInteractAction.AddBinding("<HID::*>/button0");
+
         // West = X/Square (Process)
         gamepadProcessAction.AddBinding("<Joystick>/button2");
+        gamepadProcessAction.AddBinding("<HID::*>/button2");
 
         // East = B/Circle (Dash)
         gamepadDashAction.AddBinding("<Joystick>/button1");
+        gamepadDashAction.AddBinding("<HID::*>/button1");
 
         if (!isSubscribedToEvents)
         {
@@ -216,27 +220,27 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         bool gamepadProcess = false;
         bool gamepadDash = false;
 
-        if (isDualControllerMode)
+        if (controllerCount > 0)
         {
-            // DUAL MODE: Each player gets their own physical device from the list
-            if (playerIndex < controllerCount)
+            InputDevice myDevice = null;
+            if (isDualControllerMode)
             {
-                InputDevice myDevice = cachedControllers[playerIndex];
+                if (playerIndex < controllerCount) myDevice = cachedControllers[playerIndex];
+            }
+            else if (playerIndex == activeGamepadPlayerIndex)
+            {
+                myDevice = cachedControllers[0];
+            }
+
+            if (myDevice != null)
+            {
                 gamepadInput = GetCorrectedInput(myDevice);
 
-                if (gamepadInteractAction.WasPressedThisFrame() && gamepadInteractAction.activeControl?.device == myDevice) gamepadInteract = true;
-                if (gamepadProcessAction.IsPressed() && gamepadProcessAction.activeControl?.device == myDevice) gamepadProcess = true;
-                if (gamepadDashAction.WasPressedThisFrame() && gamepadDashAction.activeControl?.device == myDevice) gamepadDash = true;
+                // Use the shared actions to check for presses on THIS specific device
+                if (IsActionPressedOnDevice(gamepadInteractAction, myDevice)) gamepadInteract = true;
+                if (IsActionHeldOnDevice(gamepadProcessAction, myDevice)) gamepadProcess = true;
+                if (IsActionPressedOnDevice(gamepadDashAction, myDevice)) gamepadDash = true;
             }
-        }
-        else if (controllerCount == 1 && playerIndex == activeGamepadPlayerIndex)
-        {
-            // SINGLE MODE: Current player uses the only available device
-            InputDevice myDevice = cachedControllers[0];
-            gamepadInput = GetCorrectedInput(myDevice);
-            if (gamepadInteractAction.WasPressedThisFrame()) gamepadInteract = true;
-            if (gamepadProcessAction.IsPressed()) gamepadProcess = true;
-            if (gamepadDashAction.WasPressedThisFrame()) gamepadDash = true;
         }
 
         // Apply gamepad input if it exists
@@ -291,6 +295,30 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         }
     }
 
+    private bool IsActionPressedOnDevice(InputAction action, InputDevice device)
+    {
+        if (!action.WasPressedThisFrame()) return false;
+        
+        // If multiple devices are mapped, we must check if the one that fired matches
+        var control = action.activeControl;
+        return control != null && control.device == device;
+    }
+
+    private bool IsActionHeldOnDevice(InputAction action, InputDevice device)
+    {
+        if (!action.IsPressed()) return false;
+        
+        // IsPressed is state-based, so we check if any control on the target device is currently down
+        foreach (var control in action.controls)
+        {
+            if (control.device == device && control is UnityEngine.InputSystem.Controls.ButtonControl button)
+            {
+                if (button.isPressed) return true;
+            }
+        }
+        return false;
+    }
+
     private void TryProcess()
     {
         // Many stations check if the player is "holding interact"
@@ -301,8 +329,26 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
     public bool IsProcessing() 
     {
         // Simple helper for stations to check if this player is pressing the 'Process' key
-        if (playerIndex == 0) return Keyboard.current != null && Keyboard.current.rKey.isPressed || (cachedControllers.Count > 0 && playerIndex == activeGamepadPlayerIndex && gamepadProcessAction.IsPressed());
-        if (playerIndex == 1) return Keyboard.current != null && (Keyboard.current.rightCtrlKey.isPressed || Keyboard.current.rightCommandKey.isPressed) || (cachedControllers.Count > 1 && gamepadProcessAction.IsPressed());
+        if (playerIndex == 0 && Keyboard.current != null && Keyboard.current.rKey.isPressed) return true;
+        if (playerIndex == 1 && Keyboard.current != null && (Keyboard.current.rightCtrlKey.isPressed || Keyboard.current.rightCommandKey.isPressed)) return true;
+
+        // Gamepad check
+        int controllerCount = cachedControllers.Count;
+        if (controllerCount > 0)
+        {
+            InputDevice myDevice = null;
+            if (controllerCount >= 2)
+            {
+                if (playerIndex < controllerCount) myDevice = cachedControllers[playerIndex];
+            }
+            else if (playerIndex == activeGamepadPlayerIndex)
+            {
+                myDevice = cachedControllers[0];
+            }
+
+            if (myDevice != null) return IsActionHeldOnDevice(gamepadProcessAction, myDevice);
+        }
+
         return false;
     }
 

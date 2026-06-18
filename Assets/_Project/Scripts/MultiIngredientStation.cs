@@ -228,7 +228,7 @@ public class MultiIngredientStation : StationBase
     private void UpdateCooking()
     {
         // HoldToProcess pauses if player releases
-        if (triggerMode == TriggerMode.HoldToProcess && !CheckPlayerHoldingInteract())
+        if (triggerMode == TriggerMode.HoldToProcess && (cookingPlayer == null || !cookingPlayer.IsProcessing()))
             return;
 
         cookingProgress += Time.deltaTime / currentCookingTime;
@@ -377,22 +377,6 @@ public class MultiIngredientStation : StationBase
         foreach (var item in b)
             if (!remaining.Remove(item)) return false;
         return remaining.Count == 0;
-    }
-
-    // ── Input check ──────────────────────────────────────────────────────────
-
-    private bool CheckPlayerHoldingInteract()
-    {
-        if (cookingPlayer == null) return false;
-
-        if (cookingPlayer.playerIndex == 0 && Keyboard.current != null)
-            return Keyboard.current.eKey.isPressed;
-        if (cookingPlayer.playerIndex == 1 && Keyboard.current != null)
-            return Keyboard.current.rightShiftKey.isPressed;
-        if (cookingPlayer.playerIndex == SimplePlayerController.activeGamepadPlayerIndex && Gamepad.current != null)
-            return Gamepad.current.buttonSouth.isPressed;
-
-        return false;
     }
 
     // ── Visuals ──────────────────────────────────────────────────────────────
