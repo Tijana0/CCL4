@@ -253,12 +253,10 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                 }
                 
                 // --- UNIVERSAL MAPPING (Works for Joystick/HID/Third-party) ---
-                // We use standard indices but check multiple variants for Mac compatibility.
-                // We use |= (OR equal) so we don't accidentally overwrite a true from the Gamepad check above
-                // with a false from the CheckButton logic.
-                gamepadInteract |= CheckButton(myDevice, "buttonSouth", 0);
-                gamepadProcess |= CheckButton(myDevice, "buttonWest", 2, true);
-                gamepadDash |= CheckButton(myDevice, "buttonEast", 1);
+                // Check all possible aliases for the buttons
+                gamepadInteract |= CheckButton(myDevice, new string[] { "buttonSouth", "button0", "button11", "a", "cross" });
+                gamepadProcess |= CheckButton(myDevice, new string[] { "buttonWest", "button2", "button13", "x", "square" }, true);
+                gamepadDash |= CheckButton(myDevice, new string[] { "buttonEast", "button1", "button12", "b", "circle" });
             }
         }
 
@@ -340,39 +338,34 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                 myDevice = cachedControllers[0];
             }
 
-            if (myDevice != null) return CheckButton(myDevice, "buttonWest", 2, true);
+            if (myDevice != null) 
+            {
+                return CheckButton(myDevice, new string[] { "buttonWest", "button2", "button13", "x", "square" }, true);
+            }
         }
 
         return false;
     }
 
-    private bool CheckButton(InputDevice device, string gamepadName, int joystickIndex, bool hold = false)
+    private bool CheckButton(InputDevice device, string[] aliases, bool hold = false)
     {
-        // 1. Try standard Gamepad names
-        if (device is Gamepad g)
+        bool isDown = false;
+        foreach (var control in device.allControls)
         {
-            var control = g[gamepadName] as UnityEngine.InputSystem.Controls.ButtonControl;
-            if (control != null) return hold ? control.isPressed : control.wasPressedThisFrame;
-        }
-
-        // 2. Try by index (Joystick/HID)
-        if (device is Joystick j && j.allControls.Count > joystickIndex)
-        {
-            var control = j.allControls[joystickIndex] as UnityEngine.InputSystem.Controls.ButtonControl;
-            if (control != null) return hold ? control.isPressed : control.wasPressedThisFrame;
-        }
-        
-        // 3. Last ditch: Search by name string for third-party mappings
-        foreach(var control in device.allControls)
-        {
-            if (control.name.ToLower().Contains(gamepadName.ToLower()) || control.name == "button" + joystickIndex)
+            if (control is UnityEngine.InputSystem.Controls.ButtonControl b)
             {
-                if (control is UnityEngine.InputSystem.Controls.ButtonControl b)
-                    return hold ? b.isPressed : b.wasPressedThisFrame;
+                bool state = hold ? b.isPressed : b.wasPressedThisFrame;
+                if (state)
+                {
+                    string cName = control.name.ToLower();
+                    foreach (var alias in aliases)
+                    {
+                        if (cName.Contains(alias.ToLower())) isDown = true;
+                    }
+                }
             }
         }
-
-        return false;
+        return isDown;
     }
 
     private Vector2 GetCorrectedInput(InputDevice device)
