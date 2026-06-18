@@ -14,7 +14,7 @@ using UnityEngine.InputSystem;
 ///
 /// Usage:
 /// - Place item → validated against processing rules
-/// - Hold Interact (E / RightShift / Gamepad A) → progress fills → item transforms
+/// - Hold Process (R / RightCtrl / Gamepad X) → progress fills → item transforms
 /// - Release early → progress resets
 /// </summary>
 public class ProcessingStation : StationBase
@@ -66,13 +66,22 @@ public class ProcessingStation : StationBase
         }
         else if (!playerHasItem && stationHasItem)
         {
-            WorldItem wi = itemOnStation.GetComponent<WorldItem>();
-            ProcessingRule rule = wi != null ? GetRule(wi.itemData) : null;
+            // Interact button now ONLY takes the item back
+            TakeItem(player);
+        }
+    }
 
-            if (rule != null)
-                StartProcessing(player);
-            else
-                TakeItem(player);
+    public void StartProcessingIfValid(SimplePlayerController player)
+    {
+        if (isProcessing) return;
+        if (player.heldItem != null) return; // Needs empty hands
+        
+        WorldItem wi = itemOnStation?.GetComponent<WorldItem>();
+        ProcessingRule rule = wi != null ? GetRule(wi.itemData) : null;
+
+        if (rule != null)
+        {
+            StartProcessing(player);
         }
     }
 

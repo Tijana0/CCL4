@@ -107,14 +107,10 @@ public class MultiIngredientStation : StationBase
 
     public override void Interact(SimplePlayerController player)
     {
-        // Pick up finished result
-        if ((stationState == StationState.Done || stationState == StationState.Ruined) && resultItem != null)
+        if (stationState == StationState.Done || stationState == StationState.Ruined)
         {
-            if (player.heldItem == null)
-            {
-                PickUpResult(player);
-                return;
-            }
+            if (player.heldItem == null) PickUpResult(player);
+            return;
         }
 
         bool playerHasItem = player.heldItem != null;
@@ -123,10 +119,15 @@ public class MultiIngredientStation : StationBase
         {
             TryAddIngredient(player);
         }
-        else if ((stationState == StationState.HasIngredients || stationState == StationState.Cooking) 
-                  && triggerMode == TriggerMode.HoldToProcess && player.heldItem == null)
+    }
+
+    public void StartCookingIfValid(SimplePlayerController player)
+    {
+        if (triggerMode != TriggerMode.HoldToProcess) return;
+        if (player.heldItem != null) return;
+
+        if (stationState == StationState.HasIngredients || stationState == StationState.Cooking)
         {
-            // Player holds interact to start/continue cooking
             if (stationState != StationState.Cooking) RestartCooking(player);
             else cookingPlayer = player; // Re-assign if player changed
         }

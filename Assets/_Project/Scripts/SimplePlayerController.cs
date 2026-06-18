@@ -315,7 +315,27 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
     private void TryProcess()
     {
-        // Stations check player.IsProcessing() directly
+        Vector3 interactionCenter = transform.position + transform.forward * 0.6f;
+        interactionCenter.y = 0.5f;
+        Vector3 halfExtents = new Vector3(0.6f, 0.5f, 0.6f);
+        
+        Collider[] hitColliders = Physics.OverlapBox(interactionCenter, halfExtents, transform.rotation);
+
+        foreach (Collider hit in hitColliders)
+        {
+            if (hit.gameObject == this.gameObject) continue;
+
+            if (hit.TryGetComponent<ProcessingStation>(out var pStation))
+            {
+                pStation.StartProcessingIfValid(this);
+                break;
+            }
+            else if (hit.TryGetComponent<MultiIngredientStation>(out var mStation))
+            {
+                mStation.StartCookingIfValid(this);
+                break;
+            }
+        }
     }
 
     public bool IsProcessing() 
