@@ -250,16 +250,15 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                     if (g.buttonSouth.wasPressedThisFrame) gamepadInteract = true;
                     if (g.buttonWest.isPressed) gamepadProcess = true;
                     if (g.buttonEast.wasPressedThisFrame) gamepadDash = true;
-                    
-                    // Specific mapping for RT (Wand)
-                    // We'll read RT here and pass it to WandController or just use it
                 }
                 
                 // --- UNIVERSAL MAPPING (Works for Joystick/HID/Third-party) ---
-                // We use standard indices but check multiple variants for Mac compatibility
-                if (CheckButton(myDevice, "buttonSouth", 0)) gamepadInteract = true;
-                if (CheckButton(myDevice, "buttonWest", 2, true)) gamepadProcess = true;
-                if (CheckButton(myDevice, "buttonEast", 1)) gamepadDash = true;
+                // We use standard indices but check multiple variants for Mac compatibility.
+                // We use |= (OR equal) so we don't accidentally overwrite a true from the Gamepad check above
+                // with a false from the CheckButton logic.
+                gamepadInteract |= CheckButton(myDevice, "buttonSouth", 0);
+                gamepadProcess |= CheckButton(myDevice, "buttonWest", 2, true);
+                gamepadDash |= CheckButton(myDevice, "buttonEast", 1);
             }
         }
 
