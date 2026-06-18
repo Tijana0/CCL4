@@ -21,6 +21,10 @@ public class PickupObject : MonoBehaviour, IInteractable
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+        }
     }
 
     private void Update()
@@ -59,7 +63,7 @@ public class PickupObject : MonoBehaviour, IInteractable
         transform.SetParent(null);
         transform.position = dropPosition;
         
-        if (rb != null) rb.isKinematic = false;
+        if (rb != null) rb.isKinematic = true;
         // reenable collider to allow pickup again
         if (col != null) col.enabled = true; 
 

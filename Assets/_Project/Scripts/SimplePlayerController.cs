@@ -11,8 +11,8 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
     
     [Header("Boundaries")]
     public bool useBoundaries = true;
-    public Vector2 minBounds = new Vector2(-5.5f, -9.5f);
-    public Vector2 maxBounds = new Vector2(10.5f, 2.5f);
+    public Vector2 minBounds = new Vector2(21f, -17f);
+    public Vector2 maxBounds = new Vector2(44f, -2f);
 
     [Header("Interaction")]
     public Transform holdPoint;
@@ -50,6 +50,11 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.useGravity = true;
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
+        }
         if (freezeLabel != null) freezeLabel.gameObject.SetActive(false);
 
         // Add generic joystick fallbacks
@@ -107,6 +112,23 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             hp.transform.SetParent(this.transform);
             hp.transform.localPosition = new Vector3(0, 0.5f, 0.5f);
             holdPoint = hp.transform;
+        }
+        UpdateBoundariesFromRoomBase();
+    }
+
+    public void UpdateBoundariesFromRoomBase()
+    {
+        GameObject roomBase = GameObject.Find("room_base");
+        if (roomBase != null)
+        {
+            Collider col = roomBase.GetComponent<Collider>();
+            if (col != null)
+            {
+                Bounds bounds = col.bounds;
+                // Inset slightly by player radius (0.5m) to keep players completely on the room floor
+                minBounds = new Vector2(bounds.min.x + 0.5f, bounds.min.z + 0.5f);
+                maxBounds = new Vector2(bounds.max.x - 0.5f, bounds.max.z - 0.5f);
+            }
         }
     }
 
@@ -464,19 +486,19 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                 float dX = Mathf.Round(interactionCenter.x);
                 float dZ = Mathf.Round(interactionCenter.z);
 
-                // Dynamically fetch actual ground boundaries to prevent dropping over the edge
-                GameObject ground = GameObject.Find("Ground");
-                if (ground != null)
+                // Dynamically fetch room_base boundaries to prevent dropping over the edge
+                GameObject roomBase = GameObject.Find("room_base");
+                if (roomBase != null)
                 {
-                    MeshRenderer mr = ground.GetComponent<MeshRenderer>();
-                    if (mr != null)
+                    Collider col = roomBase.GetComponent<Collider>();
+                    if (col != null)
                     {
-                        Bounds bounds = mr.bounds;
-                        // Inset by 0.5f to ensure the item stays well inside the invisible walls
-                        float minX = bounds.min.x + 0.5f;
-                        float maxX = bounds.max.x - 0.5f;
-                        float minZ = bounds.min.z + 0.5f;
-                        float maxZ = bounds.max.z - 0.5f;
+                        Bounds bounds = col.bounds;
+                        // Inset slightly to ensure the item stays well inside the room boundaries
+                        float minX = bounds.min.x + 0.3f;
+                        float maxX = bounds.max.x - 0.3f;
+                        float minZ = bounds.min.z + 0.3f;
+                        float maxZ = bounds.max.z - 0.3f;
 
                         dX = Mathf.Clamp(dX, minX, maxX);
                         dZ = Mathf.Clamp(dZ, minZ, maxZ);
@@ -484,12 +506,47 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                 }
                 else
                 {
-                    // Fallback to inspector bounds if no Ground found
+                    // Fallback to controller bounds if room_base not found
                     dX = Mathf.Clamp(dX, minBounds.x, maxBounds.x);
                     dZ = Mathf.Clamp(dZ, minBounds.y, maxBounds.y);
                 }
                 
-                Vector3 dropPos = new Vector3(dX, 0.5f, dZ);
+                // Determine drop height dynamically using a Raycast down from above the target position
+                float dropY = transform.position.y - 0.5f; // Fallback to estimated foot level
+                Vector3 rayStart = new Vector3(dX, transform.position.y + 1.5f, dZ);
+                RaycastHit[] hits = Physics.RaycastAll(rayStart, Vector3.down, 10f);
+                float bestY = -99f;
+                bool foundFloor = false;
+                foreach (var hit in hits)
+                {
+                    if (hit.collider != null && !hit.collider.isTrigger)
+                    {
+                        if (hit.collider.gameObject != this.gameObject && 
+                            hit.collider.gameObject != heldItem && 
+                            hit.collider.GetComponent<SimplePlayerController>() == null)
+                        {
+                            // We want the highest solid surface below the ray start
+                            if (hit.point.y > bestY && hit.point.y <= transform.position.y + 0.5f)
+                            {
+                                bestY = hit.point.y;
+                                foundFloor = true;
+                            }
+                        }
+                    }
+                }
+                if (foundFloor)
+                {
+                    dropY = bestY;
+                }
+
+                // Add offset based on the item's collider size to sit exactly on the surface
+                float heightOffset = 0.1f;
+                BoxCollider itemCol = pickup.GetComponent<BoxCollider>();
+                if (itemCol != null)
+                {
+                    heightOffset = itemCol.size.y * 0.5f;
+                }
+                Vector3 dropPos = new Vector3(dX, dropY + heightOffset, dZ);
 
                 pickup.Drop(dropPos);
                 heldItem = null;
