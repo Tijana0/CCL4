@@ -482,9 +482,9 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             PickupObject pickup = heldItem.GetComponent<PickupObject>();
             if (pickup != null)
             {
-                // Snap dropping to grid
-                float dX = Mathf.Round(interactionCenter.x);
-                float dZ = Mathf.Round(interactionCenter.z);
+                // Snap dropping to grid centers (half-integers: 0.5, 1.5, etc.)
+                float dX = Mathf.Floor(interactionCenter.x) + 0.5f;
+                float dZ = Mathf.Floor(interactionCenter.z) + 0.5f;
 
                 // Dynamically fetch room_base boundaries to prevent dropping over the edge
                 GameObject roomBase = GameObject.Find("room_base");
