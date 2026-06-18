@@ -491,13 +491,34 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             PickupObject pickup = heldItem.GetComponent<PickupObject>();
             if (pickup != null)
             {
-                // Clamp drop position to stay within the ground area
-                float dX = Mathf.Clamp(interactionCenter.x, minBounds.x, maxBounds.x);
-                float dZ = Mathf.Clamp(interactionCenter.z, minBounds.y, maxBounds.y);
-                
-                // Snap dropping to grid (keep things tidy even if pickup is loose)
-                dX = Mathf.Round(dX);
-                dZ = Mathf.Round(dZ);
+                // Snap dropping to grid
+                float dX = Mathf.Round(interactionCenter.x);
+                float dZ = Mathf.Round(interactionCenter.z);
+
+                // Dynamically fetch actual ground boundaries to prevent dropping over the edge
+                GameObject ground = GameObject.Find("Ground");
+                if (ground != null)
+                {
+                    MeshRenderer mr = ground.GetComponent<MeshRenderer>();
+                    if (mr != null)
+                    {
+                        Bounds bounds = mr.bounds;
+                        // Inset by 0.5f to ensure the item stays well inside the invisible walls
+                        float minX = bounds.min.x + 0.5f;
+                        float maxX = bounds.max.x - 0.5f;
+                        float minZ = bounds.min.z + 0.5f;
+                        float maxZ = bounds.max.z - 0.5f;
+
+                        dX = Mathf.Clamp(dX, minX, maxX);
+                        dZ = Mathf.Clamp(dZ, minZ, maxZ);
+                    }
+                }
+                else
+                {
+                    // Fallback to inspector bounds if no Ground found
+                    dX = Mathf.Clamp(dX, minBounds.x, maxBounds.x);
+                    dZ = Mathf.Clamp(dZ, minBounds.y, maxBounds.y);
+                }
                 
                 Vector3 dropPos = new Vector3(dX, 0.5f, dZ);
 
