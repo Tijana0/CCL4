@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 97340c5b42f311744bbcde4a2c5d3980, type: 3}
-  m_Name: BlueredBall
+  m_Name: Prophecy_card
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: BlueredBall
-  icon: {fileID: 21300000, guid: 551fdd6064cf1406ab46354e05be8330, type: 3}
-  prefab: {fileID: 5586524512612683342, guid: 44d69e11166ad46ddb7087024441d7c1, type: 3}
+  itemName: 
+  icon: {fileID: 0}
+  prefab: {fileID: 0}
   processingRules: []
   combineRules: []
   allowedStationTypes: 
   requiresProcessingBeforeCauldron: 0
+  isDisposable: 1

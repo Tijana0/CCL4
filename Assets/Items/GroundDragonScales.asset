@@ -14,10 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: GroundDragonScales
   icon: {fileID: 0}
-  prefab: {fileID: 2947182055110435523, guid: 30a96997416874ba8bb924e6dcd7753e, type: 3}
-  processingRules: []
+  prefab: {fileID: 6647568914046336155, guid: 249ca29df5b575145be4449e393c3f3d, type: 3}
+  processingRules:
+  - stationType: 0
+    outputItem: {fileID: 0}
+    processingTime: 0
   combineRules:
   - otherItem: {fileID: 11400000, guid: 6f12e3d11611b6f4da2e1cf6028e01eb, type: 2}
     outputItem: {fileID: 11400000, guid: 73f8552b54f50c943a16e507c8361183, type: 2}
   allowedStationTypes: 
   requiresProcessingBeforeCauldron: 0
+  isDisposable: 1

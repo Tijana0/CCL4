@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: BlueBall
   icon: {fileID: 0}
-  prefab: {fileID: 1319328529221048005, guid: 3ab4232f664e1417f8fe91d9601e2e41, type: 3}
+  prefab: {fileID: 6024581101709590736, guid: be7a1394872dff0458216ea216c08aa9, type: 3}
   processingRules: []
   combineRules:
   - otherItem: {fileID: 11400000, guid: ee991a983d1b4f54caa909010be4a5d5, type: 2}
@@ -23,3 +23,4 @@ MonoBehaviour:
     outputItem: {fileID: 11400000, guid: 267d71f9afd8c5d47bf74fbab29dc37e, type: 2}
   allowedStationTypes: 
   requiresProcessingBeforeCauldron: 0
+  isDisposable: 1

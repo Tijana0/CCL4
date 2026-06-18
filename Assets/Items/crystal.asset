@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 97340c5b42f311744bbcde4a2c5d3980, type: 3}
-  m_Name: WaterBowl
+  m_Name: crystal
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: WaterBowl
+  itemName: 
   icon: {fileID: 0}
-  prefab: {fileID: 1977527737391541243, guid: 1d9acb8007ab19344bdb1992567ac889, type: 3}
+  prefab: {fileID: 0}
   processingRules: []
   combineRules: []
-  allowedStationTypes: 00000000010000000500000006000000
+  allowedStationTypes: 
   requiresProcessingBeforeCauldron: 0
-  isDisposable: 0
+  isDisposable: 1

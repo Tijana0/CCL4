@@ -143,13 +143,6 @@ public class MultiIngredientStation : StationBase
             return;
         }
 
-        // Reject items that need processing first
-        if (wi.itemData.requiresProcessingBeforeCauldron)
-        {
-            Debug.Log($"[MultiIngredientStation] {wi.itemData.itemName} must be processed first!");
-            return;
-        }
-
         // Check max ingredients
         if (maxIngredients > 0 && ingredients.Count >= maxIngredients)
         {
@@ -164,7 +157,9 @@ public class MultiIngredientStation : StationBase
 
         Debug.Log($"[MultiIngredientStation] Added {wi.itemData.itemName}. Total: {ingredients.Count}");
 
-        stationState = StationState.HasIngredients;
+        // Only move to HasIngredients if not already cooking — don't reset cooking state
+        if (stationState != StationState.Cooking)
+            stationState = StationState.HasIngredients;
         UpdateVisuals();
 
         // Always restart cooking timer when ingredient is added
