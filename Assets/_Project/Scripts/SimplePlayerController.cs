@@ -195,17 +195,7 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                 
                 if (Keyboard.current.eKey.wasPressedThisFrame) interactPressed = true;
                 if (Keyboard.current.rKey.isPressed) processPressed = true;
-                
-                if (Keyboard.current.spaceKey.wasPressedThisFrame) 
-                {
-                    dashPressed = true;
-                    Debug.Log("<color=green>[KEYBOARD] P1 Space (Dash) pressed</color>");
-                }
-                
-                if (Keyboard.current.rKey.wasPressedThisFrame)
-                {
-                    Debug.Log("<color=yellow>[KEYBOARD] P1 R (Process) pressed</color>");
-                }
+                if (Keyboard.current.spaceKey.wasPressedThisFrame) dashPressed = true;
             }
         }
         else if (playerIndex == 1)
@@ -219,18 +209,7 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                 
                 if (Keyboard.current.rightShiftKey.wasPressedThisFrame) interactPressed = true;
                 if (Keyboard.current.rightCtrlKey.isPressed || Keyboard.current.rightCommandKey.isPressed) processPressed = true;
-                
-                // Slash / Minus key for P2 Dash
-                if (Keyboard.current.slashKey.wasPressedThisFrame || Keyboard.current.minusKey.wasPressedThisFrame) 
-                {
-                    dashPressed = true;
-                    Debug.Log("<color=green>[KEYBOARD] P2 Slash/- (Dash) pressed</color>");
-                }
-                
-                if (Keyboard.current.rightCtrlKey.wasPressedThisFrame || Keyboard.current.rightCommandKey.wasPressedThisFrame)
-                {
-                    Debug.Log("<color=yellow>[KEYBOARD] P2 RightCtrl/Cmd (Process) pressed</color>");
-                }
+                if (Keyboard.current.slashKey.wasPressedThisFrame || Keyboard.current.minusKey.wasPressedThisFrame) dashPressed = true;
             }
         }
 
@@ -255,15 +234,6 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             if (myDevice != null)
             {
                 gamepadInput = GetCorrectedInput(myDevice);
-
-                // --- DIAGNOSTIC: Log ANY button press on this device ---
-                foreach (var control in myDevice.allControls)
-                {
-                    if (control is UnityEngine.InputSystem.Controls.ButtonControl button && button.wasPressedThisFrame)
-                    {
-                        Debug.Log($"<color=white>[HARDWARE] Player {playerIndex} pressed button: {control.name} (Index/Path: {control.path})</color>");
-                    }
-                }
 
                 if (myDevice is Gamepad g)
                 {
@@ -314,7 +284,6 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             isDashing = true;
             dashTimer = dashDuration;
             currentDashCooldown = dashCooldown;
-            Debug.Log($"<color=green>[DASH] Player {playerIndex} Triggered!</color>");
         }
 
         // fallback translation if no rigidbody

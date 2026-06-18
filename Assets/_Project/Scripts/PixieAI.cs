@@ -97,9 +97,8 @@ public class PixieAI : MonoBehaviour
     {
         // Check if we hit a player
         SimplePlayerController player = other.GetComponent<SimplePlayerController>();
-        if (player != null)
+        if (player != null && !player.isFrozen)
         {
-            Debug.Log($"[Pixie] Touched Player {player.playerIndex}! Freezing for {freezeDuration}s.");
             player.Freeze(freezeDuration);
         }
     }
