@@ -17,9 +17,20 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
     public Transform holdPoint;
     [HideInInspector] public GameObject heldItem;
 
+    [Header("Movement & Dash")]
+    public float dashSpeed = 15f;
+    public float dashDuration = 0.2f;
+    public float dashCooldown = 1f;
+    private float dashTimer = 0f;
+    private float currentDashCooldown = 0f;
+    private bool isDashing = false;
+
     [Header("Controller Input")]
     public InputAction gamepadMoveAction = new InputAction("GamepadMove", binding: "<Gamepad>/leftStick", expectedControlType: "Vector2");
     public InputAction gamepadInteractAction = new InputAction("GamepadInteract", type: InputActionType.Button, binding: "<Gamepad>/buttonSouth");
+    public InputAction gamepadProcessAction = new InputAction("GamepadProcess", type: InputActionType.Button, binding: "<Gamepad>/buttonWest");
+    public InputAction gamepadDashAction = new InputAction("GamepadDash", type: InputActionType.Button, binding: "<Gamepad>/buttonEast");
+    
     [Tooltip("Check this if pulling down on the joystick moves the character up")]
     public bool invertGamepadY = true;
 
@@ -43,10 +54,14 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         // Add generic joystick fallbacks
         gamepadMoveAction.AddBinding("<Joystick>/stick");
         
-        gamepadInteractAction.AddBinding("<Joystick>/trigger"); // Usually Button 0 or A
+        // South = A/Cross (Pick Up)
         gamepadInteractAction.AddBinding("<Joystick>/button0"); 
-        gamepadInteractAction.AddBinding("<Joystick>/button1"); 
-        gamepadInteractAction.AddBinding("<HID::*>/button2"); // Common generic HID button
+        
+        // West = X/Square (Process)
+        gamepadProcessAction.AddBinding("<Joystick>/button2");
+
+        // East = B/Circle (Dash)
+        gamepadDashAction.AddBinding("<Joystick>/button1");
 
         if (!isSubscribedToEvents)
         {
@@ -67,12 +82,16 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
     {
         gamepadMoveAction.Enable();
         gamepadInteractAction.Enable();
+        gamepadProcessAction.Enable();
+        gamepadDashAction.Enable();
     }
 
     private void OnDisable()
     {
         gamepadMoveAction.Disable();
         gamepadInteractAction.Disable();
+        gamepadProcessAction.Disable();
+        gamepadDashAction.Disable();
     }
 
     private void Start()
@@ -132,6 +151,14 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             return; // Block all input/movement while frozen
         }
 
+        // --- Dash Logic ---
+        if (isDashing)
+        {
+            dashTimer -= Time.deltaTime;
+            if (dashTimer <= 0) isDashing = false;
+        }
+        if (currentDashCooldown > 0) currentDashCooldown -= Time.deltaTime;
+
         // Allocation-free controller caching
         if (controllersDirty)
         {
@@ -148,6 +175,8 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
         Vector2 moveInput = Vector2.zero;
         bool interactPressed = false;
+        bool processPressed = false;
+        bool dashPressed = false;
 
         // Keyboard inputs always work for their respective players
         if (playerIndex == 0)
@@ -160,6 +189,8 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                 if (Keyboard.current.dKey.isPressed) moveInput.x += 1;
                 
                 if (Keyboard.current.eKey.wasPressedThisFrame) interactPressed = true;
+                if (Keyboard.current.rKey.isPressed) processPressed = true;
+                if (Keyboard.current.spaceKey.wasPressedThisFrame) dashPressed = true;
             }
         }
         else if (playerIndex == 1)
@@ -172,12 +203,18 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                 if (Keyboard.current.rightArrowKey.isPressed) moveInput.x += 1;
                 
                 if (Keyboard.current.rightShiftKey.wasPressedThisFrame) interactPressed = true;
+                if (Keyboard.current.rightCtrlKey.isPressed || Keyboard.current.rightCommandKey.isPressed) processPressed = true;
+                
+                // Slash / Minus key for P2 Dash
+                if (Keyboard.current.slashKey.wasPressedThisFrame || Keyboard.current.minusKey.wasPressedThisFrame) dashPressed = true;
             }
         }
 
         // --- Gamepad / Joystick Logic ---
         Vector2 gamepadInput = Vector2.zero;
         bool gamepadInteract = false;
+        bool gamepadProcess = false;
+        bool gamepadDash = false;
 
         if (isDualControllerMode)
         {
@@ -187,13 +224,9 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                 InputDevice myDevice = cachedControllers[playerIndex];
                 gamepadInput = GetCorrectedInput(myDevice);
 
-                // Read Interaction
-                if (gamepadInteractAction.WasPressedThisFrame()) 
-                {
-                    // Verify if THIS device triggered the action
-                    var lastControl = gamepadInteractAction.activeControl;
-                    if (lastControl != null && lastControl.device == myDevice) gamepadInteract = true;
-                }
+                if (gamepadInteractAction.WasPressedThisFrame() && gamepadInteractAction.activeControl?.device == myDevice) gamepadInteract = true;
+                if (gamepadProcessAction.IsPressed() && gamepadProcessAction.activeControl?.device == myDevice) gamepadProcess = true;
+                if (gamepadDashAction.WasPressedThisFrame() && gamepadDashAction.activeControl?.device == myDevice) gamepadDash = true;
             }
         }
         else if (controllerCount == 1 && playerIndex == activeGamepadPlayerIndex)
@@ -202,6 +235,8 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             InputDevice myDevice = cachedControllers[0];
             gamepadInput = GetCorrectedInput(myDevice);
             if (gamepadInteractAction.WasPressedThisFrame()) gamepadInteract = true;
+            if (gamepadProcessAction.IsPressed()) gamepadProcess = true;
+            if (gamepadDashAction.WasPressedThisFrame()) gamepadDash = true;
         }
 
         // Apply gamepad input if it exists
@@ -211,6 +246,8 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         }
 
         if (gamepadInteract) interactPressed = true;
+        if (gamepadProcess) processPressed = true;
+        if (gamepadDash) dashPressed = true;
         // ---------------------
 
         if (moveInput.sqrMagnitude > 1)
@@ -226,10 +263,19 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             transform.rotation = Quaternion.LookRotation(lookDirection);
         }
 
+        // Dash Trigger
+        if (dashPressed && currentDashCooldown <= 0 && moveInput.sqrMagnitude > 0.1f)
+        {
+            isDashing = true;
+            dashTimer = dashDuration;
+            currentDashCooldown = dashCooldown;
+        }
+
         // fallback translation if no rigidbody
         if (rb == null)
         {
-            Vector3 movement = new Vector3(moveInput.x, 0f, moveInput.y) * moveSpeed * Time.deltaTime;
+            float speed = isDashing ? dashSpeed : moveSpeed;
+            Vector3 movement = new Vector3(moveInput.x, 0f, moveInput.y) * speed * Time.deltaTime;
             transform.Translate(movement, Space.World);
         }
 
@@ -237,6 +283,27 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         {
             TryInteract();
         }
+
+        // Processing (Hold Interaction)
+        if (processPressed)
+        {
+            TryProcess();
+        }
+    }
+
+    private void TryProcess()
+    {
+        // Many stations check if the player is "holding interact"
+        // This method can be called or the processPressed bool can be checked by stations.
+        // For now, we reuse the logic where stations check player interaction state.
+    }
+
+    public bool IsProcessing() 
+    {
+        // Simple helper for stations to check if this player is pressing the 'Process' key
+        if (playerIndex == 0) return Keyboard.current != null && Keyboard.current.rKey.isPressed || (cachedControllers.Count > 0 && playerIndex == activeGamepadPlayerIndex && gamepadProcessAction.IsPressed());
+        if (playerIndex == 1) return Keyboard.current != null && (Keyboard.current.rightCtrlKey.isPressed || Keyboard.current.rightCommandKey.isPressed) || (cachedControllers.Count > 1 && gamepadProcessAction.IsPressed());
+        return false;
     }
 
     private Vector2 GetCorrectedInput(InputDevice device)
@@ -274,7 +341,8 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
     {
         if (rb != null)
         {
-            Vector3 targetVelocity = new Vector3(currentMoveInput.x, 0f, currentMoveInput.y) * moveSpeed;
+            float speed = isDashing ? dashSpeed : moveSpeed;
+            Vector3 targetVelocity = new Vector3(currentMoveInput.x, 0f, currentMoveInput.y) * speed;
             rb.linearVelocity = new Vector3(targetVelocity.x, rb.linearVelocity.y, targetVelocity.z);
         }
     }

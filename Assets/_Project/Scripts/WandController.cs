@@ -104,22 +104,22 @@ public class WandController : MonoBehaviour
     private bool CheckActionHeld()
     {
         if (player.playerIndex == 0 && Keyboard.current != null)
-            return Keyboard.current.qKey.isPressed;
+            return Keyboard.current.fKey.isPressed;
         if (player.playerIndex == 1 && Keyboard.current != null)
-            return Keyboard.current.numpad0Key.isPressed;
+            return Keyboard.current.enterKey.isPressed;
         if (player.playerIndex == SimplePlayerController.activeGamepadPlayerIndex && Gamepad.current != null)
-            return Gamepad.current.leftTrigger.isPressed;
+            return Gamepad.current.rightTrigger.isPressed;
         return false;
     }
 
     private bool CheckActionPressed()
     {
         if (player.playerIndex == 0 && Keyboard.current != null)
-            return Keyboard.current.qKey.wasPressedThisFrame;
+            return Keyboard.current.fKey.wasPressedThisFrame;
         if (player.playerIndex == 1 && Keyboard.current != null)
-            return Keyboard.current.numpad0Key.wasPressedThisFrame;
+            return Keyboard.current.enterKey.wasPressedThisFrame;
         if (player.playerIndex == SimplePlayerController.activeGamepadPlayerIndex && Gamepad.current != null)
-            return Gamepad.current.leftTrigger.wasPressedThisFrame;
+            return Gamepad.current.rightTrigger.wasPressedThisFrame;
         return false;
     }
 }
