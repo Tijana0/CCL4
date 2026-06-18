@@ -51,6 +51,12 @@ public class GameManager : MonoBehaviour
                 module.submit.action.AddBinding("<HID::*>/button2");
             }
         }
+
+        // Auto-attach PauseManager so it's always available
+        if (GetComponent<PauseManager>() == null)
+        {
+            gameObject.AddComponent<PauseManager>();
+        }
     }
 
     private void OnEnable() { switchPlayerAction.Enable(); }
