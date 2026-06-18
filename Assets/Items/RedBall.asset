@@ -14,10 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: RedBall
   icon: {fileID: 0}
-  prefab: {fileID: 7600460821896032574, guid: 469a8f12ef4284530adc7e107cf8cb73, type: 3}
-  processingRules: []
+  prefab: {fileID: 1115837323697156612, guid: 95eabda20a5ffd34aa93ac24567b7177, type: 3}
+  processingRules:
+  - stationType: 5
+    outputItem: {fileID: 0}
+    processingTime: 0
   combineRules:
   - otherItem: {fileID: 11400000, guid: ef3018d747456b244ae47bea4dd8a975, type: 2}
     outputItem: {fileID: 11400000, guid: 35deb88b8ff2b491e999f07b2b83f08f, type: 2}
-  allowedStationTypes: 
+  allowedStationTypes: 0000000001000000020000000300000004000000050000000600000007000000
   requiresProcessingBeforeCauldron: 0
+  isDisposable: 1

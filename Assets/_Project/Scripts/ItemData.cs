@@ -28,6 +28,8 @@ public class ItemData : ScriptableObject
     public List<StationType> allowedStationTypes = new List<StationType>();
     // If true, this item CANNOT be placed in the cauldron without being processed first
     public bool requiresProcessingBeforeCauldron = false;
+    [Tooltip("If false, this item cannot be thrown in the Bin. Use for permanent scene items like buckets or teapots.")]
+    public bool isDisposable = true;
 
     /// <summary>
     /// Returns the output item for a given station type, or null if not processable there.

@@ -47,6 +47,12 @@ public class MultiIngredientStation : StationBase
     [Tooltip("Seconds after cooking completes before boiling over. Only used if enableBoilOver is true.")]
     public float boilOverDelay = 15f;
 
+    [Header("Ingredients")]
+    [Tooltip("Maximum number of ingredients this station accepts. 0 = unlimited.")]
+    public int maxIngredients = 0;
+    [Tooltip("Default cooking time if no matching recipe is found yet.")]
+    public float defaultCookingTime = 5f;
+
     [Header("Recipes")]
     public List<MultiIngredientRecipe> recipes = new List<MultiIngredientRecipe>();
 
@@ -117,10 +123,12 @@ public class MultiIngredientStation : StationBase
         {
             TryAddIngredient(player);
         }
-        else if (stationState == StationState.HasIngredients && triggerMode == TriggerMode.HoldToProcess)
+        else if ((stationState == StationState.HasIngredients || stationState == StationState.Cooking) 
+                  && triggerMode == TriggerMode.HoldToProcess && player.heldItem == null)
         {
-            // Player holds interact to start cooking
-            StartCooking(player);
+            // Player holds interact to start/continue cooking
+            if (stationState != StationState.Cooking) RestartCooking(player);
+            else cookingPlayer = player; // Re-assign if player changed
         }
     }
 
@@ -142,10 +150,10 @@ public class MultiIngredientStation : StationBase
             return;
         }
 
-        // Reject if already cooking or done
-        if (stationState == StationState.Cooking || stationState == StationState.Done)
+        // Check max ingredients
+        if (maxIngredients > 0 && ingredients.Count >= maxIngredients)
         {
-            Debug.Log("[MultiIngredientStation] Station is busy.");
+            Debug.Log($"[MultiIngredientStation] Max ingredients ({maxIngredients}) reached.");
             return;
         }
 
@@ -159,50 +167,62 @@ public class MultiIngredientStation : StationBase
         stationState = StationState.HasIngredients;
         UpdateVisuals();
 
-        // Check trigger mode
+        // Always restart cooking timer when ingredient is added
+        // (except HoldToProcess which waits for player to hold interact)
         switch (triggerMode)
         {
             case TriggerMode.OnFirstIngredient:
-                if (ingredients.Count == 1)
-                    StartCooking(null);
+                // Start cooking immediately on every new ingredient — resets timer
+                RestartCooking(null);
                 break;
 
             case TriggerMode.OnLastIngredient:
-                // Check if any recipe is now fully satisfied
+                // Only start when ALL ingredients match a recipe
                 MultiIngredientRecipe match = FindMatchingRecipe();
                 if (match != null)
-                    StartCooking(null);
+                    RestartCooking(null);
+                else
+                    Debug.Log($"[MultiIngredientStation] {ingredients.Count} ingredient(s) in — waiting for full recipe match.");
                 break;
 
             case TriggerMode.HoldToProcess:
+                // Player must hold interact — just log status
                 MultiIngredientRecipe possible = FindMatchingRecipe();
-                if (possible != null)
-                    Debug.Log($"[MultiIngredientStation] Recipe ready: {possible.recipeName}. Hold interact to brew.");
+                Debug.Log(possible != null
+                    ? $"[MultiIngredientStation] Recipe ready: {possible.recipeName}. Hold interact to brew."
+                    : $"[MultiIngredientStation] {ingredients.Count} ingredient(s) in — no recipe match yet.");
                 break;
         }
     }
 
     // ── Cooking ──────────────────────────────────────────────────────────────
 
-    private void StartCooking(SimplePlayerController player)
+    /// <summary>
+    /// Starts or restarts cooking with current ingredients.
+    /// Does NOT require a recipe match upfront — checks at completion.
+    /// Called every time a new ingredient is added.
+    /// </summary>
+    private void RestartCooking(SimplePlayerController player)
     {
+        // Get cooking time from best matching recipe, or use default
         MultiIngredientRecipe match = FindMatchingRecipe();
-        if (match == null && triggerMode != TriggerMode.OnFirstIngredient)
-        {
-            Debug.Log("[MultiIngredientStation] No matching recipe for current ingredients.");
-            return;
-        }
+        currentCookingTime = match != null ? match.cookingTime : defaultCookingTime;
 
         cookingProgress = 0f;
-        cookingPlayer = player;
-        currentCookingTime = match != null ? match.cookingTime : 5f;
+        boilOverTimer = 0f; // Reset burn timer too
+        if (player != null) cookingPlayer = player;
         stationState = StationState.Cooking;
 
         if (progressBarContainer != null) progressBarContainer.SetActive(true);
         if (progressBarFill != null) progressBarFill.fillAmount = 0f;
 
-        UpdateVisuals();
-        Debug.Log($"[MultiIngredientStation] Cooking started — {currentCookingTime}s");
+        Debug.Log($"[MultiIngredientStation] Cooking restarted with {ingredients.Count} ingredient(s) — {currentCookingTime}s");
+    }
+
+    // Kept for HoldToProcess trigger mode
+    private void StartCooking(SimplePlayerController player)
+    {
+        RestartCooking(player);
     }
 
     private void UpdateCooking()

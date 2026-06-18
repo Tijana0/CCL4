@@ -14,11 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: DragonScales
   icon: {fileID: 0}
-  prefab: {fileID: 7967399784390640300, guid: 992be8a6ff07444788202eafddbc145f, type: 3}
+  prefab: {fileID: 8773658584843026122, guid: 80ac905d1f7a1134fbeaf14400b6aeb4, type: 3}
   processingRules:
-  - stationType: 0
-    outputItem: {fileID: 0}
-    processingTime: 0
   - stationType: 2
     outputItem: {fileID: 11400000, guid: 5a9dc796142a32d438b2f864166d3c46, type: 2}
     processingTime: 3
@@ -27,3 +24,4 @@ MonoBehaviour:
     outputItem: {fileID: 11400000, guid: 73f8552b54f50c943a16e507c8361183, type: 2}
   allowedStationTypes: 020000000000000005000000
   requiresProcessingBeforeCauldron: 1
+  isDisposable: 1

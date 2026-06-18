@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: RedBlueBall
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: RedBlueBall
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: d3dabf071f3db461e8d6a12d35f1463b, type: 3}
   prefab: {fileID: 8189691268112693920, guid: 44e2b2c80809ab84ea67ff06e1471776, type: 3}
   processingRules: []
   combineRules: []
   allowedStationTypes: 
   requiresProcessingBeforeCauldron: 0
+  isDisposable: 1
