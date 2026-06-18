@@ -254,7 +254,7 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                 
                 // --- UNIVERSAL MAPPING (Works for Joystick/HID/Third-party) ---
                 // Check all possible aliases for the buttons
-                gamepadInteract |= CheckButton(myDevice, new string[] { "buttonSouth", "button0", "button11", "a", "cross" });
+                gamepadInteract |= CheckButton(myDevice, new string[] { "buttonSouth", "button0", "button11", "a", "cross", "trigger" });
                 gamepadProcess |= CheckButton(myDevice, new string[] { "buttonWest", "button2", "button13", "x", "square" }, true);
                 gamepadDash |= CheckButton(myDevice, new string[] { "buttonEast", "button1", "button12", "b", "circle" });
             }
