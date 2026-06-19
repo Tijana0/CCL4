@@ -15,7 +15,6 @@ public class PickupObject : MonoBehaviour, IInteractable
     
     private Rigidbody rb;
     private Collider col;
-    private float rotationSpeed = 50f;
 
     private void Awake()
     {
@@ -72,12 +71,6 @@ public class PickupObject : MonoBehaviour, IInteractable
         }
     }
 
-    private void Update()
-    {
-        // rotate only when placed in the world
-        transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.World);
-    }
-
     public bool CanInteract()
     {
         return true;
@@ -97,9 +90,6 @@ public class PickupObject : MonoBehaviour, IInteractable
             transform.SetParent(player.holdPoint);
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
-
-            // Stop rotation Update when held
-            this.enabled = false;
         }
     }
 
@@ -111,8 +101,5 @@ public class PickupObject : MonoBehaviour, IInteractable
         if (rb != null) rb.isKinematic = true;
         // reenable collider to allow pickup again
         if (col != null) col.enabled = true; 
-
-        // Resume rotation Update when dropped
-        this.enabled = true;
     }
 }
