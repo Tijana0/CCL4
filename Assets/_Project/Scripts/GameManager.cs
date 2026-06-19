@@ -32,24 +32,35 @@ public class GameManager : MonoBehaviour
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
 
-        // Add generic joystick fallback for player switching
-        switchPlayerAction.AddBinding("<Joystick>/button4"); // Generic Left Bumper
-        switchPlayerAction.AddBinding("<Joystick>/button5"); // Generic Right Bumper
-        switchPlayerAction.AddBinding("<HID::*>/button4"); 
+        // LB (Left Bumper) is button5 on this Mac gamepad
+        switchPlayerAction.AddBinding("<Joystick>/button5"); 
         switchPlayerAction.AddBinding("<HID::*>/button5"); 
 
-        // Add generic joystick fallbacks for UI SUBMIT
+        // Add generic joystick fallbacks for UI SUBMIT and NAVIGATE
         var eventSystem = Object.FindFirstObjectByType<UnityEngine.EventSystems.EventSystem>();
         if (eventSystem != null)
         {
             var module = eventSystem.GetComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
-            if (module != null && module.submit != null && module.submit.action != null)
+            if (module != null)
             {
-                module.submit.action.AddBinding("<Joystick>/trigger");
-                module.submit.action.AddBinding("<Joystick>/button0");
-                module.submit.action.AddBinding("<Joystick>/button1");
-                module.submit.action.AddBinding("<HID::*>/button2");
+                if (module.submit != null && module.submit.action != null)
+                {
+                    module.submit.action.AddBinding("<Joystick>/trigger");
+                    module.submit.action.AddBinding("<Joystick>/button0");
+                    module.submit.action.AddBinding("<Joystick>/button11"); // Mac alias
+                    module.submit.action.AddBinding("<HID::*>/button0");
+                }
+                if (module.move != null && module.move.action != null)
+                {
+                    module.move.action.AddBinding("<Joystick>/stick");
+                }
             }
+        }
+
+        // Auto-attach PauseManager so it's always available
+        if (GetComponent<PauseManager>() == null)
+        {
+            gameObject.AddComponent<PauseManager>();
         }
     }
 

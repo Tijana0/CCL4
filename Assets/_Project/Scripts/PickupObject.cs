@@ -15,18 +15,60 @@ public class PickupObject : MonoBehaviour, IInteractable
     
     private Rigidbody rb;
     private Collider col;
-    private float rotationSpeed = 50f;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+        }
+        CenterPivotAroundVisuals();
     }
 
-    private void Update()
+    private void CenterPivotAroundVisuals()
     {
-        // rotate only when placed in the world
-        transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime, Space.World);
+        MeshRenderer[] renderers = GetComponentsInChildren<MeshRenderer>();
+        if (renderers.Length == 0) return;
+
+        // Calculate visual bounds center in world space
+        Bounds bounds = renderers[0].bounds;
+        for (int i = 1; i < renderers.Length; i++)
+        {
+            bounds.Encapsulate(renderers[i].bounds);
+        }
+        Vector3 visualCenter = bounds.center;
+
+        // Store children to detach
+        System.Collections.Generic.List<Transform> children = new System.Collections.Generic.List<Transform>();
+        foreach (Transform child in transform)
+        {
+            children.Add(child);
+        }
+
+        // Detach children temporarily to preserve world positions/rotations
+        foreach (var child in children)
+        {
+            child.SetParent(null);
+        }
+
+        // Move parent to visual center
+        transform.position = visualCenter;
+
+        // Reattach children
+        foreach (var child in children)
+        {
+            child.SetParent(transform);
+        }
+
+        // Adjust collider center and size to match visual bounds
+        BoxCollider boxCol = GetComponent<BoxCollider>();
+        if (boxCol != null)
+        {
+            boxCol.center = Vector3.zero;
+            boxCol.size = bounds.size;
+        }
     }
 
     public bool CanInteract()
@@ -72,11 +114,8 @@ public class PickupObject : MonoBehaviour, IInteractable
         transform.position = dropPosition;
         transform.localScale = worldScaleBeforeDrop;
         
-        if (rb != null) rb.isKinematic = false;
+        if (rb != null) rb.isKinematic = true;
         // reenable collider to allow pickup again
         if (col != null) col.enabled = true; 
-
-        // Resume rotation Update when dropped
-        this.enabled = true;
     }
 }

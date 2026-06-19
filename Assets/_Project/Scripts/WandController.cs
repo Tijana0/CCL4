@@ -104,22 +104,88 @@ public class WandController : MonoBehaviour
     private bool CheckActionHeld()
     {
         if (player.playerIndex == 0 && Keyboard.current != null)
-            return Keyboard.current.qKey.isPressed;
+            return Keyboard.current.fKey.isPressed;
         if (player.playerIndex == 1 && Keyboard.current != null)
-            return Keyboard.current.numpad0Key.isPressed;
-        if (player.playerIndex == SimplePlayerController.activeGamepadPlayerIndex && Gamepad.current != null)
-            return Gamepad.current.leftTrigger.isPressed;
+            return Keyboard.current.enterKey.isPressed;
+            
+        // Gamepad logic
+        InputDevice myDevice = GetMyDevice();
+        if (myDevice != null)
+        {
+            // 1. Try standard RT
+            if (myDevice is Gamepad g && g.rightTrigger.isPressed) return true;
+            
+            // 2. Try by index (Right Trigger is usually button 5 or 7 on HID)
+            if (myDevice is Joystick j)
+            {
+                if (CheckJoystickButton(j, 5, true)) return true;
+                if (CheckJoystickButton(j, 7, true)) return true;
+            }
+            
+            // 3. Search by name
+            foreach(var control in myDevice.allControls)
+            {
+                if (control.name.ToLower().Contains("righttrigger") || control.name.ToLower().Contains("rt"))
+                {
+                    if (control is UnityEngine.InputSystem.Controls.ButtonControl b && b.isPressed) return true;
+                }
+            }
+        }
         return false;
     }
 
     private bool CheckActionPressed()
     {
         if (player.playerIndex == 0 && Keyboard.current != null)
-            return Keyboard.current.qKey.wasPressedThisFrame;
+            return Keyboard.current.fKey.wasPressedThisFrame;
         if (player.playerIndex == 1 && Keyboard.current != null)
-            return Keyboard.current.numpad0Key.wasPressedThisFrame;
-        if (player.playerIndex == SimplePlayerController.activeGamepadPlayerIndex && Gamepad.current != null)
-            return Gamepad.current.leftTrigger.wasPressedThisFrame;
+            return Keyboard.current.enterKey.wasPressedThisFrame;
+
+        // Gamepad logic
+        InputDevice myDevice = GetMyDevice();
+        if (myDevice != null)
+        {
+            if (myDevice is Gamepad g && g.rightTrigger.wasPressedThisFrame) return true;
+            
+            if (myDevice is Joystick j)
+            {
+                if (CheckJoystickButton(j, 5, false)) return true;
+                if (CheckJoystickButton(j, 7, false)) return true;
+            }
+            
+            foreach(var control in myDevice.allControls)
+            {
+                if (control.name.ToLower().Contains("righttrigger") || control.name.ToLower().Contains("rt"))
+                {
+                    if (control is UnityEngine.InputSystem.Controls.ButtonControl b && b.wasPressedThisFrame) return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private InputDevice GetMyDevice()
+    {
+        // Allocation-free device check using System.Linq or similar would be nice but let's be direct
+        var controllers = new System.Collections.Generic.List<InputDevice>();
+        foreach (var device in InputSystem.devices)
+            if (device is Gamepad || device is Joystick) controllers.Add(device);
+
+        if (controllers.Count >= 2)
+        {
+            if (player.playerIndex < controllers.Count) return controllers[player.playerIndex];
+        }
+        else if (controllers.Count == 1 && player.playerIndex == SimplePlayerController.activeGamepadPlayerIndex)
+        {
+            return controllers[0];
+        }
+        return null;
+    }
+
+    private bool CheckJoystickButton(Joystick j, int index, bool hold)
+    {
+        if (j.allControls.Count > index && j.allControls[index] is UnityEngine.InputSystem.Controls.ButtonControl b)
+            return hold ? b.isPressed : b.wasPressedThisFrame;
         return false;
     }
 }
