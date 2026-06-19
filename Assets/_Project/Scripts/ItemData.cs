@@ -13,6 +13,12 @@ public class ItemData : ScriptableObject
     public Sprite icon;
     public GameObject prefab; // The physical prefab spawned in the world
 
+    [Header("Potion Colour")]
+    [Tooltip("This item's colour contribution when used as a potion ingredient. Ignored if isColourless is checked (e.g. Water).")]
+    public Color potionColour = Color.white;
+    [Tooltip("Check for ingredients like Water that should NOT contribute colour, only dilute the blend.")]
+    public bool isColourless = false;
+
     [Header("Processing Rules")]
     // What this item becomes at each station type. Leave empty if not processable there.
     public List<ProcessingRule> processingRules = new List<ProcessingRule>();

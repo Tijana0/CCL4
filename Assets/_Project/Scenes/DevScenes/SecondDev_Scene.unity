@@ -4239,7 +4239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9cbc87c8508e4a20b1bb02f55a56190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  gameTime: 80
+  gameTime: 120
   timerText: {fileID: 1594386648}
   scoreText: {fileID: 0}
   gameOverPanel: {fileID: 1345743295}

@@ -3,25 +3,31 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Station that requires the player to HOLD INTERACT to process an item over time.
-/// Used for: Mortar & Pestle (grinding), Cutting Board (chopping).
+/// Station that requires the player to HOLD the PROCESS button to process an item over time.
+/// Used for: Mortar & Pestle (grinding), Cutting Board (chopping), Brazier (warming).
+///
+/// Input split:
+///   E (Interact)        — place item on station / pick item up from station
+///   Q (Process)          — hold near the station (empty-handed) to start/continue processing
+///
+/// This separation means E never accidentally starts processing, and Q never
+/// accidentally picks up or places items.
 ///
 /// Setup:
-/// - Set stationType (MortarAndPestle or CuttingBoard)
+/// - Set stationType (MortarAndPestle, CuttingBoard, etc.)
 /// - Assign progressBarFill (Image, Fill type Horizontal)
 /// - Assign progressBarContainer (parent GameObject to show/hide)
 /// - Item's ItemData must have a ProcessingRule for this stationType
-///
-/// Usage:
-/// - Place item → validated against processing rules
-/// - Hold Interact (E / RightShift / Gamepad A) → progress fills → item transforms
-/// - Release early → progress resets
 /// </summary>
 public class ProcessingStation : StationBase
 {
     [Header("Progress Bar UI")]
     public Image progressBarFill;
     public GameObject progressBarContainer;
+
+    [Header("Process Range")]
+    [Tooltip("How close a player must be to hold Q and process here")]
+    public float processRange = 1.5f;
 
     private bool isProcessing = false;
     private float processingProgress = 0f;
@@ -36,14 +42,32 @@ public class ProcessingStation : StationBase
 
     private void Update()
     {
-        if (!isProcessing) return;
-
-        bool holdingInteract = CheckPlayerHoldingInteract();
-        if (!holdingInteract)
+        // Only check for processing if there's an item here that has a rule
+        if (itemOnStation == null)
         {
-            CancelProcessing();
+            if (isProcessing) CancelProcessing();
             return;
         }
+
+        WorldItem wi = itemOnStation.GetComponent<WorldItem>();
+        ProcessingRule rule = wi != null ? GetRule(wi.itemData) : null;
+        if (rule == null)
+        {
+            if (isProcessing) CancelProcessing();
+            return;
+        }
+
+        // Find a nearby empty-handed player holding Q
+        SimplePlayerController holder = FindPlayerHoldingProcess();
+
+        if (holder == null)
+        {
+            if (isProcessing) CancelProcessing();
+            return;
+        }
+
+        if (!isProcessing)
+            BeginProcessing(holder, rule);
 
         processingProgress += Time.deltaTime / processingDuration;
         if (progressBarFill != null)
@@ -55,8 +79,7 @@ public class ProcessingStation : StationBase
 
     public override void Interact(SimplePlayerController player)
     {
-        if (isProcessing) return;
-
+        // E only places or picks up — never starts processing
         bool playerHasItem = player.heldItem != null;
         bool stationHasItem = itemOnStation != null;
 
@@ -64,15 +87,9 @@ public class ProcessingStation : StationBase
         {
             TryPlaceItem(player);
         }
-        else if (!playerHasItem && stationHasItem)
+        else if (!playerHasItem && stationHasItem && !isProcessing)
         {
-            WorldItem wi = itemOnStation.GetComponent<WorldItem>();
-            ProcessingRule rule = wi != null ? GetRule(wi.itemData) : null;
-
-            if (rule != null)
-                StartProcessing(player);
-            else
-                TakeItem(player);
+            TakeItem(player);
         }
     }
 
@@ -96,21 +113,17 @@ public class ProcessingStation : StationBase
         PlaceItemOnStation(player.heldItem, player);
     }
 
-    private void StartProcessing(SimplePlayerController player)
+    private void BeginProcessing(SimplePlayerController player, ProcessingRule rule)
     {
         isProcessing = true;
         processingProgress = 0f;
         processingPlayer = player;
+        processingDuration = rule.processingTime > 0 ? rule.processingTime : 2f;
 
         if (progressBarContainer != null) progressBarContainer.SetActive(true);
         if (progressBarFill != null) progressBarFill.fillAmount = 0f;
 
-        // Get duration from the item's rule
-        WorldItem wi = itemOnStation?.GetComponent<WorldItem>();
-        ProcessingRule rule = wi != null ? GetRule(wi.itemData) : null;
-        processingDuration = (rule != null && rule.processingTime > 0) ? rule.processingTime : 2f;
-
-        Debug.Log($"[ProcessingStation] Hold to process... ({processingDuration}s)");
+        Debug.Log($"[ProcessingStation] Hold Q to process... ({processingDuration}s)");
     }
 
     private void CompleteProcessing()
@@ -135,10 +148,10 @@ public class ProcessingStation : StationBase
             itemOnStation = result.gameObject;
             result.transform.localPosition = new Vector3(0, 0.2f, 0);
 
-            Rigidbody rb = result.GetComponent<Rigidbody>();
+            Rigidbody rb = result.GetComponentInChildren<Rigidbody>();
             if (rb != null) rb.isKinematic = true;
-            Collider col = result.GetComponent<Collider>();
-            if (col != null) col.enabled = false;
+            foreach (Collider col in result.GetComponentsInChildren<Collider>())
+                col.enabled = false;
         }
 
         processingPlayer = null;
@@ -155,18 +168,42 @@ public class ProcessingStation : StationBase
         if (progressBarFill != null) progressBarFill.fillAmount = 0f;
     }
 
-    private bool CheckPlayerHoldingInteract()
+    /// <summary>
+    /// Finds the closest empty-handed player within processRange who is holding Q.
+    /// </summary>
+    private SimplePlayerController FindPlayerHoldingProcess()
     {
-        if (processingPlayer == null) return false;
+        SimplePlayerController[] players = FindObjectsByType<SimplePlayerController>(FindObjectsSortMode.None);
 
-        if (processingPlayer.playerIndex == 0 && Keyboard.current != null)
-            return Keyboard.current.eKey.isPressed;
+        foreach (var p in players)
+        {
+            if (p.heldItem != null) continue; // must have empty hands to process
 
-        if (processingPlayer.playerIndex == 1 && Keyboard.current != null)
-            return Keyboard.current.rightShiftKey.isPressed;
+            float dist = Vector3.Distance(p.transform.position, transform.position);
+            if (dist > processRange) continue;
 
-        if (processingPlayer.playerIndex == SimplePlayerController.activeGamepadPlayerIndex && Gamepad.current != null)
-            return Gamepad.current.buttonSouth.isPressed;
+            if (CheckPlayerHoldingProcessButton(p))
+                return p;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Checks the dedicated PROCESS action button (Q / Numpad0 / Left Trigger).
+    /// Kept separate from interact (E) so picking items up never accidentally
+    /// triggers processing, and processing never accidentally picks things up.
+    /// </summary>
+    private bool CheckPlayerHoldingProcessButton(SimplePlayerController player)
+    {
+        if (player.playerIndex == 0 && Keyboard.current != null)
+            return Keyboard.current.qKey.isPressed;
+
+        if (player.playerIndex == 1 && Keyboard.current != null)
+            return Keyboard.current.numpad0Key.isPressed;
+
+        if (player.playerIndex == SimplePlayerController.activeGamepadPlayerIndex && Gamepad.current != null)
+            return Gamepad.current.leftTrigger.isPressed;
 
         return false;
     }

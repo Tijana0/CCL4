@@ -171,6 +171,9 @@ public class ItemContainerStation : StationBase
             return;
         }
 
+        // Capture the prefab's own intended scale before parenting under holdPoint
+        Vector3 prefabScale = itemToDispense.prefab.transform.localScale;
+
         GameObject spawned = Instantiate(itemToDispense.prefab, player.holdPoint.position, Quaternion.identity, player.holdPoint);
 
         WorldItem wi = spawned.GetComponent<WorldItem>();
@@ -180,6 +183,14 @@ public class ItemContainerStation : StationBase
         player.heldItem = spawned;
         spawned.transform.localPosition = Vector3.zero;
         spawned.transform.localRotation = Quaternion.identity;
+
+        // Counteract holdPoint's own scale so the item's world size matches the prefab
+        Vector3 holdScale = player.holdPoint.lossyScale;
+        spawned.transform.localScale = new Vector3(
+            holdScale.x != 0 ? prefabScale.x / holdScale.x : prefabScale.x,
+            holdScale.y != 0 ? prefabScale.y / holdScale.y : prefabScale.y,
+            holdScale.z != 0 ? prefabScale.z / holdScale.z : prefabScale.z
+        );
 
         Rigidbody rb = spawned.GetComponent<Rigidbody>();
         if (rb != null) rb.isKinematic = true;

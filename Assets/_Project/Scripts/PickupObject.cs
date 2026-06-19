@@ -45,9 +45,19 @@ public class PickupObject : MonoBehaviour, IInteractable
             // disable collider so overlapbox ignores it while held
             if (col != null) col.enabled = false; 
 
+            Vector3 worldScaleBeforePickup = transform.lossyScale;
+
             transform.SetParent(player.holdPoint);
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
+
+            // Counteract holdPoint scale so item doesn't shrink/grow when picked up
+            Vector3 holdScale = player.holdPoint.lossyScale;
+            transform.localScale = new Vector3(
+                holdScale.x != 0 ? worldScaleBeforePickup.x / holdScale.x : worldScaleBeforePickup.x,
+                holdScale.y != 0 ? worldScaleBeforePickup.y / holdScale.y : worldScaleBeforePickup.y,
+                holdScale.z != 0 ? worldScaleBeforePickup.z / holdScale.z : worldScaleBeforePickup.z
+            );
 
             // Stop rotation Update when held
             this.enabled = false;
@@ -56,8 +66,11 @@ public class PickupObject : MonoBehaviour, IInteractable
 
     public void Drop(Vector3 dropPosition)
     {
+        Vector3 worldScaleBeforeDrop = transform.lossyScale;
+
         transform.SetParent(null);
         transform.position = dropPosition;
+        transform.localScale = worldScaleBeforeDrop;
         
         if (rb != null) rb.isKinematic = false;
         // reenable collider to allow pickup again

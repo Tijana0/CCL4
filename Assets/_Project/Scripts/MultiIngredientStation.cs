@@ -56,6 +56,18 @@ public class MultiIngredientStation : StationBase
     [Header("Recipes")]
     public List<MultiIngredientRecipe> recipes = new List<MultiIngredientRecipe>();
 
+    [Header("Wrong Combo / Improvised Potion")]
+    [Tooltip("Item used as the fallback result when ingredients don't match any recipe. Its material gets tinted by the blended ingredient colours.")]
+    public ItemData improvisedPotionItem;
+    [Tooltip("If true, the result's renderer material colour is set to the blended ingredient colour at runtime.")]
+    public bool tintImprovisedResult = true;
+
+    [Header("Requires Ingredient To Start")]
+    [Tooltip("Enable to require a specific ingredient before cooking can begin.")]
+    public bool requireSpecificIngredient = true;
+    [Tooltip("The ingredient that must be present before cooking starts (e.g. WaterBowl). Only used if Require Specific Ingredient is checked.")]
+    public ItemData requiredStartIngredient;
+
     [Header("State Visuals (optional)")]
     [Tooltip("Shown when station is empty")]
     public GameObject emptyVisual;
@@ -143,6 +155,13 @@ public class MultiIngredientStation : StationBase
             return;
         }
 
+        // Reject items that need processing first
+        if (wi.itemData.requiresProcessingBeforeCauldron)
+        {
+            Debug.Log($"[MultiIngredientStation] {wi.itemData.itemName} must be processed first!");
+            return;
+        }
+
         // Check max ingredients
         if (maxIngredients > 0 && ingredients.Count >= maxIngredients)
         {
@@ -157,9 +176,7 @@ public class MultiIngredientStation : StationBase
 
         Debug.Log($"[MultiIngredientStation] Added {wi.itemData.itemName}. Total: {ingredients.Count}");
 
-        // Only move to HasIngredients if not already cooking — don't reset cooking state
-        if (stationState != StationState.Cooking)
-            stationState = StationState.HasIngredients;
+        stationState = StationState.HasIngredients;
         UpdateVisuals();
 
         // Always restart cooking timer when ingredient is added
@@ -199,6 +216,23 @@ public class MultiIngredientStation : StationBase
     /// </summary>
     private void RestartCooking(SimplePlayerController player)
     {
+        if (requireSpecificIngredient && requiredStartIngredient != null)
+        {
+            if (!HasIngredient(requiredStartIngredient))
+            {
+                Debug.Log($"[MultiIngredientStation] Add {requiredStartIngredient.itemName} before cooking can begin.");
+                return;
+            }
+
+            // Water (or whatever the required ingredient is) is necessary but not
+            // sufficient on its own — need at least one other ingredient with it.
+            if (ingredients.Count < 2)
+            {
+                Debug.Log($"[MultiIngredientStation] {requiredStartIngredient.itemName} alone isn't enough — add another ingredient.");
+                return;
+            }
+        }
+
         // Get cooking time from best matching recipe, or use default
         MultiIngredientRecipe match = FindMatchingRecipe();
         currentCookingTime = match != null ? match.cookingTime : defaultCookingTime;
@@ -248,20 +282,31 @@ public class MultiIngredientStation : StationBase
 
         if (resultData == null)
         {
-            Debug.LogWarning("[MultiIngredientStation] No recipe matched at completion.");
+            // No recipe matched — brew an improvised potion instead of nothing.
+            // Still produces SOMETHING the player can hand in (even if it scores 0 or low).
+            if (improvisedPotionItem != null)
+            {
+                Color blended = PotionColourUtility.BlendIngredients(ingredients);
+                SpawnResult(improvisedPotionItem, tintImprovisedResult ? (Color?)blended : null);
+                Debug.Log($"[MultiIngredientStation] No recipe matched — brewed improvised potion (colour: {blended}).");
+            }
+            else
+            {
+                Debug.LogWarning("[MultiIngredientStation] No recipe matched and no improvisedPotionItem assigned — nothing produced.");
+            }
+
             ingredients.Clear();
-            stationState = StationState.Empty;
             UpdateVisuals();
             return;
         }
 
-        SpawnResult(resultData);
+        SpawnResult(resultData, null);
         ingredients.Clear();
         UpdateVisuals();
         Debug.Log($"[MultiIngredientStation] Done! Result: {resultData.itemName}");
     }
 
-    private void SpawnResult(ItemData data)
+    private void SpawnResult(ItemData data, Color? tintColour)
     {
         Transform anchor = resultSpawnPoint != null ? resultSpawnPoint
                          : counterTopPoint != null ? counterTopPoint
@@ -273,11 +318,32 @@ public class MultiIngredientStation : StationBase
             resultItem = result.gameObject;
             result.transform.localPosition = new Vector3(0, 0.3f, 0);
 
-            Rigidbody rb = result.GetComponent<Rigidbody>();
+            Rigidbody rb = result.GetComponentInChildren<Rigidbody>();
             if (rb != null) rb.isKinematic = true;
-            Collider col = result.GetComponent<Collider>();
-            if (col != null) col.enabled = false;
+            foreach (Collider col in result.GetComponentsInChildren<Collider>())
+                col.enabled = false;
+
+            // Apply the blended potion colour to the liquid's material, if requested.
+            if (tintColour.HasValue)
+                ApplyTintToRenderer(result.gameObject, tintColour.Value);
         }
+    }
+
+    /// <summary>
+    /// Tints the FIRST renderer found (including children) using an instanced material
+    /// so other instances of the same prefab aren't affected.
+    /// </summary>
+    private void ApplyTintToRenderer(GameObject target, Color colour)
+    {
+        Renderer renderer = target.GetComponentInChildren<Renderer>();
+        if (renderer == null)
+        {
+            Debug.LogWarning("[MultiIngredientStation] No Renderer found on improvised potion to tint.");
+            return;
+        }
+
+        // .material (not sharedMaterial) creates a per-instance copy automatically
+        renderer.material.color = colour;
     }
 
     // ── Boil over ────────────────────────────────────────────────────────────
@@ -294,6 +360,24 @@ public class MultiIngredientStation : StationBase
     }
 
     // ── Pick up result ───────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Removes and returns the finished result GameObject without giving it
+    /// to any specific player. Used by CauldronPourTarget so a Bottle can
+    /// "pour" the potion out instead of picking the whole liquid item up directly.
+    /// Returns null if nothing is brewed.
+    /// </summary>
+    public GameObject TakeResultItem()
+    {
+        if (resultItem == null) return null;
+
+        GameObject item = resultItem;
+        resultItem = null;
+        stationState = StationState.Empty;
+        boilOverTimer = 0f;
+        UpdateVisuals();
+        return item;
+    }
 
     private void PickUpResult(SimplePlayerController player)
     {
@@ -320,6 +404,14 @@ public class MultiIngredientStation : StationBase
     /// Ordered recipes are checked first — if order is wrong, returns wrongOrderResult.
     /// Then unordered recipes are checked.
     /// </summary>
+    /// <summary>Returns true if the given item is currently present among the ingredients.</summary>
+    private bool HasIngredient(ItemData item)
+    {
+        foreach (var i in ingredients)
+            if (i == item) return true;
+        return false;
+    }
+
     private MultiIngredientRecipe FindMatchingRecipe()
     {
         // Check ordered recipes first
@@ -376,16 +468,21 @@ public class MultiIngredientStation : StationBase
 
     // ── Input check ──────────────────────────────────────────────────────────
 
+    /// <summary>
+    /// Checks the dedicated PROCESS action button (Q / Numpad0 / Left Trigger).
+    /// Kept separate from interact (E) so picking up ingredients never
+    /// accidentally triggers cooking.
+    /// </summary>
     private bool CheckPlayerHoldingInteract()
     {
         if (cookingPlayer == null) return false;
 
         if (cookingPlayer.playerIndex == 0 && Keyboard.current != null)
-            return Keyboard.current.eKey.isPressed;
+            return Keyboard.current.qKey.isPressed;
         if (cookingPlayer.playerIndex == 1 && Keyboard.current != null)
-            return Keyboard.current.rightShiftKey.isPressed;
+            return Keyboard.current.numpad0Key.isPressed;
         if (cookingPlayer.playerIndex == SimplePlayerController.activeGamepadPlayerIndex && Gamepad.current != null)
-            return Gamepad.current.buttonSouth.isPressed;
+            return Gamepad.current.leftTrigger.isPressed;
 
         return false;
     }
