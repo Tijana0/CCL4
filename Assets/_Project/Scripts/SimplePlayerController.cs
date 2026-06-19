@@ -479,6 +479,17 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             {
                 if (interactable.CanInteract())
                 {
+                    // Skip empty stations (counters, sinks, bins) if player hands are also empty
+                    if (interactable is StationBase station)
+                    {
+                        bool playerHasItem = heldItem != null;
+                        bool stationHasItem = station.itemOnStation != null;
+                        if (!playerHasItem && !stationHasItem && !(station is ItemContainerStation))
+                        {
+                            continue;
+                        }
+                    }
+
                     interactable.Interact(this);
                     interacted = true;
                     break;
