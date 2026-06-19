@@ -125,9 +125,9 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             if (col != null)
             {
                 Bounds bounds = col.bounds;
-                // Walls take up 0.1m on Left (min X), Right (max X), and Back (max Z)
+                // Walls take up 0.5m on Left (min X), Right (max X), and Back (max Z)
                 // Front (min Z) has no wall.
-                float wallThickness = 0.1f;
+                float wallThickness = 0.5f;
                 float playerRadius = 0.5f;
 
                 float leftWallX = bounds.min.x + wallThickness;
@@ -496,65 +496,110 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                 float dX = Mathf.Round(interactionCenter.x);
                 float dZ = Mathf.Floor(interactionCenter.z) + 0.5f;
 
-                // Dynamically fetch room_base boundaries to prevent dropping over the edge/walls
-                GameObject roomBase = GameObject.Find("room_base");
-                if (roomBase != null)
-                {
-                    Collider col = roomBase.GetComponent<Collider>();
-                    if (col != null)
-                    {
-                        Bounds bounds = col.bounds;
-                        float wallThickness = 0.1f;
-                        
-                        // Inner boundaries of the room floor
-                        float leftWallX = bounds.min.x + wallThickness;
-                        float rightWallX = bounds.max.x - wallThickness;
-                        float backWallZ = bounds.max.z - wallThickness;
-                        float frontEdgeZ = bounds.min.z; // no wall
+                // CHECK FOR COUNTERS/DESKS NEARBY TO SNAP TO THEM DIRECTLY!
+                Collider[] nearbyColliders = Physics.OverlapSphere(interactionCenter, 0.8f);
+                float closestDist = 99f;
+                Vector3 targetSnapPos = Vector3.zero;
+                bool snappedToCounter = false;
 
-                        // Clamp drop centers to stay within inner floor boundaries
-                        float minX = leftWallX + 0.3f;
-                        float maxX = rightWallX - 0.3f;
-                        float minZ = frontEdgeZ + 0.3f;
-                        float maxZ = backWallZ - 0.3f;
-
-                        dX = Mathf.Clamp(dX, minX, maxX);
-                        dZ = Mathf.Clamp(dZ, minZ, maxZ);
-                    }
-                }
-                else
+                foreach (var cHit in nearbyColliders)
                 {
-                    // Fallback to controller bounds if room_base not found
-                    dX = Mathf.Clamp(dX, minBounds.x, maxBounds.x);
-                    dZ = Mathf.Clamp(dZ, minBounds.y, maxBounds.y);
-                }
-                
-                // Determine drop height dynamically using a Raycast down from above the target position
-                float dropY = transform.position.y - 0.5f; // Fallback to estimated foot level
-                Vector3 rayStart = new Vector3(dX, transform.position.y + 1.5f, dZ);
-                RaycastHit[] hits = Physics.RaycastAll(rayStart, Vector3.down, 10f);
-                float bestY = -99f;
-                bool foundFloor = false;
-                foreach (var hit in hits)
-                {
-                    if (hit.collider != null && !hit.collider.isTrigger)
+                    if (cHit.gameObject != this.gameObject && cHit.gameObject != heldItem)
                     {
-                        if (hit.collider.gameObject != this.gameObject && 
-                            hit.collider.gameObject != heldItem && 
-                            hit.collider.GetComponent<SimplePlayerController>() == null)
+                        Counter counter = cHit.GetComponent<Counter>();
+                        if (counter == null)
                         {
-                            // We want the highest solid surface below the ray start
-                            if (hit.point.y > bestY && hit.point.y <= transform.position.y + 0.5f)
+                            counter = cHit.GetComponentInParent<Counter>();
+                        }
+
+                        if (counter != null)
+                        {
+                            Vector3 counterPos = counter.counterTopPoint != null ? counter.counterTopPoint.position : counter.transform.position;
+                            float dist = Vector2.Distance(new Vector2(interactionCenter.x, interactionCenter.z), new Vector2(counterPos.x, counterPos.z));
+                            if (dist < closestDist)
                             {
-                                bestY = hit.point.y;
-                                foundFloor = true;
+                                closestDist = dist;
+                                targetSnapPos = counterPos;
+                                snappedToCounter = true;
                             }
                         }
                     }
                 }
-                if (foundFloor)
+
+                if (snappedToCounter)
                 {
-                    dropY = bestY;
+                    dX = targetSnapPos.x;
+                    dZ = targetSnapPos.z;
+                }
+                else
+                {
+                    // Dynamically fetch room_base boundaries to prevent dropping over the edge/walls
+                    GameObject roomBase = GameObject.Find("room_base");
+                    if (roomBase != null)
+                    {
+                        Collider col = roomBase.GetComponent<Collider>();
+                        if (col != null)
+                        {
+                            Bounds bounds = col.bounds;
+                            float wallThickness = 0.5f; // Set to 0.5m
+                            
+                            // Inner boundaries of the room floor
+                            float leftWallX = bounds.min.x + wallThickness;
+                            float rightWallX = bounds.max.x - wallThickness;
+                            float backWallZ = bounds.max.z - wallThickness;
+                            float frontEdgeZ = bounds.min.z; // no wall
+
+                            // Clamp drop centers to stay within inner floor boundaries
+                            float minX = leftWallX + 0.3f;
+                            float maxX = rightWallX - 0.3f;
+                            float minZ = frontEdgeZ + 0.3f;
+                            float maxZ = backWallZ - 0.3f;
+
+                            dX = Mathf.Clamp(dX, minX, maxX);
+                            dZ = Mathf.Clamp(dZ, minZ, maxZ);
+                        }
+                    }
+                    else
+                    {
+                        // Fallback to controller bounds if room_base not found
+                        dX = Mathf.Clamp(dX, minBounds.x, maxBounds.x);
+                        dZ = Mathf.Clamp(dZ, minBounds.y, maxBounds.y);
+                    }
+                }
+                
+                // Determine drop height dynamically using a Raycast down from above the target position
+                float dropY = transform.position.y - 0.5f; // Fallback to estimated foot level
+                if (snappedToCounter)
+                {
+                    dropY = targetSnapPos.y;
+                }
+                else
+                {
+                    Vector3 rayStart = new Vector3(dX, transform.position.y + 1.5f, dZ);
+                    RaycastHit[] hits = Physics.RaycastAll(rayStart, Vector3.down, 10f);
+                    float bestY = -99f;
+                    bool foundFloor = false;
+                    foreach (var hit in hits)
+                    {
+                        if (hit.collider != null && !hit.collider.isTrigger)
+                        {
+                            if (hit.collider.gameObject != this.gameObject && 
+                                hit.collider.gameObject != heldItem && 
+                                hit.collider.GetComponent<SimplePlayerController>() == null)
+                            {
+                                // We want the highest solid surface below the ray start
+                                if (hit.point.y > bestY && hit.point.y <= transform.position.y + 0.5f)
+                                {
+                                    bestY = hit.point.y;
+                                    foundFloor = true;
+                                }
+                            }
+                        }
+                    }
+                    if (foundFloor)
+                    {
+                        dropY = bestY;
+                    }
                 }
 
                 // Add offset based on the item's collider size to sit exactly on the surface
