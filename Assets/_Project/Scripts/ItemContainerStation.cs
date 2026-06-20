@@ -1,21 +1,34 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 /// <summary>
 /// Dispenser station — gives items to players.
 /// Three extraction modes configurable per station in the Inspector.
 ///
-/// Instant:         Press E → item goes straight to player's hands
-/// HoldToExtract:   Hold E for extractionTime seconds → item given
-/// RequiresItem:    Player must hold a specific item (e.g. empty bucket)
-///                  and interact — that item is transformed into the output
-///                  item in their hands (e.g. full bucket)
+/// Instant:         Press E → item goes straight to player's hands (uses itemToDispense)
+/// HoldToExtract:   Hold E for extractionTime seconds → item given (uses itemToDispense)
+/// RequiresItem:    Player must hold one of several possible items —
+///                  each maps to its own output. E.g. one Water Source handling
+///                  BOTH "Empty Bucket -> Full Bucket" AND "Empty Teapot -> Full Teapot"
+///                  on the same object. Uses requiredItemSwaps list instead of the
+///                  single itemToDispense/requiredItem pair.
 /// </summary>
 public class ItemContainerStation : StationBase
 {
     public enum ExtractionMode { Instant, HoldToExtract, RequiresItem }
 
+    [System.Serializable]
+    public class RequiredItemSwap
+    {
+        [Tooltip("Item the player must be holding to trigger this swap. E.g. EmptyBucket.")]
+        public ItemData requiredItem;
+        [Tooltip("What it becomes. E.g. FullBucket.")]
+        public ItemData outputItem;
+    }
+
     [Header("Dispenser Settings")]
+    [Tooltip("Used by Instant and HoldToExtract modes.")]
     public ItemData itemToDispense;
     public ExtractionMode extractionMode = ExtractionMode.Instant;
 
@@ -24,15 +37,14 @@ public class ItemContainerStation : StationBase
     public float extractionTime = 2f;
 
     [Header("RequiresItem Settings")]
-    [Tooltip("Item the player must be holding to extract. E.g. EmptyBucket to get FullBucket.")]
-    public ItemData requiredItem;
+    [Tooltip("List of possible swaps for RequiresItem mode. Add one entry per item this station can fill/transform. E.g. EmptyBucket->FullBucket AND EmptyTeapot->FullTeapot on the same station.")]
+    public List<RequiredItemSwap> requiredItemSwaps = new List<RequiredItemSwap>();
     [Tooltip("If true the required item is consumed. If false it stays in player hands alongside the output.")]
     public bool consumeRequiredItem = true;
 
     [Header("Optional Visuals")]
     public SpriteRenderer itemIconRenderer;
 
-    // Hold-to-extract runtime state
     private bool isExtracting = false;
     private float extractProgress = 0f;
     private SimplePlayerController extractingPlayer = null;
@@ -65,12 +77,6 @@ public class ItemContainerStation : StationBase
 
     public override void Interact(SimplePlayerController player)
     {
-        if (itemToDispense == null)
-        {
-            Debug.LogWarning("[ItemContainerStation] No item assigned to dispense.");
-            return;
-        }
-
         switch (extractionMode)
         {
             case ExtractionMode.Instant:
@@ -89,18 +95,28 @@ public class ItemContainerStation : StationBase
 
     private void HandleInstant(SimplePlayerController player)
     {
+        if (itemToDispense == null)
+        {
+            Debug.LogWarning("[ItemContainerStation] No item assigned to dispense.");
+            return;
+        }
         if (player.heldItem != null)
         {
             Debug.Log("[ItemContainerStation] Player's hands must be empty.");
             return;
         }
-        GiveItemToPlayer(player);
+        GiveItemToPlayer(player, itemToDispense);
     }
 
     // ── Hold To Extract ───────────────────────────────────────────────────────
 
     private void HandleHoldToExtract(SimplePlayerController player)
     {
+        if (itemToDispense == null)
+        {
+            Debug.LogWarning("[ItemContainerStation] No item assigned to dispense.");
+            return;
+        }
         if (player.heldItem != null)
         {
             Debug.Log("[ItemContainerStation] Player's hands must be empty.");
@@ -122,7 +138,7 @@ public class ItemContainerStation : StationBase
         extractProgress = 0f;
 
         if (extractingPlayer != null && extractingPlayer.heldItem == null)
-            GiveItemToPlayer(extractingPlayer);
+            GiveItemToPlayer(extractingPlayer, itemToDispense);
 
         extractingPlayer = null;
     }
@@ -140,53 +156,66 @@ public class ItemContainerStation : StationBase
     {
         if (player.heldItem == null)
         {
-            Debug.Log($"[ItemContainerStation] You need to be holding {(requiredItem != null ? requiredItem.itemName : "a specific item")}.");
+            Debug.Log("[ItemContainerStation] You need to be holding an item to use this station.");
             return;
         }
 
         WorldItem heldWI = player.heldItem.GetComponent<WorldItem>();
-        if (heldWI == null || heldWI.itemData != requiredItem)
+        if (heldWI == null)
         {
-            Debug.Log($"[ItemContainerStation] Wrong item. Need: {(requiredItem != null ? requiredItem.itemName : "?")}");
+            Debug.Log("[ItemContainerStation] Held item has no WorldItem component.");
             return;
         }
 
-        // Consume the required item if set
+        ItemData output = GetSwapOutput(heldWI.itemData);
+        if (output == null)
+        {
+            Debug.Log($"[ItemContainerStation] {heldWI.itemData.itemName} can't be used here.");
+            return;
+        }
+
         if (consumeRequiredItem)
         {
             Destroy(player.heldItem);
             player.heldItem = null;
         }
 
-        GiveItemToPlayer(player);
+        GiveItemToPlayer(player, output);
+    }
+
+    private ItemData GetSwapOutput(ItemData heldItem)
+    {
+        foreach (var swap in requiredItemSwaps)
+            if (swap.requiredItem == heldItem) return swap.outputItem;
+        return null;
     }
 
     // ── Shared ────────────────────────────────────────────────────────────────
 
-    private void GiveItemToPlayer(SimplePlayerController player)
+    private void GiveItemToPlayer(SimplePlayerController player, ItemData dataToGive)
     {
-        if (itemToDispense.prefab == null)
+        if (dataToGive == null || dataToGive.prefab == null)
         {
-            Debug.LogWarning($"[ItemContainerStation] {itemToDispense.itemName} has no prefab assigned.");
+            Debug.LogWarning($"[ItemContainerStation] {(dataToGive != null ? dataToGive.itemName : "item")} has no prefab assigned.");
             return;
         }
 
-        GameObject spawned = Instantiate(itemToDispense.prefab, player.holdPoint.position, Quaternion.identity, player.holdPoint);
+        GameObject spawned = Instantiate(dataToGive.prefab, player.holdPoint.position, Quaternion.identity, player.holdPoint);
 
         WorldItem wi = spawned.GetComponent<WorldItem>();
         if (wi == null) wi = spawned.AddComponent<WorldItem>();
-        wi.itemData = itemToDispense;
+        wi.itemData = dataToGive;
 
         player.heldItem = spawned;
         spawned.transform.localPosition = Vector3.zero;
         spawned.transform.localRotation = Quaternion.identity;
 
-        Rigidbody rb = spawned.GetComponent<Rigidbody>();
+        Rigidbody rb = spawned.GetComponentInChildren<Rigidbody>();
         if (rb != null) rb.isKinematic = true;
-        Collider col = spawned.GetComponent<Collider>();
-        if (col != null) col.enabled = false;
+        foreach (Collider col in spawned.GetComponentsInChildren<Collider>())
+            col.enabled = false;
 
-        Debug.Log($"[ItemContainerStation] Dispensed: {itemToDispense.itemName}");
+        Debug.Log($"[ItemContainerStation] Dispensed: {dataToGive.itemName}");
     }
 
     private bool CheckPlayerHoldingInteract(SimplePlayerController player)

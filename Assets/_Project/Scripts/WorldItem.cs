@@ -38,7 +38,28 @@ public class WorldItem : MonoBehaviour
             return null;
         }
 
+        // Capture the prefab's own intended local scale BEFORE parenting,
+        // so it isn't multiplied by a scaled station/counter parent.
+        Vector3 prefabScale = resultData.prefab.transform.localScale;
+
         GameObject go = Instantiate(resultData.prefab, position, Quaternion.identity, parent);
+
+        // Re-apply the prefab's original scale in local space relative to the new parent,
+        // counteracting any non-uniform parent scale (the "big" and "flat" bug).
+        if (parent != null)
+        {
+            Vector3 parentScale = parent.lossyScale;
+            go.transform.localScale = new Vector3(
+                parentScale.x != 0 ? prefabScale.x / parentScale.x : prefabScale.x,
+                parentScale.y != 0 ? prefabScale.y / parentScale.y : prefabScale.y,
+                parentScale.z != 0 ? prefabScale.z / parentScale.z : prefabScale.z
+            );
+        }
+        else
+        {
+            go.transform.localScale = prefabScale;
+        }
+
         WorldItem wi = go.GetComponent<WorldItem>();
         if (wi == null) wi = go.AddComponent<WorldItem>();
         wi.itemData = resultData;

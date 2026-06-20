@@ -71,8 +71,22 @@ public abstract class StationBase : MonoBehaviour, IInteractable
         if (player != null) player.heldItem = null;
 
         Transform anchor = counterTopPoint != null ? counterTopPoint : transform;
+
+        // Preserve the item's intended world scale before reparenting —
+        // prevents items shrinking/growing when placed on a scaled station.
+        Vector3 worldScaleBeforeParent = item.transform.lossyScale;
+
         item.transform.SetParent(anchor);
         item.transform.localRotation = Quaternion.identity;
+
+        // Re-derive localScale so the item's WORLD scale stays the same
+        // regardless of the anchor's own scale.
+        Vector3 anchorScale = anchor.lossyScale;
+        item.transform.localScale = new Vector3(
+            anchorScale.x != 0 ? worldScaleBeforeParent.x / anchorScale.x : worldScaleBeforeParent.x,
+            anchorScale.y != 0 ? worldScaleBeforeParent.y / anchorScale.y : worldScaleBeforeParent.y,
+            anchorScale.z != 0 ? worldScaleBeforeParent.z / anchorScale.z : worldScaleBeforeParent.z
+        );
 
         // DYNAMIC OFFSET: Calculate height to prevent sinking
         float yOffset = 0.2f; // Default fallback
@@ -105,9 +119,19 @@ public abstract class StationBase : MonoBehaviour, IInteractable
         itemOnStation = null;
 
         player.heldItem = item;
+
+        Vector3 worldScaleBeforeParent = item.transform.lossyScale;
+
         item.transform.SetParent(player.holdPoint);
         item.transform.localPosition = Vector3.zero;
         item.transform.localRotation = Quaternion.identity;
+
+        Vector3 holdScale = player.holdPoint.lossyScale;
+        item.transform.localScale = new Vector3(
+            holdScale.x != 0 ? worldScaleBeforeParent.x / holdScale.x : worldScaleBeforeParent.x,
+            holdScale.y != 0 ? worldScaleBeforeParent.y / holdScale.y : worldScaleBeforeParent.y,
+            holdScale.z != 0 ? worldScaleBeforeParent.z / holdScale.z : worldScaleBeforeParent.z
+        );
 
         Collider col = item.GetComponent<Collider>();
         if (col != null) col.enabled = false;
