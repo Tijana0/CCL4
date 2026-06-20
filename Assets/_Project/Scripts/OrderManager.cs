@@ -60,6 +60,7 @@ public class OrderManager : MonoBehaviour
         // 1. Add base ingredients as simple orders
         foreach (var item in items)
         {
+            if (item == null) continue;
             discoveredOrders.Add(new RoomRecipe {
                 recipeName = item.itemName,
                 requiredOutput = item,
@@ -270,6 +271,7 @@ public class OrderManager : MonoBehaviour
 
         foreach (var item in allRoomItems)
         {
+            if (item == null) continue;
             foreach (var rule in item.combineRules)
             {
                 if (rule.outputItem == target)
