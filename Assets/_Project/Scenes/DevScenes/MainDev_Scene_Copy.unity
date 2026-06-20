@@ -5099,6 +5099,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1257224976}
     m_Modifications:
+    - target: {fileID: 8630628275602137463, guid: 2c6f48193e5a47743af866f9ba0e0e5a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8630628275602137463, guid: 2c6f48193e5a47743af866f9ba0e0e5a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8630628275602137463, guid: 2c6f48193e5a47743af866f9ba0e0e5a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3619312113309723841, guid: 2c6f48193e5a47743af866f9ba0e0e5a, type: 3}
       propertyPath: m_Name
       value: book (2)
