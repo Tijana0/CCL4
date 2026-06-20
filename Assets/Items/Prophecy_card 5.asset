@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 97340c5b42f311744bbcde4a2c5d3980, type: 3}
-  m_Name: herb
+  m_Name: Prophecy_card 5
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: 
+  itemName: prophecy card 5
   icon: {fileID: 0}
   prefab: {fileID: 0}
+  potionColour: {r: 1, g: 1, b: 1, a: 1}
+  isColourless: 0
   processingRules: []
   combineRules: []
   allowedStationTypes: 

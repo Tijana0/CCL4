@@ -1,17 +1,18 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.InputSystem;
 
 /// <summary>
-/// Station that requires the player to HOLD the PROCESS button to process an item over time.
+/// Station that requires the player to HOLD the dedicated PROCESS button
+/// (R / RightCtrl / Gamepad West) to process an item over time.
 /// Used for: Mortar & Pestle (grinding), Cutting Board (chopping), Brazier (warming).
 ///
-/// Input split:
-///   E (Interact)        — place item on station / pick item up from station
-///   Q (Process)          — hold near the station (empty-handed) to start/continue processing
+/// Driven by SimplePlayerController.TryProcess(), which calls
+/// StartProcessingIfValid(player) every frame the Process button is held
+/// while the player is near this station.
 ///
-/// This separation means E never accidentally starts processing, and Q never
-/// accidentally picks up or places items.
+/// Input split:
+///   E (Interact) — place item on station / pick item up from station
+///   R (Process)  — hold near the station to start/continue processing
 ///
 /// Setup:
 /// - Set stationType (MortarAndPestle, CuttingBoard, etc.)
@@ -25,14 +26,19 @@ public class ProcessingStation : StationBase
     public Image progressBarFill;
     public GameObject progressBarContainer;
 
-    [Header("Process Range")]
-    [Tooltip("How close a player must be to hold Q and process here")]
-    public float processRange = 1.5f;
+    [Header("Overcook (optional)")]
+    [Tooltip("If true, a finished result left unattended too long is destroyed instead of waiting forever. Used by the Brazier to evaporate burnt herbs.")]
+    public bool enableOvercook = false;
+    [Tooltip("Seconds after completion before the result evaporates/destroys. Only used if Enable Overcook is checked.")]
+    public float overcookDelay = 8f;
 
     private bool isProcessing = false;
     private float processingProgress = 0f;
     private float processingDuration = 2f;
     private SimplePlayerController processingPlayer = null;
+    private int lastProcessedFrame = -1;
+    private bool resultReady = false;
+    private float overcookTimer = 0f;
 
     private void Awake()
     {
@@ -42,32 +48,61 @@ public class ProcessingStation : StationBase
 
     private void Update()
     {
-        // Only check for processing if there's an item here that has a rule
-        if (itemOnStation == null)
+        // If no one called StartProcessingIfValid this frame (player walked away
+        // or released Process), cancel. We detect this by checking if the
+        // frame counter wasn't bumped since last Update.
+        if (isProcessing && lastProcessedFrame != Time.frameCount - 1 && lastProcessedFrame != Time.frameCount)
         {
-            if (isProcessing) CancelProcessing();
-            return;
+            CancelProcessing();
         }
+
+        // Overcook: result finished and sitting unattended too long evaporates entirely
+        if (enableOvercook && resultReady && itemOnStation != null)
+        {
+            overcookTimer += Time.deltaTime;
+            if (overcookTimer >= overcookDelay)
+            {
+                Evaporate();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Destroys the finished result with NO output and clears the station.
+    /// Called when a result is left too long with Overcook enabled.
+    /// </summary>
+    private void Evaporate()
+    {
+        if (itemOnStation != null)
+        {
+            Destroy(itemOnStation);
+            itemOnStation = null;
+        }
+        resultReady = false;
+        overcookTimer = 0f;
+        Debug.Log($"[ProcessingStation] {stationType} evaporated — left too long.");
+    }
+
+    /// <summary>
+    /// Called every frame by SimplePlayerController.TryProcess() while the
+    /// Process button is held and this station is in range.
+    /// Starts processing if valid, advances progress if already processing.
+    /// </summary>
+    public void StartProcessingIfValid(SimplePlayerController player)
+    {
+        if (itemOnStation == null) return;
 
         WorldItem wi = itemOnStation.GetComponent<WorldItem>();
         ProcessingRule rule = wi != null ? GetRule(wi.itemData) : null;
-        if (rule == null)
-        {
-            if (isProcessing) CancelProcessing();
-            return;
-        }
+        if (rule == null) return;
 
-        // Find a nearby empty-handed player holding Q
-        SimplePlayerController holder = FindPlayerHoldingProcess();
-
-        if (holder == null)
-        {
-            if (isProcessing) CancelProcessing();
-            return;
-        }
+        // Mark this frame as "actively being processed" so Update() doesn't cancel it
+        lastProcessedFrame = Time.frameCount;
 
         if (!isProcessing)
-            BeginProcessing(holder, rule);
+        {
+            BeginProcessing(player, rule);
+        }
 
         processingProgress += Time.deltaTime / processingDuration;
         if (progressBarFill != null)
@@ -123,7 +158,7 @@ public class ProcessingStation : StationBase
         if (progressBarContainer != null) progressBarContainer.SetActive(true);
         if (progressBarFill != null) progressBarFill.fillAmount = 0f;
 
-        Debug.Log($"[ProcessingStation] Hold Q to process... ({processingDuration}s)");
+        Debug.Log($"[ProcessingStation] Hold Process to work... ({processingDuration}s)");
     }
 
     private void CompleteProcessing()
@@ -155,6 +190,8 @@ public class ProcessingStation : StationBase
         }
 
         processingPlayer = null;
+        resultReady = true;
+        overcookTimer = 0f;
         Debug.Log($"[ProcessingStation] Done! Result: {rule.outputItem.itemName}");
     }
 
@@ -166,46 +203,6 @@ public class ProcessingStation : StationBase
 
         if (progressBarContainer != null) progressBarContainer.SetActive(false);
         if (progressBarFill != null) progressBarFill.fillAmount = 0f;
-    }
-
-    /// <summary>
-    /// Finds the closest empty-handed player within processRange who is holding Q.
-    /// </summary>
-    private SimplePlayerController FindPlayerHoldingProcess()
-    {
-        SimplePlayerController[] players = FindObjectsByType<SimplePlayerController>(FindObjectsSortMode.None);
-
-        foreach (var p in players)
-        {
-            if (p.heldItem != null) continue; // must have empty hands to process
-
-            float dist = Vector3.Distance(p.transform.position, transform.position);
-            if (dist > processRange) continue;
-
-            if (CheckPlayerHoldingProcessButton(p))
-                return p;
-        }
-
-        return null;
-    }
-
-    /// <summary>
-    /// Checks the dedicated PROCESS action button (Q / Numpad0 / Left Trigger).
-    /// Kept separate from interact (E) so picking items up never accidentally
-    /// triggers processing, and processing never accidentally picks things up.
-    /// </summary>
-    private bool CheckPlayerHoldingProcessButton(SimplePlayerController player)
-    {
-        if (player.playerIndex == 0 && Keyboard.current != null)
-            return Keyboard.current.qKey.isPressed;
-
-        if (player.playerIndex == 1 && Keyboard.current != null)
-            return Keyboard.current.numpad0Key.isPressed;
-
-        if (player.playerIndex == SimplePlayerController.activeGamepadPlayerIndex && Gamepad.current != null)
-            return Gamepad.current.leftTrigger.isPressed;
-
-        return false;
     }
 
     private ProcessingRule GetRule(ItemData data)

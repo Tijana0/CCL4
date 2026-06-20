@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
 /// <summary>
@@ -93,6 +92,7 @@ public class MultiIngredientStation : StationBase
     private float boilOverTimer = 0f;
     private SimplePlayerController cookingPlayer = null;
     private GameObject resultItem = null;
+    private int lastProcessedFrame = -1;
 
     private enum StationState { Empty, HasIngredients, Cooking, Done, Ruined }
 
@@ -119,10 +119,14 @@ public class MultiIngredientStation : StationBase
 
     public override void Interact(SimplePlayerController player)
     {
-        if (stationState == StationState.Done || stationState == StationState.Ruined)
+        // Pick up finished result
+        if ((stationState == StationState.Done || stationState == StationState.Ruined) && resultItem != null)
         {
-            if (player.heldItem == null) PickUpResult(player);
-            return;
+            if (player.heldItem == null)
+            {
+                PickUpResult(player);
+                return;
+            }
         }
 
         bool playerHasItem = player.heldItem != null;
@@ -131,17 +135,30 @@ public class MultiIngredientStation : StationBase
         {
             TryAddIngredient(player);
         }
+        // Note: HoldToProcess is now driven by StartCookingIfValid() via the
+        // dedicated Process button (R), not Interact (E). See below.
     }
 
+    /// <summary>
+    /// Called every frame by SimplePlayerController.TryProcess() while the
+    /// Process button is held and this station is in range with empty hands.
+    /// Only relevant when triggerMode == HoldToProcess.
+    /// </summary>
     public void StartCookingIfValid(SimplePlayerController player)
     {
         if (triggerMode != TriggerMode.HoldToProcess) return;
         if (player.heldItem != null) return;
+        if (stationState != StationState.HasIngredients && stationState != StationState.Cooking) return;
 
-        if (stationState == StationState.HasIngredients || stationState == StationState.Cooking)
+        lastProcessedFrame = Time.frameCount;
+
+        if (stationState != StationState.Cooking)
         {
-            if (stationState != StationState.Cooking) RestartCooking(player);
-            else cookingPlayer = player; // Re-assign if player changed
+            RestartCooking(player);
+        }
+        else
+        {
+            cookingPlayer = player; // Re-assign if a different player took over
         }
     }
 
@@ -153,13 +170,6 @@ public class MultiIngredientStation : StationBase
         if (wi == null)
         {
             Debug.Log("[MultiIngredientStation] Item has no WorldItem component.");
-            return;
-        }
-
-        // Reject items that need processing first
-        if (wi.itemData.requiresProcessingBeforeCauldron)
-        {
-            Debug.Log($"[MultiIngredientStation] {wi.itemData.itemName} must be processed first!");
             return;
         }
 
@@ -225,8 +235,8 @@ public class MultiIngredientStation : StationBase
                 return;
             }
 
-            // Water (or whatever the required ingredient is) is necessary but not
-            // sufficient on its own — need at least one other ingredient with it.
+            // The required ingredient alone is not enough — at least one OTHER
+            // ingredient must also be present.
             if (ingredients.Count < 2)
             {
                 Debug.Log($"[MultiIngredientStation] {requiredStartIngredient.itemName} alone isn't enough — add another ingredient.");
@@ -257,9 +267,13 @@ public class MultiIngredientStation : StationBase
 
     private void UpdateCooking()
     {
-        // HoldToProcess pauses if player releases
-        if (triggerMode == TriggerMode.HoldToProcess && (cookingPlayer == null || !cookingPlayer.IsProcessing()))
-            return;
+        // HoldToProcess pauses if StartCookingIfValid wasn't called this/last frame
+        // (i.e. player walked away or released the Process button)
+        if (triggerMode == TriggerMode.HoldToProcess)
+        {
+            bool calledRecently = lastProcessedFrame == Time.frameCount || lastProcessedFrame == Time.frameCount - 1;
+            if (!calledRecently) return;
+        }
 
         cookingProgress += Time.deltaTime / currentCookingTime;
         if (progressBarFill != null)
@@ -470,24 +484,6 @@ public class MultiIngredientStation : StationBase
     // ── Input check ──────────────────────────────────────────────────────────
 
     /// <summary>
-    /// Checks the dedicated PROCESS action button (Q / Numpad0 / Left Trigger).
-    /// Kept separate from interact (E) so picking up ingredients never
-    /// accidentally triggers cooking.
-    /// </summary>
-    private bool CheckPlayerHoldingInteract()
-    {
-        if (cookingPlayer == null) return false;
-
-        if (cookingPlayer.playerIndex == 0 && Keyboard.current != null)
-            return Keyboard.current.qKey.isPressed;
-        if (cookingPlayer.playerIndex == 1 && Keyboard.current != null)
-            return Keyboard.current.numpad0Key.isPressed;
-        if (cookingPlayer.playerIndex == SimplePlayerController.activeGamepadPlayerIndex && Gamepad.current != null)
-            return Gamepad.current.leftTrigger.isPressed;
-
-        return false;
-    }
-
     // ── Visuals ──────────────────────────────────────────────────────────────
 
     private void UpdateVisuals()

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 97340c5b42f311744bbcde4a2c5d3980, type: 3}
-  m_Name: crystal
+  m_Name: Burnt_herb 2
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: crystal
+  itemName: burnt herb 2
   icon: {fileID: 0}
   prefab: {fileID: 0}
   potionColour: {r: 1, g: 1, b: 1, a: 1}

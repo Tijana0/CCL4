@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97340c5b42f311744bbcde4a2c5d3980, type: 3}
   m_Name: candle
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: 
+  itemName: candle
   icon: {fileID: 0}
   prefab: {fileID: 0}
+  potionColour: {r: 1, g: 1, b: 1, a: 1}
+  isColourless: 0
   processingRules: []
   combineRules: []
   allowedStationTypes: 

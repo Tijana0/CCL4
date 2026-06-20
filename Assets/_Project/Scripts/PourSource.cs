@@ -23,6 +23,12 @@ public class PourSource : MonoBehaviour
     public float pourRange = 1.5f;
 
     private SimplePlayerController owner;
+    private WorldItem selfWorldItem;
+
+    private void Awake()
+    {
+        selfWorldItem = GetComponent<WorldItem>();
+    }
 
     private void Update()
     {
@@ -40,7 +46,18 @@ public class PourSource : MonoBehaviour
 
         if (!CheckActionPressed(owner)) return;
 
-        PourTarget target = FindNearbyTarget();
+        // Check for a TeacupFillTarget first (variable-fill, never spilled)
+        TeacupFillTarget teacup = FindNearbyTarget<TeacupFillTarget>();
+        if (teacup != null)
+        {
+            ItemData myData = selfWorldItem != null ? selfWorldItem.itemData : null;
+            teacup.OnPoured(owner, myData);
+            ResetSelf();
+            return;
+        }
+
+        // Fall back to the regular PourTarget (Cauldron, etc.)
+        PourTarget target = FindNearbyTarget<PourTarget>();
         if (target != null)
         {
             target.OnPoured(owner);
@@ -52,10 +69,10 @@ public class PourSource : MonoBehaviour
         }
     }
 
-    private PourTarget FindNearbyTarget()
+    private T FindNearbyTarget<T>() where T : Component
     {
-        PourTarget[] targets = FindObjectsByType<PourTarget>(FindObjectsSortMode.None);
-        PourTarget closest = null;
+        T[] targets = FindObjectsByType<T>(FindObjectsSortMode.None);
+        T closest = null;
         float closestDist = float.MaxValue;
 
         foreach (var t in targets)
