@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
 /// <summary>
@@ -56,6 +55,26 @@ public class MultiIngredientStation : StationBase
     [Header("Recipes")]
     public List<MultiIngredientRecipe> recipes = new List<MultiIngredientRecipe>();
 
+    [Header("Wrong Combo / Improvised Potion")]
+    [Tooltip("Item used as the fallback result when ingredients don't match any recipe. Its material gets tinted by the blended ingredient colours.")]
+    public ItemData improvisedPotionItem;
+    [Tooltip("If true, the result's renderer material colour is set to the blended ingredient colour at runtime.")]
+    public bool tintImprovisedResult = true;
+
+    [Header("Requires Ingredient To Start")]
+    [Tooltip("Enable to require a specific ingredient before cooking can begin.")]
+    public bool requireSpecificIngredient = true;
+    [Tooltip("The ingredient that must be present before cooking starts (e.g. WaterBowl). Only used if Require Specific Ingredient is checked.")]
+    public ItemData requiredStartIngredient;
+
+    [Header("Container Swap (optional)")]
+    [Tooltip("If true, a player holding containerItem can interact directly with this station once a result is ready, swapping their empty container for the filled result. E.g. Empty Teacup -> Filled Teacup, without needing to carry the Teapot away.")]
+    public bool allowContainerSwap = false;
+    [Tooltip("The empty container item that can be swapped here. E.g. EmptyTeacup.")]
+    public ItemData containerItem;
+    [Tooltip("Mappings from the brewed result to what the container becomes. E.g. Tea1 result + EmptyTeacup -> TeacupFilled1.")]
+    public List<ContainerSwapMapping> containerSwapMappings = new List<ContainerSwapMapping>();
+
     [Header("State Visuals (optional)")]
     [Tooltip("Shown when station is empty")]
     public GameObject emptyVisual;
@@ -81,6 +100,7 @@ public class MultiIngredientStation : StationBase
     private float boilOverTimer = 0f;
     private SimplePlayerController cookingPlayer = null;
     private GameObject resultItem = null;
+    private int lastProcessedFrame = -1;
 
     private enum StationState { Empty, HasIngredients, Cooking, Done, Ruined }
 
@@ -107,10 +127,26 @@ public class MultiIngredientStation : StationBase
 
     public override void Interact(SimplePlayerController player)
     {
-        if (stationState == StationState.Done || stationState == StationState.Ruined)
+        // Container swap: player holds the designated empty container (e.g. EmptyTeacup)
+        // and the result is ready -> swap container for filled result directly here.
+        if (allowContainerSwap && stationState == StationState.Done && resultItem != null && player.heldItem != null)
         {
-            if (player.heldItem == null) PickUpResult(player);
-            return;
+            WorldItem heldWI = player.heldItem.GetComponent<WorldItem>();
+            if (heldWI != null && heldWI.itemData == containerItem)
+            {
+                TrySwapContainer(player, heldWI.itemData);
+                return;
+            }
+        }
+
+        // Pick up finished result directly (raw, no container needed)
+        if ((stationState == StationState.Done || stationState == StationState.Ruined) && resultItem != null)
+        {
+            if (player.heldItem == null)
+            {
+                PickUpResult(player);
+                return;
+            }
         }
 
         bool playerHasItem = player.heldItem != null;
@@ -119,17 +155,30 @@ public class MultiIngredientStation : StationBase
         {
             TryAddIngredient(player);
         }
+        // Note: HoldToProcess is now driven by StartCookingIfValid() via the
+        // dedicated Process button (R), not Interact (E). See below.
     }
 
+    /// <summary>
+    /// Called every frame by SimplePlayerController.TryProcess() while the
+    /// Process button is held and this station is in range with empty hands.
+    /// Only relevant when triggerMode == HoldToProcess.
+    /// </summary>
     public void StartCookingIfValid(SimplePlayerController player)
     {
         if (triggerMode != TriggerMode.HoldToProcess) return;
         if (player.heldItem != null) return;
+        if (stationState != StationState.HasIngredients && stationState != StationState.Cooking) return;
 
-        if (stationState == StationState.HasIngredients || stationState == StationState.Cooking)
+        lastProcessedFrame = Time.frameCount;
+
+        if (stationState != StationState.Cooking)
         {
-            if (stationState != StationState.Cooking) RestartCooking(player);
-            else cookingPlayer = player; // Re-assign if player changed
+            RestartCooking(player);
+        }
+        else
+        {
+            cookingPlayer = player; // Re-assign if a different player took over
         }
     }
 
@@ -141,13 +190,6 @@ public class MultiIngredientStation : StationBase
         if (wi == null)
         {
             Debug.Log("[MultiIngredientStation] Item has no WorldItem component.");
-            return;
-        }
-
-        // Reject items that need processing first
-        if (wi.itemData.requiresProcessingBeforeCauldron)
-        {
-            Debug.Log($"[MultiIngredientStation] {wi.itemData.itemName} must be processed first!");
             return;
         }
 
@@ -205,6 +247,23 @@ public class MultiIngredientStation : StationBase
     /// </summary>
     private void RestartCooking(SimplePlayerController player)
     {
+        if (requireSpecificIngredient && requiredStartIngredient != null)
+        {
+            if (!HasIngredient(requiredStartIngredient))
+            {
+                Debug.Log($"[MultiIngredientStation] Add {requiredStartIngredient.itemName} before cooking can begin.");
+                return;
+            }
+
+            // The required ingredient alone is not enough — at least one OTHER
+            // ingredient must also be present.
+            if (ingredients.Count < 2)
+            {
+                Debug.Log($"[MultiIngredientStation] {requiredStartIngredient.itemName} alone isn't enough — add another ingredient.");
+                return;
+            }
+        }
+
         // Get cooking time from best matching recipe, or use default
         MultiIngredientRecipe match = FindMatchingRecipe();
         currentCookingTime = match != null ? match.cookingTime : defaultCookingTime;
@@ -228,9 +287,13 @@ public class MultiIngredientStation : StationBase
 
     private void UpdateCooking()
     {
-        // HoldToProcess pauses if player releases
-        if (triggerMode == TriggerMode.HoldToProcess && (cookingPlayer == null || !cookingPlayer.IsProcessing()))
-            return;
+        // HoldToProcess pauses if StartCookingIfValid wasn't called this/last frame
+        // (i.e. player walked away or released the Process button)
+        if (triggerMode == TriggerMode.HoldToProcess)
+        {
+            bool calledRecently = lastProcessedFrame == Time.frameCount || lastProcessedFrame == Time.frameCount - 1;
+            if (!calledRecently) return;
+        }
 
         cookingProgress += Time.deltaTime / currentCookingTime;
         if (progressBarFill != null)
@@ -254,20 +317,31 @@ public class MultiIngredientStation : StationBase
 
         if (resultData == null)
         {
-            Debug.LogWarning("[MultiIngredientStation] No recipe matched at completion.");
+            // No recipe matched — brew an improvised potion instead of nothing.
+            // Still produces SOMETHING the player can hand in (even if it scores 0 or low).
+            if (improvisedPotionItem != null)
+            {
+                Color blended = PotionColourUtility.BlendIngredients(ingredients);
+                SpawnResult(improvisedPotionItem, tintImprovisedResult ? (Color?)blended : null);
+                Debug.Log($"[MultiIngredientStation] No recipe matched — brewed improvised potion (colour: {blended}).");
+            }
+            else
+            {
+                Debug.LogWarning("[MultiIngredientStation] No recipe matched and no improvisedPotionItem assigned — nothing produced.");
+            }
+
             ingredients.Clear();
-            stationState = StationState.Empty;
             UpdateVisuals();
             return;
         }
 
-        SpawnResult(resultData);
+        SpawnResult(resultData, null);
         ingredients.Clear();
         UpdateVisuals();
         Debug.Log($"[MultiIngredientStation] Done! Result: {resultData.itemName}");
     }
 
-    private void SpawnResult(ItemData data)
+    private void SpawnResult(ItemData data, Color? tintColour)
     {
         Transform anchor = resultSpawnPoint != null ? resultSpawnPoint
                          : counterTopPoint != null ? counterTopPoint
@@ -279,11 +353,32 @@ public class MultiIngredientStation : StationBase
             resultItem = result.gameObject;
             result.transform.localPosition = new Vector3(0, 0.3f, 0);
 
-            Rigidbody rb = result.GetComponent<Rigidbody>();
+            Rigidbody rb = result.GetComponentInChildren<Rigidbody>();
             if (rb != null) rb.isKinematic = true;
-            Collider col = result.GetComponent<Collider>();
-            if (col != null) col.enabled = false;
+            foreach (Collider col in result.GetComponentsInChildren<Collider>())
+                col.enabled = false;
+
+            // Apply the blended potion colour to the liquid's material, if requested.
+            if (tintColour.HasValue)
+                ApplyTintToRenderer(result.gameObject, tintColour.Value);
         }
+    }
+
+    /// <summary>
+    /// Tints the FIRST renderer found (including children) using an instanced material
+    /// so other instances of the same prefab aren't affected.
+    /// </summary>
+    private void ApplyTintToRenderer(GameObject target, Color colour)
+    {
+        Renderer renderer = target.GetComponentInChildren<Renderer>();
+        if (renderer == null)
+        {
+            Debug.LogWarning("[MultiIngredientStation] No Renderer found on improvised potion to tint.");
+            return;
+        }
+
+        // .material (not sharedMaterial) creates a per-instance copy automatically
+        renderer.material.color = colour;
     }
 
     // ── Boil over ────────────────────────────────────────────────────────────
@@ -300,6 +395,74 @@ public class MultiIngredientStation : StationBase
     }
 
     // ── Pick up result ───────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Removes and returns the finished result GameObject without giving it
+    /// to any specific player. Used by CauldronPourTarget so a Bottle can
+    /// "pour" the potion out instead of picking the whole liquid item up directly.
+    /// Returns null if nothing is brewed.
+    /// </summary>
+    public GameObject TakeResultItem()
+    {
+        if (resultItem == null) return null;
+
+        GameObject item = resultItem;
+        resultItem = null;
+        stationState = StationState.Empty;
+        boilOverTimer = 0f;
+        UpdateVisuals();
+        return item;
+    }
+
+    /// <summary>
+    /// Swaps the player's empty container for the filled result, based on
+    /// what was actually brewed (read from resultItem's own WorldItem).
+    /// </summary>
+    private void TrySwapContainer(SimplePlayerController player, ItemData heldContainerItem)
+    {
+        WorldItem resultWI = resultItem.GetComponent<WorldItem>();
+        ItemData brewedItem = resultWI != null ? resultWI.itemData : null;
+
+        ItemData filledContainer = GetContainerSwapResult(brewedItem);
+        if (filledContainer == null || filledContainer.prefab == null)
+        {
+            Debug.LogWarning($"[MultiIngredientStation] No container swap mapping found for {(brewedItem != null ? brewedItem.itemName : "null")}.");
+            return;
+        }
+
+        // Destroy the player's empty container and the raw brewed result
+        Destroy(player.heldItem);
+        Destroy(resultItem);
+        resultItem = null;
+        stationState = StationState.Empty;
+        boilOverTimer = 0f;
+        UpdateVisuals();
+
+        // Spawn the filled container directly into the player's hands
+        GameObject spawned = Instantiate(filledContainer.prefab, player.holdPoint.position, Quaternion.identity, player.holdPoint);
+        WorldItem newWI = spawned.GetComponent<WorldItem>();
+        if (newWI == null) newWI = spawned.AddComponent<WorldItem>();
+        newWI.itemData = filledContainer;
+
+        spawned.transform.localPosition = Vector3.zero;
+        spawned.transform.localRotation = Quaternion.identity;
+
+        Rigidbody rb = spawned.GetComponentInChildren<Rigidbody>();
+        if (rb != null) rb.isKinematic = true;
+        foreach (Collider col in spawned.GetComponentsInChildren<Collider>())
+            col.enabled = false;
+
+        player.heldItem = spawned;
+
+        Debug.Log($"[MultiIngredientStation] Container swapped -> {filledContainer.itemName}");
+    }
+
+    private ItemData GetContainerSwapResult(ItemData brewedItem)
+    {
+        foreach (var m in containerSwapMappings)
+            if (m.brewedResultItem == brewedItem) return m.filledContainerItem;
+        return null;
+    }
 
     private void PickUpResult(SimplePlayerController player)
     {
@@ -326,6 +489,14 @@ public class MultiIngredientStation : StationBase
     /// Ordered recipes are checked first — if order is wrong, returns wrongOrderResult.
     /// Then unordered recipes are checked.
     /// </summary>
+    /// <summary>Returns true if the given item is currently present among the ingredients.</summary>
+    private bool HasIngredient(ItemData item)
+    {
+        foreach (var i in ingredients)
+            if (i == item) return true;
+        return false;
+    }
+
     private MultiIngredientRecipe FindMatchingRecipe()
     {
         // Check ordered recipes first
@@ -380,6 +551,9 @@ public class MultiIngredientStation : StationBase
         return remaining.Count == 0;
     }
 
+    // ── Input check ──────────────────────────────────────────────────────────
+
+    /// <summary>
     // ── Visuals ──────────────────────────────────────────────────────────────
 
     private void UpdateVisuals()
@@ -426,4 +600,16 @@ public class MultiIngredientRecipe
     public bool orderMatters = false;
     [Tooltip("Result if orderMatters is true but player adds ingredients in wrong order. Leave empty to produce nothing.")]
     public ItemData wrongOrderResult;
+}
+/// <summary>
+/// Maps a brewed result item to what the player's empty container becomes
+/// when swapped at the station. E.g. Tea1 -> TeacupFilled1.
+/// </summary>
+[System.Serializable]
+public class ContainerSwapMapping
+{
+    [Tooltip("The item this station can brew (e.g. Tea1, Tea2, Tea3, TeaWrong)")]
+    public ItemData brewedResultItem;
+    [Tooltip("What the empty container becomes when swapped for this result (e.g. TeacupFilled1)")]
+    public ItemData filledContainerItem;
 }
