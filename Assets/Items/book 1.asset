@@ -19,6 +19,6 @@ MonoBehaviour:
   isColourless: 0
   processingRules: []
   combineRules: []
-  allowedStationTypes: 0000000002000000
+  allowedStationTypes: 000000000a000000050000000b000000
   requiresProcessingBeforeCauldron: 0
   isDisposable: 1

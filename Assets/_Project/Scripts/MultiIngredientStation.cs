@@ -67,6 +67,14 @@ public class MultiIngredientStation : StationBase
     [Tooltip("The ingredient that must be present before cooking starts (e.g. WaterBowl). Only used if Require Specific Ingredient is checked.")]
     public ItemData requiredStartIngredient;
 
+    [Header("Container Swap (optional)")]
+    [Tooltip("If true, a player holding containerItem can interact directly with this station once a result is ready, swapping their empty container for the filled result. E.g. Empty Teacup -> Filled Teacup, without needing to carry the Teapot away.")]
+    public bool allowContainerSwap = false;
+    [Tooltip("The empty container item that can be swapped here. E.g. EmptyTeacup.")]
+    public ItemData containerItem;
+    [Tooltip("Mappings from the brewed result to what the container becomes. E.g. Tea1 result + EmptyTeacup -> TeacupFilled1.")]
+    public List<ContainerSwapMapping> containerSwapMappings = new List<ContainerSwapMapping>();
+
     [Header("State Visuals (optional)")]
     [Tooltip("Shown when station is empty")]
     public GameObject emptyVisual;
@@ -119,7 +127,19 @@ public class MultiIngredientStation : StationBase
 
     public override void Interact(SimplePlayerController player)
     {
-        // Pick up finished result
+        // Container swap: player holds the designated empty container (e.g. EmptyTeacup)
+        // and the result is ready -> swap container for filled result directly here.
+        if (allowContainerSwap && stationState == StationState.Done && resultItem != null && player.heldItem != null)
+        {
+            WorldItem heldWI = player.heldItem.GetComponent<WorldItem>();
+            if (heldWI != null && heldWI.itemData == containerItem)
+            {
+                TrySwapContainer(player, heldWI.itemData);
+                return;
+            }
+        }
+
+        // Pick up finished result directly (raw, no container needed)
         if ((stationState == StationState.Done || stationState == StationState.Ruined) && resultItem != null)
         {
             if (player.heldItem == null)
@@ -394,6 +414,56 @@ public class MultiIngredientStation : StationBase
         return item;
     }
 
+    /// <summary>
+    /// Swaps the player's empty container for the filled result, based on
+    /// what was actually brewed (read from resultItem's own WorldItem).
+    /// </summary>
+    private void TrySwapContainer(SimplePlayerController player, ItemData heldContainerItem)
+    {
+        WorldItem resultWI = resultItem.GetComponent<WorldItem>();
+        ItemData brewedItem = resultWI != null ? resultWI.itemData : null;
+
+        ItemData filledContainer = GetContainerSwapResult(brewedItem);
+        if (filledContainer == null || filledContainer.prefab == null)
+        {
+            Debug.LogWarning($"[MultiIngredientStation] No container swap mapping found for {(brewedItem != null ? brewedItem.itemName : "null")}.");
+            return;
+        }
+
+        // Destroy the player's empty container and the raw brewed result
+        Destroy(player.heldItem);
+        Destroy(resultItem);
+        resultItem = null;
+        stationState = StationState.Empty;
+        boilOverTimer = 0f;
+        UpdateVisuals();
+
+        // Spawn the filled container directly into the player's hands
+        GameObject spawned = Instantiate(filledContainer.prefab, player.holdPoint.position, Quaternion.identity, player.holdPoint);
+        WorldItem newWI = spawned.GetComponent<WorldItem>();
+        if (newWI == null) newWI = spawned.AddComponent<WorldItem>();
+        newWI.itemData = filledContainer;
+
+        spawned.transform.localPosition = Vector3.zero;
+        spawned.transform.localRotation = Quaternion.identity;
+
+        Rigidbody rb = spawned.GetComponentInChildren<Rigidbody>();
+        if (rb != null) rb.isKinematic = true;
+        foreach (Collider col in spawned.GetComponentsInChildren<Collider>())
+            col.enabled = false;
+
+        player.heldItem = spawned;
+
+        Debug.Log($"[MultiIngredientStation] Container swapped -> {filledContainer.itemName}");
+    }
+
+    private ItemData GetContainerSwapResult(ItemData brewedItem)
+    {
+        foreach (var m in containerSwapMappings)
+            if (m.brewedResultItem == brewedItem) return m.filledContainerItem;
+        return null;
+    }
+
     private void PickUpResult(SimplePlayerController player)
     {
         if (resultItem == null || player.heldItem != null) return;
@@ -530,4 +600,16 @@ public class MultiIngredientRecipe
     public bool orderMatters = false;
     [Tooltip("Result if orderMatters is true but player adds ingredients in wrong order. Leave empty to produce nothing.")]
     public ItemData wrongOrderResult;
+}
+/// <summary>
+/// Maps a brewed result item to what the player's empty container becomes
+/// when swapped at the station. E.g. Tea1 -> TeacupFilled1.
+/// </summary>
+[System.Serializable]
+public class ContainerSwapMapping
+{
+    [Tooltip("The item this station can brew (e.g. Tea1, Tea2, Tea3, TeaWrong)")]
+    public ItemData brewedResultItem;
+    [Tooltip("What the empty container becomes when swapped for this result (e.g. TeacupFilled1)")]
+    public ItemData filledContainerItem;
 }

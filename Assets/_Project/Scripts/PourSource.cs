@@ -46,16 +46,6 @@ public class PourSource : MonoBehaviour
 
         if (!CheckActionPressed(owner)) return;
 
-        // Check for a TeacupFillTarget first (variable-fill, never spilled)
-        TeacupFillTarget teacup = FindNearbyTarget<TeacupFillTarget>();
-        if (teacup != null)
-        {
-            ItemData myData = selfWorldItem != null ? selfWorldItem.itemData : null;
-            teacup.OnPoured(owner, myData);
-            ResetSelf();
-            return;
-        }
-
         // Fall back to the regular PourTarget (Cauldron, etc.)
         PourTarget target = FindNearbyTarget<PourTarget>();
         if (target != null)

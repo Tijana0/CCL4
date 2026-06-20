@@ -22,6 +22,10 @@ using UnityEngine.UI;
 /// </summary>
 public class ProcessingStation : StationBase
 {
+    [Header("Transform Rules (defined on this station)")]
+    [Tooltip("Define what each item becomes when processed here, e.g. Herb1 -> BurntHerb1. Checked BEFORE the item's own ItemData processing rules.")]
+    public System.Collections.Generic.List<StationTransformRule> transformRules = new System.Collections.Generic.List<StationTransformRule>();
+
     [Header("Progress Bar UI")]
     public Image progressBarFill;
     public GameObject progressBarContainer;
@@ -93,15 +97,15 @@ public class ProcessingStation : StationBase
         if (itemOnStation == null) return;
 
         WorldItem wi = itemOnStation.GetComponent<WorldItem>();
-        ProcessingRule rule = wi != null ? GetRule(wi.itemData) : null;
-        if (rule == null) return;
+        var (output, time) = wi != null ? GetTransform(wi.itemData) : (null, 2f);
+        if (output == null) return;
 
         // Mark this frame as "actively being processed" so Update() doesn't cancel it
         lastProcessedFrame = Time.frameCount;
 
         if (!isProcessing)
         {
-            BeginProcessing(player, rule);
+            BeginProcessing(player, time);
         }
 
         processingProgress += Time.deltaTime / processingDuration;
@@ -137,23 +141,23 @@ public class ProcessingStation : StationBase
             return;
         }
 
-        ProcessingRule rule = GetRule(worldItem.itemData);
-        if (rule == null)
+        var (output, time) = GetTransform(worldItem.itemData);
+        if (output == null)
         {
-            Debug.Log($"[ProcessingStation] {worldItem.itemData.itemName} cannot be processed at {stationType}.");
+            Debug.Log($"[ProcessingStation] {worldItem.itemData.itemName} has no transform rule for {stationType}.");
             return;
         }
 
-        processingDuration = rule.processingTime > 0 ? rule.processingTime : 2f;
+        processingDuration = time;
         PlaceItemOnStation(player.heldItem, player);
     }
 
-    private void BeginProcessing(SimplePlayerController player, ProcessingRule rule)
+    private void BeginProcessing(SimplePlayerController player, float duration)
     {
         isProcessing = true;
         processingProgress = 0f;
         processingPlayer = player;
-        processingDuration = rule.processingTime > 0 ? rule.processingTime : 2f;
+        processingDuration = duration > 0 ? duration : 2f;
 
         if (progressBarContainer != null) progressBarContainer.SetActive(true);
         if (progressBarFill != null) progressBarFill.fillAmount = 0f;
@@ -168,8 +172,8 @@ public class ProcessingStation : StationBase
 
         WorldItem wi = itemOnStation?.GetComponent<WorldItem>();
         if (wi == null) return;
-        ProcessingRule rule = GetRule(wi.itemData);
-        if (rule?.outputItem == null) return;
+        var (outputItem, _) = GetTransform(wi.itemData);
+        if (outputItem == null) return;
 
         Transform anchor = counterTopPoint != null ? counterTopPoint : transform;
         Vector3 spawnPos = anchor.position + Vector3.up * 0.2f;
@@ -177,7 +181,7 @@ public class ProcessingStation : StationBase
         Destroy(itemOnStation);
         itemOnStation = null;
 
-        WorldItem result = WorldItem.CreateCombined(rule.outputItem, spawnPos, anchor);
+        WorldItem result = WorldItem.CreateCombined(outputItem, spawnPos, anchor);
         if (result != null)
         {
             itemOnStation = result.gameObject;
@@ -192,7 +196,7 @@ public class ProcessingStation : StationBase
         processingPlayer = null;
         resultReady = true;
         overcookTimer = 0f;
-        Debug.Log($"[ProcessingStation] Done! Result: {rule.outputItem.itemName}");
+        Debug.Log($"[ProcessingStation] Done! Result: {outputItem.itemName}");
     }
 
     private void CancelProcessing()
@@ -205,11 +209,23 @@ public class ProcessingStation : StationBase
         if (progressBarFill != null) progressBarFill.fillAmount = 0f;
     }
 
-    private ProcessingRule GetRule(ItemData data)
+    /// <summary>
+    /// Finds the output + duration for a given input item.
+    /// Checks this station's own Transform Rules first, then falls back
+    /// to the item's own ItemData.processingRules.
+    /// </summary>
+    private (ItemData output, float time) GetTransform(ItemData data)
     {
-        if (data == null) return null;
+        if (data == null) return (null, 2f);
+
+        foreach (var rule in transformRules)
+            if (rule.inputItem == data && rule.outputItem != null)
+                return (rule.outputItem, rule.processingTime > 0 ? rule.processingTime : 2f);
+
         foreach (var rule in data.processingRules)
-            if (rule.stationType == stationType) return rule;
-        return null;
+            if (rule.stationType == stationType && rule.outputItem != null)
+                return (rule.outputItem, rule.processingTime > 0 ? rule.processingTime : 2f);
+
+        return (null, 2f);
     }
 }
