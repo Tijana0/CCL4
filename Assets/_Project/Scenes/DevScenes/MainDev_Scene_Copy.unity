@@ -3803,6 +3803,118 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1690813035}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &684541394
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 684541398}
+  - component: {fileID: 684541397}
+  - component: {fileID: 684541396}
+  - component: {fileID: 684541395}
+  m_Layer: 0
+  m_Name: Sphere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!135 &684541395
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684541394}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &684541396
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684541394}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &684541397
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684541394}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &684541398
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684541394}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 32, y: 0.94815, z: -6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &704459783
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5506,6 +5618,57 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.00431511, y: 0.004315111, z: 0.005644113}
   m_Center: {x: -0.025004767, y: -0.024966756, z: 0.011838868}
+--- !u!114 &972711564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 972711562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eb5a04341ec3a04385b04e62741dc83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MultiIngredientStation
+  stationType: 10
+  counterTopPoint: {fileID: 972711561}
+  itemOnStation: {fileID: 0}
+  triggerMode: 1
+  enableBoilOver: 0
+  boilOverDelay: 15
+  maxIngredients: 2
+  defaultCookingTime: 5
+  recipes:
+  - recipeName: Vision 1
+    requiredIngredients:
+    - {fileID: 11400000, guid: 7dad8d659d886494cafd9a0cae0d05ff, type: 2}
+    - {fileID: 11400000, guid: a00f73ea82f64c84b87f6355129ff7dc, type: 2}
+    outputItem: {fileID: 11400000, guid: 3d64a75fd8a7bb94b82e9c4e3fcfc19a, type: 2}
+    cookingTime: 5
+    orderMatters: 0
+    wrongOrderResult: {fileID: 11400000, guid: 12f5508274813ed479090a80abe4c67a, type: 2}
+  - recipeName: Vision 2
+    requiredIngredients:
+    - {fileID: 11400000, guid: 46843358b60e618478e061dc56520b2e, type: 2}
+    - {fileID: 11400000, guid: a00f73ea82f64c84b87f6355129ff7dc, type: 2}
+    outputItem: {fileID: 11400000, guid: f036a665a93c2564e9dc832a8ea4cb1f, type: 2}
+    cookingTime: 5
+    orderMatters: 0
+    wrongOrderResult: {fileID: 11400000, guid: 12f5508274813ed479090a80abe4c67a, type: 2}
+  improvisedPotionItem: {fileID: 11400000, guid: 12f5508274813ed479090a80abe4c67a, type: 2}
+  tintImprovisedResult: 1
+  requireSpecificIngredient: 0
+  requiredStartIngredient: {fileID: 0}
+  allowContainerSwap: 0
+  containerItem: {fileID: 0}
+  containerSwapMappings: []
+  emptyVisual: {fileID: 0}
+  activeVisual: {fileID: 0}
+  doneVisual: {fileID: 0}
+  ruinedVisual: {fileID: 0}
+  progressBarFill: {fileID: 0}
+  progressBarContainer: {fileID: 0}
+  resultSpawnPoint: {fileID: 0}
 --- !u!1 &973461107
 GameObject:
   m_ObjectHideFlags: 0
@@ -7469,6 +7632,57 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.00431511, y: 0.004315111, z: 0.005644113}
   m_Center: {x: -0.025004767, y: -0.024966756, z: 0.011838868}
+--- !u!114 &1537945346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1537945344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eb5a04341ec3a04385b04e62741dc83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MultiIngredientStation
+  stationType: 10
+  counterTopPoint: {fileID: 1537945343}
+  itemOnStation: {fileID: 0}
+  triggerMode: 1
+  enableBoilOver: 0
+  boilOverDelay: 15
+  maxIngredients: 2
+  defaultCookingTime: 5
+  recipes:
+  - recipeName: Vision 1
+    requiredIngredients:
+    - {fileID: 11400000, guid: 7dad8d659d886494cafd9a0cae0d05ff, type: 2}
+    - {fileID: 11400000, guid: a00f73ea82f64c84b87f6355129ff7dc, type: 2}
+    outputItem: {fileID: 11400000, guid: 3d64a75fd8a7bb94b82e9c4e3fcfc19a, type: 2}
+    cookingTime: 5
+    orderMatters: 0
+    wrongOrderResult: {fileID: 11400000, guid: 12f5508274813ed479090a80abe4c67a, type: 2}
+  - recipeName: Vision 2
+    requiredIngredients:
+    - {fileID: 11400000, guid: 46843358b60e618478e061dc56520b2e, type: 2}
+    - {fileID: 11400000, guid: a00f73ea82f64c84b87f6355129ff7dc, type: 2}
+    outputItem: {fileID: 11400000, guid: f036a665a93c2564e9dc832a8ea4cb1f, type: 2}
+    cookingTime: 5
+    orderMatters: 0
+    wrongOrderResult: {fileID: 11400000, guid: 12f5508274813ed479090a80abe4c67a, type: 2}
+  improvisedPotionItem: {fileID: 11400000, guid: 12f5508274813ed479090a80abe4c67a, type: 2}
+  tintImprovisedResult: 1
+  requireSpecificIngredient: 0
+  requiredStartIngredient: {fileID: 0}
+  allowContainerSwap: 0
+  containerItem: {fileID: 0}
+  containerSwapMappings: []
+  emptyVisual: {fileID: 0}
+  activeVisual: {fileID: 0}
+  doneVisual: {fileID: 0}
+  ruinedVisual: {fileID: 0}
+  progressBarFill: {fileID: 0}
+  progressBarContainer: {fileID: 0}
+  resultSpawnPoint: {fileID: 0}
 --- !u!1001 &1542669631
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9348,7 +9562,7 @@ Transform:
   m_GameObject: {fileID: 1841006901}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: 0, y: 0.35, z: 0}
+  m_LocalPosition: {x: -0.016667046, y: 0.35, z: 0.041666422}
   m_LocalScale: {x: 0.83333325, y: 0.83333343, z: 0.83333343}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10514,108 +10728,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b3a2b2fbd96049b5857d8604f876026, type: 3}
---- !u!114 &1537945346
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1537945344}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0eb5a04341ec3a04385b04e62741dc83, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MultiIngredientStation
-  stationType: 10
-  counterTopPoint: {fileID: 1537945343}
-  itemOnStation: {fileID: 0}
-  triggerMode: 1
-  enableBoilOver: 0
-  boilOverDelay: 15
-  maxIngredients: 2
-  defaultCookingTime: 5
-  recipes:
-  - recipeName: Vision 1
-    requiredIngredients:
-    - {fileID: 11400000, guid: 7dad8d659d886494cafd9a0cae0d05ff, type: 2}
-    - {fileID: 11400000, guid: a00f73ea82f64c84b87f6355129ff7dc, type: 2}
-    outputItem: {fileID: 11400000, guid: 3d64a75fd8a7bb94b82e9c4e3fcfc19a, type: 2}
-    cookingTime: 5
-    orderMatters: 0
-    wrongOrderResult: {fileID: 11400000, guid: 12f5508274813ed479090a80abe4c67a, type: 2}
-  - recipeName: Vision 2
-    requiredIngredients:
-    - {fileID: 11400000, guid: 46843358b60e618478e061dc56520b2e, type: 2}
-    - {fileID: 11400000, guid: a00f73ea82f64c84b87f6355129ff7dc, type: 2}
-    outputItem: {fileID: 11400000, guid: 3d64a75fd8a7bb94b82e9c4e3fcfc19a, type: 2}
-    cookingTime: 5
-    orderMatters: 0
-    wrongOrderResult: {fileID: 11400000, guid: 12f5508274813ed479090a80abe4c67a, type: 2}
-  improvisedPotionItem: {fileID: 11400000, guid: 12f5508274813ed479090a80abe4c67a, type: 2}
-  tintImprovisedResult: 1
-  requireSpecificIngredient: 0
-  requiredStartIngredient: {fileID: 0}
-  allowContainerSwap: 0
-  containerItem: {fileID: 0}
-  containerSwapMappings: []
-  emptyVisual: {fileID: 0}
-  activeVisual: {fileID: 0}
-  doneVisual: {fileID: 0}
-  ruinedVisual: {fileID: 0}
-  progressBarFill: {fileID: 0}
-  progressBarContainer: {fileID: 0}
-  resultSpawnPoint: {fileID: 0}
---- !u!114 &972711564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 972711562}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0eb5a04341ec3a04385b04e62741dc83, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MultiIngredientStation
-  stationType: 10
-  counterTopPoint: {fileID: 972711561}
-  itemOnStation: {fileID: 0}
-  triggerMode: 1
-  enableBoilOver: 0
-  boilOverDelay: 15
-  maxIngredients: 2
-  defaultCookingTime: 5
-  recipes:
-  - recipeName: Vision 1
-    requiredIngredients:
-    - {fileID: 11400000, guid: 7dad8d659d886494cafd9a0cae0d05ff, type: 2}
-    - {fileID: 11400000, guid: a00f73ea82f64c84b87f6355129ff7dc, type: 2}
-    outputItem: {fileID: 11400000, guid: 3d64a75fd8a7bb94b82e9c4e3fcfc19a, type: 2}
-    cookingTime: 5
-    orderMatters: 0
-    wrongOrderResult: {fileID: 11400000, guid: 12f5508274813ed479090a80abe4c67a, type: 2}
-  - recipeName: Vision 2
-    requiredIngredients:
-    - {fileID: 11400000, guid: 46843358b60e618478e061dc56520b2e, type: 2}
-    - {fileID: 11400000, guid: a00f73ea82f64c84b87f6355129ff7dc, type: 2}
-    outputItem: {fileID: 11400000, guid: 3d64a75fd8a7bb94b82e9c4e3fcfc19a, type: 2}
-    cookingTime: 5
-    orderMatters: 0
-    wrongOrderResult: {fileID: 11400000, guid: 12f5508274813ed479090a80abe4c67a, type: 2}
-  improvisedPotionItem: {fileID: 11400000, guid: 12f5508274813ed479090a80abe4c67a, type: 2}
-  tintImprovisedResult: 1
-  requireSpecificIngredient: 0
-  requiredStartIngredient: {fileID: 0}
-  allowContainerSwap: 0
-  containerItem: {fileID: 0}
-  containerSwapMappings: []
-  emptyVisual: {fileID: 0}
-  activeVisual: {fileID: 0}
-  doneVisual: {fileID: 0}
-  ruinedVisual: {fileID: 0}
-  progressBarFill: {fileID: 0}
-  progressBarContainer: {fileID: 0}
-  resultSpawnPoint: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -10635,3 +10747,4 @@ SceneRoots:
   - {fileID: 1503550794}
   - {fileID: 1660762416}
   - {fileID: 1771254597}
+  - {fileID: 684541398}
