@@ -164,6 +164,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: book (1)
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 2ee9e32a11729754da71a6a4c4aa961a, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value:
+      objectReference: {fileID: 2100000, guid: 151340d13f3944790bbcafde48121af6, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
