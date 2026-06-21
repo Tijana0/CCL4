@@ -447,17 +447,20 @@ public class MultiIngredientStation : StationBase
             if (tintColour.HasValue)
                 ApplyTintToRenderer(result.gameObject, tintColour.Value);
 
-            // For CrystalBall results: apply glowing cyan material and add a spot light
+            // For CrystalBall results: apply glowing material using the item's potionColour
             if (stationType == StationType.CrystalBall)
             {
+                Color visionColor = (data != null && !data.isColourless)
+                    ? data.potionColour
+                    : new Color(0.2f, 0.8f, 1f, 1f);
+
                 Renderer visionRenderer = result.GetComponentInChildren<Renderer>();
                 if (visionRenderer != null)
                 {
-                    // Use URP Unlit so the sphere glows as a flat self-lit colour (no pink)
                     Shader unlitShader = Shader.Find("Universal Render Pipeline/Unlit")
                                      ?? Shader.Find("Unlit/Color");
                     Material glowMat = new Material(unlitShader);
-                    glowMat.SetColor("_BaseColor", new Color(0.2f, 0.8f, 1f, 1f));
+                    glowMat.SetColor("_BaseColor", visionColor);
                     visionRenderer.material = glowMat;
                 }
 
@@ -471,7 +474,7 @@ public class MultiIngredientStation : StationBase
                 lightGO.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
                 Light spot = lightGO.AddComponent<Light>();
                 spot.type = LightType.Spot;
-                spot.color = new Color(0.2f, 0.8f, 1f);
+                spot.color = visionColor;
                 spot.intensity = 5f;
                 spot.range = 6f;
                 spot.spotAngle = 60f;
