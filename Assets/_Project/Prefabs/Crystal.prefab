@@ -64,6 +64,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickupObject
   itemType: 0
   value: 0
+  skipPivotCentering: 0
 --- !u!65 &1512299678502848295
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -176,6 +177,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 3ff9b347e4213764a81cc552c1a7af46, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 61051fd7f41aa4d989ddd495f4947819, type: 2}
     - target: {fileID: 919132149155446097, guid: 3ff9b347e4213764a81cc552c1a7af46, type: 3}
       propertyPath: m_Name
       value: crystal
