@@ -37,6 +37,10 @@ public class AudioManager : MonoBehaviour
     public AK.Wwise.Event levelStart;
     public AK.Wwise.Event timerWarning; // sound when time is about to end
 
+    [Header("Volume control (RTPC)")]
+    public AK.Wwise.RTPC musicVolume;   // assign MusicVolume RTPC in Inspector
+
+
     void Awake()
     {
         if (Instance != null) { Destroy(gameObject); return; }
@@ -81,4 +85,7 @@ public class AudioManager : MonoBehaviour
     public void StartMusic() => Play(musicStart, gameObject);
     public void StopMusic()  => Play(musicStop, gameObject);
     public void PlayLevelStart() => Play(levelStart, gameObject);
+    
+    // Volume control
+    public void SetMusicVolume(float value) => musicVolume?.SetGlobalValue(value);
 }
