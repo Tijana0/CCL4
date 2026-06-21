@@ -65,6 +65,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickupObject
   itemType: 0
   value: 0
+  skipPivotCentering: 1
 --- !u!65 &2226632816997675238
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -84,7 +85,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.55, y: 0.31, z: 0.48}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &2687464575893148113
 Rigidbody:
@@ -139,15 +140,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 86454fe78d5299543933eafb3d386e2c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 26.99
+      value: -4.6
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 86454fe78d5299543933eafb3d386e2c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.45
+      value: -1.07
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 86454fe78d5299543933eafb3d386e2c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -15.24
+      value: -2.26
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 86454fe78d5299543933eafb3d386e2c, type: 3}
       propertyPath: m_LocalRotation.w
