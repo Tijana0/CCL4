@@ -5480,7 +5480,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cfd0873acfa547e47a894e1b28c557e2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.4510994
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cfd0873acfa547e47a894e1b28c557e2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5800,7 +5800,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cfd0873acfa547e47a894e1b28c557e2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 1.000001
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: cfd0873acfa547e47a894e1b28c557e2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -13976,9 +13976,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1502342594}
-  - component: {fileID: 1502342597}
-  - component: {fileID: 1502342596}
-  - component: {fileID: 1502342595}
   m_Layer: 0
   m_Name: herb_pickup
   m_TagString: Untagged
@@ -14004,69 +14001,6 @@ Transform:
   - {fileID: 1413273993}
   m_Father: {fileID: 1257224976}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1502342595
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1502342593}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35bfb6233ac754f869f6dd5fe511517d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PickupObject
-  itemType: 0
-  value: 0
-  skipPivotCentering: 0
---- !u!65 &1502342596
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1502342593}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.39433652, y: 0.7427206, z: 0.5047109}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &1502342597
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1502342593}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &1503550791
 GameObject:
   m_ObjectHideFlags: 0
@@ -21575,7 +21509,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c496ea77cdb8079479812bc6959c8ca1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 13.7
+      value: 14.151099
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c496ea77cdb8079479812bc6959c8ca1, type: 3}
       propertyPath: m_LocalRotation.w
@@ -22492,7 +22426,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c496ea77cdb8079479812bc6959c8ca1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.024431
+      value: 5.024432
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c496ea77cdb8079479812bc6959c8ca1, type: 3}
       propertyPath: m_LocalRotation.w
