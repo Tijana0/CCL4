@@ -164,6 +164,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: herb (2)
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: c496ea77cdb8079479812bc6959c8ca1, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value:
+      objectReference: {fileID: 2100000, guid: 1a323935479dc471d90ca31c8414ad91, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
