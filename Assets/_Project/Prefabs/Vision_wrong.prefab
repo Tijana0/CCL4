@@ -44,7 +44,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 12
   m_Type: 2
-  m_Color: {r: 0.2, g: 0.8, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.45, b: 0.05, a: 1}
   m_Intensity: 2
   m_Range: 1
   m_SpotAngle: 30
@@ -194,7 +194,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1a3cfcff4d7247f9a0ad8bf1f4af9557, type: 2}
+  - {fileID: 2100000, guid: 8039cb30cd11c46549052b54d332b410, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -282,6 +282,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickupObject
   itemType: 0
   value: 0
+  skipPivotCentering: 0
 --- !u!65 &7794277170833875829
 BoxCollider:
   m_ObjectHideFlags: 0
