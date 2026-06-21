@@ -463,7 +463,7 @@ GameObject:
   - component: {fileID: 79533673}
   - component: {fileID: 79533672}
   m_Layer: 0
-  m_Name: Crystal_station
+  m_Name: crystal-dispenser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
