@@ -4572,6 +4572,79 @@ MonoBehaviour:
   progressBarContainer: {fileID: 0}
   enableOvercook: 1
   overcookDelay: 20
+--- !u!1001 &735169975
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 54.147064
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.9796
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 82.76737
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 23.04
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.2155151
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -8.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.5000007
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.50000083
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.49999925
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.4999993
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 036bc6cfc62114739a5665ac61a21920, type: 2}
+    - target: {fileID: 919132149155446097, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_Name
+      value: JanelaGotica
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
 --- !u!1001 &741737199
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5382,6 +5455,75 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3ff9b347e4213764a81cc552c1a7af46, type: 3}
   m_PrefabInstance: {fileID: 826812995}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &837188203
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 54.147064
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.9796
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 82.76737
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 38.96
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.2155151
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -8.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
+      propertyPath: m_Name
+      value: JanelaGotica (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 64f8fb844655a464394da1f4aac6abbf, type: 3}
 --- !u!1001 &859886766
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20837,3 +20979,5 @@ SceneRoots:
   - {fileID: 1771254597}
   - {fileID: 79533674}
   - {fileID: 881203064}
+  - {fileID: 735169975}
+  - {fileID: 837188203}
