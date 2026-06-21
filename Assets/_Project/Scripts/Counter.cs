@@ -1,11 +1,17 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 /// <summary>
-/// Plain counter — holds one item, but supports combining two items into one
-/// if a CombineRule exists between them (e.g. red ball + blue ball = purple ball).
+/// Plain counter — holds one item, but supports combining two items into one.
+/// Combine rules can be defined directly on this station (checked first),
+/// or fall back to ItemData combine rules.
 /// </summary>
 public class Counter : StationBase
 {
+    [Header("Combine Rules (defined on this station)")]
+    [Tooltip("Define what two items become when combined here. Checked before ItemData combine rules.")]
+    public List<StationCombineRule> combineRules = new List<StationCombineRule>();
+
     private void Awake()
     {
         stationType = StationType.Counter;
@@ -14,7 +20,7 @@ public class Counter : StationBase
     private void Start()
     {
         if (itemOnStation != null)
-            PlaceItemOnStation(itemOnStation, null); // null player = editor pre-placed item
+            PlaceItemOnStation(itemOnStation, null);
     }
 
     protected override void TryCombineOrSwap(SimplePlayerController player)
@@ -28,8 +34,12 @@ public class Counter : StationBase
             return;
         }
 
-        // Check for a combine rule between the two items
-        ItemData result = heldWI.itemData.GetCombineResult(stationWI.itemData);
+        // Check station-defined combine rules first
+        ItemData result = GetStationCombineResult(heldWI.itemData, stationWI.itemData);
+
+        // Fall back to ItemData combine rules
+        if (result == null)
+            result = heldWI.itemData.GetCombineResult(stationWI.itemData);
 
         if (result == null)
         {
@@ -37,28 +47,45 @@ public class Counter : StationBase
             return;
         }
 
-        // Destroy both items
         Destroy(player.heldItem);
         Destroy(itemOnStation);
         player.heldItem = null;
         itemOnStation = null;
 
-        // Spawn result on the counter
         Transform anchor = counterTopPoint != null ? counterTopPoint : transform;
         Vector3 spawnPos = anchor.position + Vector3.up * 0.2f;
 
         WorldItem combined = WorldItem.CreateCombined(result, spawnPos, anchor);
         if (combined != null)
         {
-            itemOnStation = combined.gameObject;
-            combined.transform.localPosition = new Vector3(0, 0.2f, 0);
-
-            Rigidbody rb = combined.GetComponent<Rigidbody>();
-            if (rb != null) rb.isKinematic = true;
-            Collider col = combined.GetComponent<Collider>();
-            if (col != null) col.enabled = false;
-
+            PlaceItemOnStation(combined.gameObject, null);
             Debug.Log($"[Counter] Combined into {result.itemName}!");
         }
     }
+
+    private ItemData GetStationCombineResult(ItemData a, ItemData b)
+    {
+        foreach (var rule in combineRules)
+        {
+            if ((rule.itemA == a && rule.itemB == b) ||
+                (rule.itemA == b && rule.itemB == a))
+                return rule.outputItem;
+        }
+        return null;
+    }
+}
+
+/// <summary>
+/// A combine rule defined directly on a Counter station.
+/// Order of itemA/itemB does not matter.
+/// </summary>
+[System.Serializable]
+public class StationCombineRule
+{
+    [Tooltip("First item")]
+    public ItemData itemA;
+    [Tooltip("Second item")]
+    public ItemData itemB;
+    [Tooltip("What they combine into")]
+    public ItemData outputItem;
 }

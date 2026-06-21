@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97340c5b42f311744bbcde4a2c5d3980, type: 3}
+  m_Name: BlueBall
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: BlueBall
+  icon: {fileID: 0}
+  prefab: {fileID: 6024581101709590736, guid: be7a1394872dff0458216ea216c08aa9, type: 3}
+  processingRules: []
+  combineRules:
+  - otherItem: {fileID: 11400000, guid: ee991a983d1b4f54caa909010be4a5d5, type: 2}
+    outputItem: {fileID: 11400000, guid: 267d71f9afd8c5d47bf74fbab29dc37e, type: 2}
+  - otherItem: {fileID: 11400000, guid: ee991a983d1b4f54caa909010be4a5d5, type: 2}
+    outputItem: {fileID: 11400000, guid: 267d71f9afd8c5d47bf74fbab29dc37e, type: 2}
+  allowedStationTypes: 
+  requiresProcessingBeforeCauldron: 0
+  isDisposable: 1
