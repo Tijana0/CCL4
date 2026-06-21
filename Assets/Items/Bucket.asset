@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: bucket
   icon: {fileID: 0}
-  prefab: {fileID: 0}
+  prefab: {fileID: 4938356781378103017, guid: 66e5f09a2cd2ef9439c5afbe6157c643, type: 3}
   potionColour: {r: 1, g: 1, b: 1, a: 1}
   isColourless: 0
   processingRules: []
