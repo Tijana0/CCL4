@@ -72,37 +72,47 @@ public class OrderManager : MonoBehaviour
         // 2. Discover combinations
         foreach (var item in items)
         {
-            foreach (var rule in item.combineRules)
+            if (item == null) continue;
+
+            if (item.combineRules != null)
             {
-                // If both inputs and output exist in the room (or are valid results)
-                if (rule.outputItem != null)
+                foreach (var rule in item.combineRules)
                 {
-                    // Check if we already added this result to avoid duplicates
-                    if (!discoveredOrders.Exists(r => r.requiredOutput == rule.outputItem))
+                    if (rule == null) continue;
+                    // If both inputs and output exist in the room (or are valid results)
+                    if (rule.outputItem != null)
                     {
-                        discoveredOrders.Add(new RoomRecipe {
-                            recipeName = rule.outputItem.itemName,
-                            requiredOutput = rule.outputItem,
-                            scoreValue = 15,
-                            timeLimit = 60f
-                        });
+                        // Check if we already added this result to avoid duplicates
+                        if (!discoveredOrders.Exists(r => r.requiredOutput == rule.outputItem))
+                        {
+                            discoveredOrders.Add(new RoomRecipe {
+                                recipeName = rule.outputItem.itemName,
+                                requiredOutput = rule.outputItem,
+                                scoreValue = 15,
+                                timeLimit = 60f
+                            });
+                        }
                     }
                 }
             }
 
             // 3. Discover processing results
-            foreach (var rule in item.processingRules)
+            if (item.processingRules != null)
             {
-                if (rule.outputItem != null)
+                foreach (var rule in item.processingRules)
                 {
-                    if (!discoveredOrders.Exists(r => r.requiredOutput == rule.outputItem))
+                    if (rule == null) continue;
+                    if (rule.outputItem != null)
                     {
-                        discoveredOrders.Add(new RoomRecipe {
-                            recipeName = rule.outputItem.itemName,
-                            requiredOutput = rule.outputItem,
-                            scoreValue = 10,
-                            timeLimit = 50f
-                        });
+                        if (!discoveredOrders.Exists(r => r.requiredOutput == rule.outputItem))
+                        {
+                            discoveredOrders.Add(new RoomRecipe {
+                                recipeName = rule.outputItem.itemName,
+                                requiredOutput = rule.outputItem,
+                                scoreValue = 10,
+                                timeLimit = 50f
+                            });
+                        }
                     }
                 }
             }
