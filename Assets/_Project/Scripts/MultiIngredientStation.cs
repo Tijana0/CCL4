@@ -92,6 +92,8 @@ public class MultiIngredientStation : StationBase
     [Header("Result Spawn Point (optional)")]
     public Transform resultSpawnPoint;
 
+    public override bool HasReadyResult => resultItem != null;
+
     // ── Runtime state ────────────────────────────────────────────────────────
     private List<ItemData> ingredients = new List<ItemData>();
     private StationState stationState = StationState.Empty;
@@ -106,12 +108,95 @@ public class MultiIngredientStation : StationBase
 
     private void Start()
     {
+        if (stationType == StationType.CrystalBall)
+        {
+            if (activeVisual == null)
+            {
+                GameObject visualParent = new GameObject("CrystalBall_ActiveVisual");
+                visualParent.transform.SetParent(this.transform, false);
+                visualParent.transform.localPosition = new Vector3(0f, 0.8f, 0f);
+
+                GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                sphere.name = "ShiningSphere";
+                sphere.transform.SetParent(visualParent.transform, false);
+                sphere.transform.localPosition = Vector3.zero;
+                sphere.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+                Renderer sphereRenderer = sphere.GetComponent<Renderer>();
+                if (sphereRenderer != null)
+                {
+                    Shader unlitShader = Shader.Find("Universal Render Pipeline/Unlit")
+                                     ?? Shader.Find("Unlit/Color");
+                    Material glowMat = new Material(unlitShader);
+                    glowMat.SetColor("_BaseColor", new Color(1f, 0.95f, 0.6f, 1f));
+                    sphereRenderer.material = glowMat;
+                }
+                Collider sphereCollider = sphere.GetComponent<Collider>();
+                if (sphereCollider != null) sphereCollider.enabled = false;
+
+                GameObject lightObj = new GameObject("ShiningLight");
+                lightObj.transform.SetParent(visualParent.transform, false);
+                lightObj.transform.localPosition = Vector3.zero;
+                Light lightComponent = lightObj.AddComponent<Light>();
+                lightComponent.type = LightType.Point;
+                lightComponent.color = new Color(0.95f, 0.9f, 0.6f);
+                lightComponent.intensity = 8f;
+                lightComponent.range = 5f;
+                lightComponent.shadows = LightShadows.None;
+
+                activeVisual = visualParent;
+            }
+
+            // Build a world-space progress bar — no parenting, use world position directly
+            if (progressBarContainer == null && counterTopPoint != null)
+            {
+                GameObject canvasGO = new GameObject("CrystalBall_ProgressCanvas");
+                canvasGO.transform.position = counterTopPoint.position + new Vector3(-1.5f, 1.7f, 1.5f);
+                canvasGO.transform.localScale = Vector3.one * 0.01f;
+
+                Canvas canvas = canvasGO.AddComponent<Canvas>();
+                canvas.renderMode = RenderMode.WorldSpace;
+
+                RectTransform canvasRect = canvasGO.GetComponent<RectTransform>();
+                canvasRect.sizeDelta = new Vector2(120f, 18f);
+
+                GameObject bg = new GameObject("Background");
+                bg.transform.SetParent(canvasGO.transform, false);
+                UnityEngine.UI.Image bgImg = bg.AddComponent<UnityEngine.UI.Image>();
+                bgImg.color = new Color(0.1f, 0.1f, 0.15f, 0.85f);
+                RectTransform bgRect = bg.GetComponent<RectTransform>();
+                bgRect.anchorMin = Vector2.zero;
+                bgRect.anchorMax = Vector2.one;
+                bgRect.offsetMin = Vector2.zero;
+                bgRect.offsetMax = Vector2.zero;
+
+                GameObject fill = new GameObject("Fill");
+                fill.transform.SetParent(canvasGO.transform, false);
+                UnityEngine.UI.Image fillImg = fill.AddComponent<UnityEngine.UI.Image>();
+                fillImg.color = new Color(0.2f, 0.8f, 1f, 1f);
+                RectTransform fillRect = fill.GetComponent<RectTransform>();
+                fillRect.anchorMin = Vector2.zero;
+                fillRect.anchorMax = Vector2.one;
+                fillRect.offsetMin = new Vector2(2f, 2f);
+                fillRect.offsetMax = new Vector2(-2f, -2f);
+                // Pivot at left edge so localScale.x=0→empty, 1→full fills left-to-right
+                fillRect.pivot = new Vector2(0f, 0.5f);
+                fill.transform.localScale = new Vector3(0f, 1f, 1f);
+
+                progressBarContainer = canvasGO;
+                progressBarFill = fillImg;
+                canvasGO.SetActive(false);
+            }
+        }
+
         UpdateVisuals();
-        if (progressBarContainer != null) progressBarContainer.SetActive(false);
     }
 
     private void Update()
     {
+        // Billboard the progress bar toward the camera
+        if (progressBarContainer != null && Camera.main != null)
+            progressBarContainer.transform.rotation = Camera.main.transform.rotation;
+
         switch (stationState)
         {
             case StationState.Cooking:
@@ -274,7 +359,7 @@ public class MultiIngredientStation : StationBase
         stationState = StationState.Cooking;
 
         if (progressBarContainer != null) progressBarContainer.SetActive(true);
-        if (progressBarFill != null) progressBarFill.fillAmount = 0f;
+        if (progressBarFill != null) progressBarFill.transform.localScale = new Vector3(0f, 1f, 1f);
 
         Debug.Log($"[MultiIngredientStation] Cooking restarted with {ingredients.Count} ingredient(s) — {currentCookingTime}s");
     }
@@ -297,7 +382,7 @@ public class MultiIngredientStation : StationBase
 
         cookingProgress += Time.deltaTime / currentCookingTime;
         if (progressBarFill != null)
-            progressBarFill.fillAmount = cookingProgress;
+            progressBarFill.transform.localScale = new Vector3(Mathf.Clamp01(cookingProgress), 1f, 1f);
 
         if (cookingProgress >= 1f)
             CompleteCooking();
@@ -351,7 +436,7 @@ public class MultiIngredientStation : StationBase
         if (result != null)
         {
             resultItem = result.gameObject;
-            result.transform.localPosition = new Vector3(0, 0.3f, 0);
+            result.transform.position = anchor.position + new Vector3(-1.5f, 1.5f, 1.5f);
 
             Rigidbody rb = result.GetComponentInChildren<Rigidbody>();
             if (rb != null) rb.isKinematic = true;
@@ -361,6 +446,41 @@ public class MultiIngredientStation : StationBase
             // Apply the blended potion colour to the liquid's material, if requested.
             if (tintColour.HasValue)
                 ApplyTintToRenderer(result.gameObject, tintColour.Value);
+
+            // For CrystalBall results: apply glowing cyan material and add a spot light
+            if (stationType == StationType.CrystalBall)
+            {
+                Renderer visionRenderer = result.GetComponentInChildren<Renderer>();
+                if (visionRenderer != null)
+                {
+                    // Use URP Unlit so the sphere glows as a flat self-lit colour (no pink)
+                    Shader unlitShader = Shader.Find("Universal Render Pipeline/Unlit")
+                                     ?? Shader.Find("Unlit/Color");
+                    Material glowMat = new Material(unlitShader);
+                    glowMat.SetColor("_BaseColor", new Color(0.2f, 0.8f, 1f, 1f));
+                    visionRenderer.material = glowMat;
+                }
+
+                // Remove any existing lights from the prefab and replace with a spot light
+                foreach (Light l in result.GetComponentsInChildren<Light>())
+                    l.enabled = false;
+
+                GameObject lightGO = new GameObject("VisionSpotLight");
+                lightGO.transform.SetParent(result.transform, false);
+                lightGO.transform.localPosition = Vector3.zero;
+                lightGO.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+                Light spot = lightGO.AddComponent<Light>();
+                spot.type = LightType.Spot;
+                spot.color = new Color(0.2f, 0.8f, 1f);
+                spot.intensity = 5f;
+                spot.range = 6f;
+                spot.spotAngle = 60f;
+                spot.shadows = LightShadows.None;
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"[SpawnResult] WorldItem.CreateCombined returned null for '{data?.itemName}'. Prefab assigned? {data?.prefab != null}");
         }
     }
 
@@ -579,6 +699,20 @@ public class MultiIngredientStation : StationBase
 
         if (progressBarContainer != null) progressBarContainer.SetActive(false);
         UpdateVisuals();
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (stationType != StationType.CrystalBall) return;
+        if (counterTopPoint == null) return;
+
+        // Magenta sphere = where the Vision result will spawn
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawSphere(counterTopPoint.position + new Vector3(-1.5f, 1.5f, 1.5f), 0.15f);
+
+        // Cyan wire cube = where the progress bar canvas will sit
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireCube(counterTopPoint.position + new Vector3(-1.5f, 1.7f, 1.5f), new Vector3(1.2f, 0.18f, 0.01f));
     }
 }
 

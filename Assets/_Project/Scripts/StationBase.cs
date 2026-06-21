@@ -26,6 +26,10 @@ public abstract class StationBase : MonoBehaviour, IInteractable
 
     public bool CanInteract() => true;
 
+    // Override in subclasses that have a ready result the player can pick up
+    // even when itemOnStation is null (e.g. MultiIngredientStation after cooking).
+    public virtual bool HasReadyResult => false;
+
     public virtual void Interact(SimplePlayerController player)
     {
         // Bin and Sink are handled entirely by InstantStation.Interact()
@@ -54,8 +58,9 @@ public abstract class StationBase : MonoBehaviour, IInteractable
             return;
         }
 
-        // RoomConfig whitelist — only source of truth
-        if (whitelistSet && allowedItems.Count > 0 && !allowedItems.Contains(worldItem.itemData))
+        // Plain counters accept any item — only specialized stations enforce the whitelist.
+        // RoomConfig whitelist — only source of truth for non-counter stations.
+        if (stationType != StationType.Counter && whitelistSet && allowedItems.Count > 0 && !allowedItems.Contains(worldItem.itemData))
         {
             Debug.Log($"[Station:{stationType}] {worldItem.itemData.itemName} is not allowed here.");
             OnPlacementRejected(player, worldItem);

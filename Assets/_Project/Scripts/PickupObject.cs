@@ -62,12 +62,18 @@ public class PickupObject : MonoBehaviour, IInteractable
             child.SetParent(transform);
         }
 
-        // Adjust collider center and size to match visual bounds
+        // Adjust collider center and size to match visual bounds.
+        // bounds.size is world-space; boxCol.size is local-space, so divide by lossyScale.
         BoxCollider boxCol = GetComponent<BoxCollider>();
         if (boxCol != null)
         {
             boxCol.center = Vector3.zero;
-            boxCol.size = bounds.size;
+            Vector3 ls = transform.lossyScale;
+            boxCol.size = new Vector3(
+                ls.x != 0 ? bounds.size.x / ls.x : bounds.size.x,
+                ls.y != 0 ? bounds.size.y / ls.y : bounds.size.y,
+                ls.z != 0 ? bounds.size.z / ls.z : bounds.size.z
+            );
         }
     }
 

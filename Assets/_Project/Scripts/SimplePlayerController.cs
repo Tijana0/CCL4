@@ -484,7 +484,7 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                     {
                         bool playerHasItem = heldItem != null;
                         bool stationHasItem = station.itemOnStation != null;
-                        if (!playerHasItem && !stationHasItem && !(station is ItemContainerStation))
+                        if (!playerHasItem && !stationHasItem && !station.HasReadyResult && !(station is ItemContainerStation))
                         {
                             continue;
                         }
