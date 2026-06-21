@@ -54,6 +54,7 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         {
             rb.useGravity = true;
             rb.constraints = RigidbodyConstraints.FreezeRotation;
+            rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         }
         if (freezeLabel != null) freezeLabel.gameObject.SetActive(false);
 
@@ -438,11 +439,15 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
     private void LateUpdate()
     {
-        if (useBoundaries)
+        if (useBoundaries && rb != null)
         {
-            float clampedX = Mathf.Clamp(transform.position.x, minBounds.x, maxBounds.x);
-            float clampedZ = Mathf.Clamp(transform.position.z, minBounds.y, maxBounds.y);
-            transform.position = new Vector3(clampedX, transform.position.y, clampedZ);
+            // Use rb.position instead of transform.position to keep the physics
+            // engine in sync — setting transform.position directly on a Rigidbody
+            // desyncs its internal state and breaks collision detection.
+            Vector3 pos = rb.position;
+            pos.x = Mathf.Clamp(pos.x, minBounds.x, maxBounds.x);
+            pos.z = Mathf.Clamp(pos.z, minBounds.y, maxBounds.y);
+            rb.position = pos;
         }
     }
 
