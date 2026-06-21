@@ -106,6 +106,53 @@ public class MultiIngredientStation : StationBase
 
     private void Start()
     {
+        if (stationType == StationType.CrystalBall)
+        {
+            if (activeVisual == null)
+            {
+                // Create a parent GameObject for the active visual
+                GameObject visualParent = new GameObject("CrystalBall_ActiveVisual");
+                visualParent.transform.SetParent(this.transform, false);
+                // Position it slightly above the crystal ball
+                visualParent.transform.localPosition = new Vector3(0f, 0.8f, 0f);
+                
+                // 1. Create the shining sphere visual
+                GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                sphere.name = "ShiningSphere";
+                sphere.transform.SetParent(visualParent.transform, false);
+                sphere.transform.localPosition = Vector3.zero;
+                sphere.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+                
+                // Make the sphere look bright cream yellow and glowing
+                Renderer sphereRenderer = sphere.GetComponent<Renderer>();
+                if (sphereRenderer != null)
+                {
+                    Material glowMat = new Material(Shader.Find("Standard"));
+                    glowMat.color = new Color(1f, 0.95f, 0.6f, 1f);
+                    glowMat.EnableKeyword("_EMISSION");
+                    glowMat.SetColor("_EmissionColor", new Color(1f, 0.9f, 0.5f) * 2f);
+                    sphereRenderer.material = glowMat;
+                }
+                
+                // Disable collision
+                Collider sphereCollider = sphere.GetComponent<Collider>();
+                if (sphereCollider != null) sphereCollider.enabled = false;
+
+                // 2. Create the bright point light
+                GameObject lightObj = new GameObject("ShiningLight");
+                lightObj.transform.SetParent(visualParent.transform, false);
+                lightObj.transform.localPosition = Vector3.zero;
+                Light lightComponent = lightObj.AddComponent<Light>();
+                lightComponent.type = LightType.Point;
+                lightComponent.color = new Color(0.95f, 0.9f, 0.6f);
+                lightComponent.intensity = 8f;
+                lightComponent.range = 5f;
+                lightComponent.shadows = LightShadows.None;
+
+                activeVisual = visualParent;
+            }
+        }
+
         UpdateVisuals();
         if (progressBarContainer != null) progressBarContainer.SetActive(false);
     }
