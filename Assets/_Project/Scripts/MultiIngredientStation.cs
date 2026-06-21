@@ -460,25 +460,24 @@ public class MultiIngredientStation : StationBase
                     Shader unlitShader = Shader.Find("Universal Render Pipeline/Unlit")
                                      ?? Shader.Find("Unlit/Color");
                     Material glowMat = new Material(unlitShader);
-                    glowMat.SetColor("_BaseColor", visionColor);
+                    // HDR value (> 1) triggers bloom when post-processing is active
+                    glowMat.SetColor("_BaseColor", visionColor * 3f);
                     visionRenderer.material = glowMat;
                 }
 
-                // Remove any existing lights from the prefab and replace with a spot light
+                // Remove any existing lights from the prefab and replace with a point light
                 foreach (Light l in result.GetComponentsInChildren<Light>())
                     l.enabled = false;
 
-                GameObject lightGO = new GameObject("VisionSpotLight");
+                GameObject lightGO = new GameObject("VisionPointLight");
                 lightGO.transform.SetParent(result.transform, false);
                 lightGO.transform.localPosition = Vector3.zero;
-                lightGO.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
-                Light spot = lightGO.AddComponent<Light>();
-                spot.type = LightType.Spot;
-                spot.color = visionColor;
-                spot.intensity = 5f;
-                spot.range = 6f;
-                spot.spotAngle = 60f;
-                spot.shadows = LightShadows.None;
+                Light point = lightGO.AddComponent<Light>();
+                point.type = LightType.Point;
+                point.color = visionColor;
+                point.intensity = 20f;
+                point.range = 8f;
+                point.shadows = LightShadows.None;
             }
         }
         else
