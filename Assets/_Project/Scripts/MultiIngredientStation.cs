@@ -460,12 +460,10 @@ public class MultiIngredientStation : StationBase
                     Shader unlitShader = Shader.Find("Universal Render Pipeline/Unlit")
                                      ?? Shader.Find("Unlit/Color");
                     Material glowMat = new Material(unlitShader);
-                    // HDR value (> 1) triggers bloom when post-processing is active
-                    glowMat.SetColor("_BaseColor", visionColor * 3f);
+                    glowMat.SetColor("_BaseColor", visionColor);
                     visionRenderer.material = glowMat;
                 }
 
-                // Remove any existing lights from the prefab and replace with a point light
                 foreach (Light l in result.GetComponentsInChildren<Light>())
                     l.enabled = false;
 
@@ -475,8 +473,8 @@ public class MultiIngredientStation : StationBase
                 Light point = lightGO.AddComponent<Light>();
                 point.type = LightType.Point;
                 point.color = visionColor;
-                point.intensity = 20f;
-                point.range = 8f;
+                point.intensity = 3f;
+                point.range = 4f;
                 point.shadows = LightShadows.None;
             }
         }
