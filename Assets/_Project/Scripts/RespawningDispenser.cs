@@ -27,6 +27,12 @@ public class RespawningDispenser : MonoBehaviour
     private void Start()
     {
         if (spawnPoint == null) spawnPoint = transform;
+        if (itemPrefab == null)
+        {
+            Debug.LogWarning($"[RespawningDispenser] '{name}' has no itemPrefab assigned — disabling.", this);
+            enabled = false;
+            return;
+        }
         SpawnNow();
     }
 
@@ -55,5 +61,13 @@ public class RespawningDispenser : MonoBehaviour
             spawnPoint.position + Vector3.up * heightOffset,
             spawnPoint.rotation,
             spawnPoint);
+
+        // Keep the prefab's intended world scale even if the spawn point is scaled.
+        Vector3 parent = spawnPoint.lossyScale;
+        Vector3 want = itemPrefab.transform.localScale;
+        current.transform.localScale = new Vector3(
+            parent.x != 0f ? want.x / parent.x : want.x,
+            parent.y != 0f ? want.y / parent.y : want.y,
+            parent.z != 0f ? want.z / parent.z : want.z);
     }
 }
