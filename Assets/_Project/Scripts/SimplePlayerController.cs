@@ -627,6 +627,21 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                 }
                 Vector3 dropPos = new Vector3(dX, dropY + heightOffset, dZ);
 
+                // Prevent placing items so they clip into stairs/platforms.
+                // The box is shrunk to 85% so resting ON TOP of a platform is still allowed;
+                // only positions that actually overlap the geometry are rejected.
+                Vector3 blockHalf = (itemCol != null ? itemCol.size : new Vector3(0.5f, 0.3f, 0.5f)) * 0.5f * 0.85f;
+                Collider[] blockHits = Physics.OverlapBox(dropPos, blockHalf, Quaternion.identity, ~0, QueryTriggerInteraction.Ignore);
+                foreach (Collider bh in blockHits)
+                {
+                    string bn = bh.gameObject.name.ToLower();
+                    if (bn.StartsWith("platform") || bn.StartsWith("stairs"))
+                    {
+                        // Would overlap a platform/stairs — keep holding instead of dropping.
+                        return;
+                    }
+                }
+
                 pickup.Drop(dropPos);
                 heldItem = null;
             }
