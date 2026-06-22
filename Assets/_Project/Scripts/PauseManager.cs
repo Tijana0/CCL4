@@ -12,6 +12,9 @@ public class PauseManager : MonoBehaviour
     private GameObject pausePanel;
     private GameObject firstSelectedButton;
 
+    // Constant button-alias set, hoisted out of the per-frame check to avoid array allocations.
+    private static readonly string[] PauseButtonAliases = { "start", "button9", "options", "menu" };
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -147,7 +150,7 @@ public class PauseManager : MonoBehaviour
             }
             
             // Ultra-permissive alias checking for third-party macOS gamepads
-            if (CheckButton(device, new string[] { "start", "button9", "options", "menu" }))
+            if (CheckButton(device, PauseButtonAliases))
             {
                 pausePressed = true;
             }

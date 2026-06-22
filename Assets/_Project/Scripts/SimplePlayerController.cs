@@ -47,6 +47,11 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
     private static bool controllersDirty = true;
     private static bool isSubscribedToEvents = false;
 
+    // Constant button-alias sets, hoisted out of Update to avoid per-frame array allocations.
+    private static readonly string[] InteractButtonAliases = { "buttonSouth", "button0", "a", "cross", "trigger" };
+    private static readonly string[] ProcessButtonAliases = { "buttonWest", "button3", "x", "square", "button13" };
+    private static readonly string[] DashButtonAliases = { "buttonEast", "button2", "b", "circle", "button12" };
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -280,9 +285,9 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                 // A (Interact) = trigger / button0
                 // B (Dash) = button2
                 // X (Process) = button3 (Assuming standard HID layout since B=2)
-                gamepadInteract |= CheckButton(myDevice, new string[] { "buttonSouth", "button0", "a", "cross", "trigger" });
-                gamepadProcess |= CheckButton(myDevice, new string[] { "buttonWest", "button3", "x", "square", "button13" }, true);
-                gamepadDash |= CheckButton(myDevice, new string[] { "buttonEast", "button2", "b", "circle", "button12" });
+                gamepadInteract |= CheckButton(myDevice, InteractButtonAliases);
+                gamepadProcess |= CheckButton(myDevice, ProcessButtonAliases, true);
+                gamepadDash |= CheckButton(myDevice, DashButtonAliases);
             }
         }
 
