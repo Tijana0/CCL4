@@ -447,35 +447,35 @@ public class MultiIngredientStation : StationBase
             if (tintColour.HasValue)
                 ApplyTintToRenderer(result.gameObject, tintColour.Value);
 
-            // For CrystalBall results: apply glowing cyan material and add a spot light
+            // For CrystalBall results: apply glowing material using the item's potionColour
             if (stationType == StationType.CrystalBall)
             {
+                Color visionColor = (data != null && !data.isColourless)
+                    ? data.potionColour
+                    : new Color(0.2f, 0.8f, 1f, 1f);
+
                 Renderer visionRenderer = result.GetComponentInChildren<Renderer>();
                 if (visionRenderer != null)
                 {
-                    // Use URP Unlit so the sphere glows as a flat self-lit colour (no pink)
                     Shader unlitShader = Shader.Find("Universal Render Pipeline/Unlit")
                                      ?? Shader.Find("Unlit/Color");
                     Material glowMat = new Material(unlitShader);
-                    glowMat.SetColor("_BaseColor", new Color(0.2f, 0.8f, 1f, 1f));
+                    glowMat.SetColor("_BaseColor", visionColor);
                     visionRenderer.material = glowMat;
                 }
 
-                // Remove any existing lights from the prefab and replace with a spot light
                 foreach (Light l in result.GetComponentsInChildren<Light>())
                     l.enabled = false;
 
-                GameObject lightGO = new GameObject("VisionSpotLight");
+                GameObject lightGO = new GameObject("VisionPointLight");
                 lightGO.transform.SetParent(result.transform, false);
                 lightGO.transform.localPosition = Vector3.zero;
-                lightGO.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
-                Light spot = lightGO.AddComponent<Light>();
-                spot.type = LightType.Spot;
-                spot.color = new Color(0.2f, 0.8f, 1f);
-                spot.intensity = 5f;
-                spot.range = 6f;
-                spot.spotAngle = 60f;
-                spot.shadows = LightShadows.None;
+                Light point = lightGO.AddComponent<Light>();
+                point.type = LightType.Point;
+                point.color = visionColor;
+                point.intensity = 3f;
+                point.range = 4f;
+                point.shadows = LightShadows.None;
             }
         }
         else

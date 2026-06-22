@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: tea 3
   icon: {fileID: 0}
-  prefab: {fileID: 0}
+  prefab: {fileID: 3635232974365509252, guid: 2a8d5cf4c9911d74ca41c576cd80c456, type: 3}
   potionColour: {r: 1, g: 1, b: 1, a: 1}
   isColourless: 0
   processingRules: []

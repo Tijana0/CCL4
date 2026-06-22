@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: teapot
   icon: {fileID: 0}
-  prefab: {fileID: 0}
+  prefab: {fileID: 137518175886192598, guid: dbf3fccf72270074ea86e490cf1b57ec, type: 3}
   potionColour: {r: 1, g: 1, b: 1, a: 1}
   isColourless: 0
   processingRules: []

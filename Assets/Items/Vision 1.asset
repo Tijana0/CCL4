@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: vision 1
   icon: {fileID: 0}
   prefab: {fileID: 1116528748878795103, guid: 792626fde2c06464cacb32281f5fa36a, type: 3}
-  potionColour: {r: 1, g: 1, b: 1, a: 1}
+  potionColour: {r: 0.2, g: 0.8, b: 1, a: 1}
   isColourless: 0
   processingRules: []
   combineRules: []

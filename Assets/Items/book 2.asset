@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: book 2
   icon: {fileID: 0}
-  prefab: {fileID: 0}
+  prefab: {fileID: 3619312113309723841, guid: 2c6f48193e5a47743af866f9ba0e0e5a, type: 3}
   potionColour: {r: 1, g: 1, b: 1, a: 1}
   isColourless: 0
   processingRules: []
