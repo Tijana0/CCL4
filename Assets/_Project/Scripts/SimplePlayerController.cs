@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class SimplePlayerController : MonoBehaviour, IInteractable
 {
@@ -483,9 +484,8 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         
         Collider[] hitColliders = Physics.OverlapBox(interactionCenter, halfExtents, transform.rotation);
 
-        bool interacted = false;
-
-        // prioritize interacting with something in the world (including other players)
+        // Find all valid interactable targets and assign priority/distance
+        List<InteractableTarget> targets = new List<InteractableTarget>();
         foreach (Collider hit in hitColliders)
         {
             // Don't interact with yourself!
@@ -495,32 +495,64 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             {
                 if (interactable.CanInteract())
                 {
-                    // Skip empty stations (counters, sinks, bins) if player hands are also empty
+                    int priority = 1; // Default priority (pickups, players)
                     if (interactable is StationBase station)
                     {
-                        bool playerHasItem = heldItem != null;
-                        bool stationHasItem = station.itemOnStation != null;
-                        if (!playerHasItem && !stationHasItem && !station.HasReadyResult && !(station is ItemContainerStation))
-                        {
-                            continue;
-                        }
-
-                        // When holding an item, skip dispensers that require empty hands
-                        // (Instant / HoldToExtract). They can't accept the held item, so they
-                        // shouldn't "steal" the interaction from a station that can (bin, hand-in,
-                        // counter, or a RequiresItem dispenser like the sink).
-                        if (playerHasItem && station is ItemContainerStation ics
-                            && ics.extractionMode != ItemContainerStation.ExtractionMode.RequiresItem)
-                        {
-                            continue;
-                        }
+                        if (station.stationType == StationType.Counter)
+                            priority = 0; // Generic counter gets lowest priority
+                        else
+                            priority = 2; // Specialized stations get highest priority
                     }
 
-                    interactable.Interact(this);
-                    interacted = true;
-                    break;
+                    float distance = Vector3.Distance(interactionCenter, hit.bounds.center);
+                    targets.Add(new InteractableTarget
+                    {
+                        interactable = interactable,
+                        priority = priority,
+                        distance = distance
+                    });
                 }
             }
+        }
+
+        // Sort targets: highest priority first, then closest distance first
+        targets.Sort((a, b) =>
+        {
+            if (a.priority != b.priority)
+                return b.priority.CompareTo(a.priority); // Descending priority
+            return a.distance.CompareTo(b.distance); // Ascending distance
+        });
+
+        bool interacted = false;
+
+        foreach (var target in targets)
+        {
+            IInteractable interactable = target.interactable;
+
+            // Skip empty stations (counters, sinks, bins) if player hands are also empty
+            if (interactable is StationBase station)
+            {
+                bool playerHasItem = heldItem != null;
+                bool stationHasItem = station.itemOnStation != null;
+                if (!playerHasItem && !stationHasItem && !station.HasReadyResult && !(station is ItemContainerStation))
+                {
+                    continue;
+                }
+
+                // When holding an item, skip dispensers that require empty hands
+                // (Instant / HoldToExtract). They can't accept the held item, so they
+                // shouldn't "steal" the interaction from a station that can (bin, hand-in,
+                // counter, or a RequiresItem dispenser like the sink).
+                if (playerHasItem && station is ItemContainerStation ics
+                    && ics.extractionMode != ItemContainerStation.ExtractionMode.RequiresItem)
+                {
+                    continue;
+                }
+            }
+
+            interactable.Interact(this);
+            interacted = true;
+            break;
         }
 
         // drop item on the floor if hitting empty space and we didn't interact
@@ -696,6 +728,13 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
     {
         isFrozen = false;
         if (freezeLabel != null) freezeLabel.gameObject.SetActive(false);
+    }
+
+    private struct InteractableTarget
+    {
+        public IInteractable interactable;
+        public int priority;
+        public float distance;
     }
 
     private void OnDrawGizmosSelected()

@@ -3639,6 +3639,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -5
       objectReference: {fileID: 0}
+    - target: {fileID: 4841357392342121978, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.44166636
+      objectReference: {fileID: 0}
+    - target: {fileID: 4841357392342121978, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.000000012417633
+      objectReference: {fileID: 0}
     - target: {fileID: 4920711262638203324, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
       propertyPath: m_Name
       value: DivinationClassroom
