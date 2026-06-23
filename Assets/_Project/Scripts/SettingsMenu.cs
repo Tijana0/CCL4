@@ -48,9 +48,9 @@ public class SettingsMenu : MonoBehaviour
         // ── Scroll view ─────────────────────────────────────────────────────────
         var scrollGO = NewRect("Scroll", panel.transform);
         var scrollRT = scrollGO.GetComponent<RectTransform>();
-        scrollRT.anchorMin = new Vector2(0.15f, 0f); scrollRT.anchorMax = new Vector2(0.85f, 1f);
-        scrollRT.offsetMin = new Vector2(0f, 90f);    // leave room for Back button
-        scrollRT.offsetMax = new Vector2(0f, -100f);  // leave room for title
+        scrollRT.anchorMin = new Vector2(0.08f, 0f); scrollRT.anchorMax = new Vector2(0.92f, 1f);
+        scrollRT.offsetMin = new Vector2(0f, 80f);    // leave room for Back button
+        scrollRT.offsetMax = new Vector2(0f, -82f);   // leave room for title
         var scroll = scrollGO.AddComponent<ScrollRect>();
         scroll.horizontal = false; scroll.vertical = true; scroll.scrollSensitivity = 20f;
         scrollGO.AddComponent<Image>().color = new Color(1f, 1f, 1f, 0.04f);
@@ -59,10 +59,11 @@ public class SettingsMenu : MonoBehaviour
         var content = NewRect("Content", scrollGO.transform);
         var contentRT = content.GetComponent<RectTransform>();
         contentRT.anchorMin = new Vector2(0f, 1f); contentRT.anchorMax = new Vector2(1f, 1f); contentRT.pivot = new Vector2(0.5f, 1f);
+        contentRT.sizeDelta = Vector2.zero; // width follows the viewport (default sizeDelta is 100, which overflows)
         var vlg = content.AddComponent<VerticalLayoutGroup>();
         vlg.childControlWidth = true; vlg.childForceExpandWidth = true;
-        vlg.childControlHeight = false; vlg.childForceExpandHeight = false;
-        vlg.spacing = 12f; vlg.padding = new RectOffset(20, 20, 20, 20);
+        vlg.childControlHeight = true; vlg.childForceExpandHeight = false;
+        vlg.spacing = 8f; vlg.padding = new RectOffset(16, 16, 12, 12);
         var fitter = content.AddComponent<ContentSizeFitter>();
         fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
         scroll.content = contentRT;
@@ -204,7 +205,7 @@ public class SettingsMenu : MonoBehaviour
 
     private void AddControlsPlaceholder(Transform parent)
     {
-        var row = Row(parent, 180f);
+        var row = Row(parent, 110f);
         var img = NewRect("ControlsPlaceholder", row.transform);
         Stretch(img.GetComponent<RectTransform>());
         img.AddComponent<Image>().color = new Color(1f, 1f, 1f, 0.08f);
