@@ -30,6 +30,18 @@ public class PickupObject : MonoBehaviour, IInteractable
             CenterPivotAroundVisuals();
     }
 
+    private void Start()
+    {
+        // If the item is on the floor at startup (no parent), enable physics
+        if (transform.parent == null && rb != null)
+        {
+            rb.isKinematic = false;
+            rb.linearDamping = 10f; // High drag so they stop quickly when pushed
+            rb.angularDamping = 10f; // High angular drag so they don't roll forever
+            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Keep upright
+        }
+    }
+
     private void CenterPivotAroundVisuals()
     {
         MeshRenderer[] renderers = GetComponentsInChildren<MeshRenderer>();
@@ -139,7 +151,13 @@ public class PickupObject : MonoBehaviour, IInteractable
         transform.position = dropPosition;
         transform.localScale = worldScaleBeforeDrop;
         
-        if (rb != null) rb.isKinematic = true;
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+            rb.linearDamping = 10f; // High drag so they stop quickly when pushed
+            rb.angularDamping = 10f; // High angular drag so they don't roll forever
+            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Keep upright
+        }
         // reenable collider to allow pickup again
         if (col != null) col.enabled = true; 
     }
