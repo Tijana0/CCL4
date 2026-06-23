@@ -25,16 +25,11 @@ public class SettingsMenu : MonoBehaviour
     public void Build(Canvas canvas, Action backCallback)
     {
         onBack = backCallback;
-        uiRes = new DefaultControls.Resources
-        {
-            standard   = Resources.GetBuiltinResource<Sprite>("UISprite.psd"),
-            background = Resources.GetBuiltinResource<Sprite>("Background.psd"),
-            inputField = Resources.GetBuiltinResource<Sprite>("InputFieldBackground.psd"),
-            knob       = Resources.GetBuiltinResource<Sprite>("Knob.psd"),
-            checkmark  = Resources.GetBuiltinResource<Sprite>("Checkmark.psd"),
-            dropdown   = Resources.GetBuiltinResource<Sprite>("DropdownArrow.psd"),
-            mask       = Resources.GetBuiltinResource<Sprite>("UIMask.psd"),
-        };
+        // Leave sprites null — DefaultControls builds fully-functional controls without
+        // them (they just render as plain solid shapes). Loading built-in editor sprites
+        // via Resources.GetBuiltinResource fails at runtime and logs errors, which can
+        // trip "Error Pause" and freeze play mode.
+        uiRes = new DefaultControls.Resources();
 
         var s = SettingsManager.Instance;
 
