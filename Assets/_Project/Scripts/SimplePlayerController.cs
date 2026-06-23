@@ -504,6 +504,16 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                         {
                             continue;
                         }
+
+                        // When holding an item, skip dispensers that require empty hands
+                        // (Instant / HoldToExtract). They can't accept the held item, so they
+                        // shouldn't "steal" the interaction from a station that can (bin, hand-in,
+                        // counter, or a RequiresItem dispenser like the sink).
+                        if (playerHasItem && station is ItemContainerStation ics
+                            && ics.extractionMode != ItemContainerStation.ExtractionMode.RequiresItem)
+                        {
+                            continue;
+                        }
                     }
 
                     interactable.Interact(this);
