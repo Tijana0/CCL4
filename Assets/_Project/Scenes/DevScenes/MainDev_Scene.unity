@@ -1021,6 +1021,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4959255437028996412, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
+      propertyPath: gameTime
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 4959255437028996412, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
       propertyPath: timerText
       value: 
       objectReference: {fileID: 0}
@@ -2424,7 +2428,7 @@ PrefabInstance:
       objectReference: {fileID: 1113801524}
     - target: {fileID: 5601866021472316106, guid: bf918a9b7f2514fca9e1f9176234d581, type: 3}
       propertyPath: recipes.Array.size
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 5601866021472316106, guid: bf918a9b7f2514fca9e1f9176234d581, type: 3}
       propertyPath: useProceduralGeneration
@@ -2536,27 +2540,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5601866021472316106, guid: bf918a9b7f2514fca9e1f9176234d581, type: 3}
       propertyPath: recipes.Array.data[5].recipeName
-      value: Vision 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5601866021472316106, guid: bf918a9b7f2514fca9e1f9176234d581, type: 3}
-      propertyPath: recipes.Array.data[6].recipeName
       value: Prophecy_card 1
       objectReference: {fileID: 0}
     - target: {fileID: 5601866021472316106, guid: bf918a9b7f2514fca9e1f9176234d581, type: 3}
-      propertyPath: recipes.Array.data[7].recipeName
+      propertyPath: recipes.Array.data[6].recipeName
       value: Prophecy_card 2
       objectReference: {fileID: 0}
     - target: {fileID: 5601866021472316106, guid: bf918a9b7f2514fca9e1f9176234d581, type: 3}
-      propertyPath: recipes.Array.data[8].recipeName
+      propertyPath: recipes.Array.data[7].recipeName
       value: Prophecy_card 3
       objectReference: {fileID: 0}
     - target: {fileID: 5601866021472316106, guid: bf918a9b7f2514fca9e1f9176234d581, type: 3}
-      propertyPath: recipes.Array.data[9].recipeName
+      propertyPath: recipes.Array.data[8].recipeName
       value: Prophecy_card 4
       objectReference: {fileID: 0}
     - target: {fileID: 5601866021472316106, guid: bf918a9b7f2514fca9e1f9176234d581, type: 3}
-      propertyPath: recipes.Array.data[10].recipeName
+      propertyPath: recipes.Array.data[9].recipeName
       value: Prophecy_card 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5601866021472316106, guid: bf918a9b7f2514fca9e1f9176234d581, type: 3}
+      propertyPath: recipes.Array.data[10].recipeName
+      value: Prophecy_card 6
       objectReference: {fileID: 0}
     - target: {fileID: 5601866021472316106, guid: bf918a9b7f2514fca9e1f9176234d581, type: 3}
       propertyPath: recipes.Array.data[11].recipeName
@@ -2569,27 +2573,27 @@ PrefabInstance:
     - target: {fileID: 5601866021472316106, guid: bf918a9b7f2514fca9e1f9176234d581, type: 3}
       propertyPath: recipes.Array.data[5].requiredOutput
       value: 
-      objectReference: {fileID: 11400000, guid: 12f5508274813ed479090a80abe4c67a, type: 2}
+      objectReference: {fileID: 11400000, guid: d3892b62306ad834fbba16c05db537aa, type: 2}
     - target: {fileID: 5601866021472316106, guid: bf918a9b7f2514fca9e1f9176234d581, type: 3}
       propertyPath: recipes.Array.data[6].requiredOutput
       value: 
-      objectReference: {fileID: 11400000, guid: d3892b62306ad834fbba16c05db537aa, type: 2}
+      objectReference: {fileID: 11400000, guid: 1c1204dcc904d984ea453a6aa3519125, type: 2}
     - target: {fileID: 5601866021472316106, guid: bf918a9b7f2514fca9e1f9176234d581, type: 3}
       propertyPath: recipes.Array.data[7].requiredOutput
       value: 
-      objectReference: {fileID: 11400000, guid: 1c1204dcc904d984ea453a6aa3519125, type: 2}
+      objectReference: {fileID: 11400000, guid: 2d5bed9f00b21844795c1fa889383b80, type: 2}
     - target: {fileID: 5601866021472316106, guid: bf918a9b7f2514fca9e1f9176234d581, type: 3}
       propertyPath: recipes.Array.data[8].requiredOutput
       value: 
-      objectReference: {fileID: 11400000, guid: 2d5bed9f00b21844795c1fa889383b80, type: 2}
+      objectReference: {fileID: 11400000, guid: 1d2b350b54d170b41a9a1899c66ff800, type: 2}
     - target: {fileID: 5601866021472316106, guid: bf918a9b7f2514fca9e1f9176234d581, type: 3}
       propertyPath: recipes.Array.data[9].requiredOutput
       value: 
-      objectReference: {fileID: 11400000, guid: 1d2b350b54d170b41a9a1899c66ff800, type: 2}
+      objectReference: {fileID: 11400000, guid: 61136e0156001834180f9439bcb0e0a7, type: 2}
     - target: {fileID: 5601866021472316106, guid: bf918a9b7f2514fca9e1f9176234d581, type: 3}
       propertyPath: recipes.Array.data[10].requiredOutput
       value: 
-      objectReference: {fileID: 11400000, guid: 61136e0156001834180f9439bcb0e0a7, type: 2}
+      objectReference: {fileID: 11400000, guid: f19342264fad3514583e1913b7e1e8b7, type: 2}
     - target: {fileID: 5601866021472316106, guid: bf918a9b7f2514fca9e1f9176234d581, type: 3}
       propertyPath: recipes.Array.data[11].requiredOutput
       value: 
