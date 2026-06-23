@@ -570,9 +570,9 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         PickupObject pickup = heldItem.GetComponent<PickupObject>();
         if (pickup == null) return;
 
-        // Snap dropping to grid centers (X: integer, Z: half-integer)
-        float dX = Mathf.Round(interactionCenter.x);
-        float dZ = Mathf.Floor(interactionCenter.z) + 0.5f;
+        // Use exact unsnapped coordinates (snapping only occurs if placed on a counter/station)
+        float dX = interactionCenter.x;
+        float dZ = interactionCenter.z;
 
         // CHECK FOR COUNTERS/DESKS NEARBY TO SNAP TO THEM DIRECTLY!
         Collider[] nearbyColliders = Physics.OverlapSphere(interactionCenter, 0.8f);
