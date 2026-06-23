@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 97340c5b42f311744bbcde4a2c5d3980, type: 3}
-  m_Name: Vision_wrong
+  m_Name: Vision 3
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: vision wrong
-  icon: {fileID: 0}
+  itemName: Vision 3
+  icon: {fileID: 21300000, guid: a362d3574285d4331889e843ea121a20, type: 3}
   prefab: {fileID: 3726590569512160768, guid: 91164c0a23532144dae66b61d7e9bde1, type: 3}
   potionColour: {r: 0.7, g: 0.35, b: 0.05, a: 1}
   isColourless: 0

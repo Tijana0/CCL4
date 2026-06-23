@@ -215,6 +215,13 @@ public class ItemContainerStation : StationBase
         foreach (Collider col in spawned.GetComponentsInChildren<Collider>())
             col.enabled = false;
 
+        // Dispensing bypasses PickupObject.Interact, so play the pickup sound here too.
+        if (AudioManager.Instance != null)
+        {
+            bool isHerb = dataToGive.itemName != null && dataToGive.itemName.ToLower().Contains("herb");
+            AudioManager.Instance.PlayPickup(spawned, isHerb);
+        }
+
         Debug.Log($"[ItemContainerStation] Dispensed: {dataToGive.itemName}");
     }
 
