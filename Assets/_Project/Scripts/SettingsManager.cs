@@ -40,6 +40,7 @@ public class SettingsManager : MonoBehaviour
     public float sfxVolume    = 100f;
     public int   resolutionIndex = 2;   // default 1920x1080
     public bool  fullscreen   = true;
+    private bool hasSavedDisplayPrefs = false;
 
     // ── PlayerPrefs keys ───────────────────────────────────────────────────────
     const string K_Master  = "settings.masterVolume";
@@ -74,6 +75,7 @@ public class SettingsManager : MonoBehaviour
         sfxVolume       = PlayerPrefs.GetFloat(K_Sfx,      100f);
         resolutionIndex = PlayerPrefs.GetInt(K_Res,        2);
         fullscreen      = PlayerPrefs.GetInt(K_Win,        1) == 1;
+        hasSavedDisplayPrefs = PlayerPrefs.HasKey(K_Res) || PlayerPrefs.HasKey(K_Win);
     }
 
     public void ApplyAll()
@@ -81,7 +83,10 @@ public class SettingsManager : MonoBehaviour
         ApplyMasterVolume();
         ApplyMusicVolume();
         ApplySfxVolume();
-        ApplyDisplay();
+        // Only re-apply display on startup if the player previously chose one. This
+        // avoids forcing a resolution/fullscreen change on first launch (and the
+        // focus-disrupting Screen call that goes with it).
+        if (hasSavedDisplayPrefs) ApplyDisplay();
         // music on/off intentionally not auto-applied here to avoid double-posting
         // the BackgroundMusic event at boot; wire fully when audio routing is ready.
     }
@@ -148,6 +153,11 @@ public class SettingsManager : MonoBehaviour
 
     private void ApplyDisplay()
     {
+        // Resolution/fullscreen changes are ignored by the editor Game view anyway,
+        // and calling Screen.SetResolution there can steal keyboard focus from the
+        // Game view (so movement input stops registering). Only apply in a build.
+        if (Application.isEditor) return;
+
         FullScreenMode mode = fullscreen ? FullScreenMode.FullScreenWindow : FullScreenMode.Windowed;
         if (resolutionIndex >= 0 && resolutionIndex < Resolutions.Length)
         {
