@@ -125,6 +125,9 @@ public class PickupObject : MonoBehaviour, IInteractable
 
             // Stop rotation Update when held
             this.enabled = false;
+
+            if(AudioManager.Instance != null)
+                AudioManager.Instance.PlayPickup(this.gameObject, false);
         }
     }
 

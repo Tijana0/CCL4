@@ -199,8 +199,12 @@ public class GameManager : MonoBehaviour
         if (PersistentGameState.Instance != null)
         {
             PersistentGameState.Instance.currentLevelIndex = currentBuildIndex;
-            // Temporarily award 3 stars automatically for completing the level
-            PersistentGameState.Instance.AwardStars(currentBuildIndex, 3);
+            // Award stars based on final score.
+            int stars = 0;
+            if (score >= 10) stars = 1;
+            if (score >= 25) stars = 2;
+            if (score >= 50) stars = 3;
+            PersistentGameState.Instance.AwardStars(currentBuildIndex, stars);
         }
 
         if (gameOverPanel != null)
