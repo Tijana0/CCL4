@@ -47,6 +47,11 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
     private static bool controllersDirty = true;
     private static bool isSubscribedToEvents = false;
 
+    // Constant button-alias sets, hoisted out of Update to avoid per-frame array allocations.
+    private static readonly string[] InteractButtonAliases = { "buttonSouth", "button0", "a", "cross", "trigger" };
+    private static readonly string[] ProcessButtonAliases = { "buttonWest", "button3", "x", "square", "button13" };
+    private static readonly string[] DashButtonAliases = { "buttonEast", "button2", "b", "circle", "button12" };
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -54,6 +59,7 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         {
             rb.useGravity = true;
             rb.constraints = RigidbodyConstraints.FreezeRotation;
+            rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         }
         if (freezeLabel != null) freezeLabel.gameObject.SetActive(false);
 
@@ -196,105 +202,7 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         }
         if (currentDashCooldown > 0) currentDashCooldown -= Time.deltaTime;
 
-        // Allocation-free controller caching
-        if (controllersDirty)
-        {
-            cachedControllers.Clear();
-            foreach (var device in InputSystem.devices)
-            {
-                if (device is Gamepad || device is Joystick) cachedControllers.Add(device);
-            }
-            controllersDirty = false;
-        }
-
-        int controllerCount = cachedControllers.Count;
-        bool isDualControllerMode = (controllerCount >= 2);
-
-        Vector2 moveInput = Vector2.zero;
-        bool interactPressed = false;
-        bool processPressed = false;
-        bool dashPressed = false;
-
-        // Keyboard inputs always work for their respective players
-        if (playerIndex == 0)
-        {
-            if (Keyboard.current != null)
-            {
-                if (Keyboard.current.wKey.isPressed) moveInput.y += 1;
-                if (Keyboard.current.sKey.isPressed) moveInput.y -= 1;
-                if (Keyboard.current.aKey.isPressed) moveInput.x -= 1;
-                if (Keyboard.current.dKey.isPressed) moveInput.x += 1;
-                
-                if (Keyboard.current.eKey.wasPressedThisFrame) interactPressed = true;
-                if (Keyboard.current.rKey.isPressed) processPressed = true;
-                if (Keyboard.current.spaceKey.wasPressedThisFrame) dashPressed = true;
-            }
-        }
-        else if (playerIndex == 1)
-        {
-            if (Keyboard.current != null)
-            {
-                if (Keyboard.current.upArrowKey.isPressed) moveInput.y += 1;
-                if (Keyboard.current.downArrowKey.isPressed) moveInput.y -= 1;
-                if (Keyboard.current.leftArrowKey.isPressed) moveInput.x -= 1;
-                if (Keyboard.current.rightArrowKey.isPressed) moveInput.x += 1;
-                
-                if (Keyboard.current.rightShiftKey.wasPressedThisFrame) interactPressed = true;
-                if (Keyboard.current.rightCtrlKey.isPressed || Keyboard.current.rightCommandKey.isPressed) processPressed = true;
-                if (Keyboard.current.slashKey.wasPressedThisFrame || Keyboard.current.minusKey.wasPressedThisFrame) dashPressed = true;
-            }
-        }
-
-        // --- Gamepad / Joystick Logic ---
-        Vector2 gamepadInput = Vector2.zero;
-        bool gamepadInteract = false;
-        bool gamepadProcess = false;
-        bool gamepadDash = false;
-
-        if (controllerCount > 0)
-        {
-            InputDevice myDevice = null;
-            if (isDualControllerMode)
-            {
-                if (playerIndex < controllerCount) myDevice = cachedControllers[playerIndex];
-            }
-            else if (playerIndex == activeGamepadPlayerIndex)
-            {
-                myDevice = cachedControllers[0];
-            }
-
-            if (myDevice != null)
-            {
-                gamepadInput = GetCorrectedInput(myDevice);
-
-                if (myDevice is Gamepad g)
-                {
-                    if (g.buttonSouth.wasPressedThisFrame) gamepadInteract = true;
-                    if (g.buttonWest.isPressed) gamepadProcess = true;
-                    if (g.buttonEast.wasPressedThisFrame) gamepadDash = true;
-                }
-                
-                // --- UNIVERSAL MAPPING (Works for Joystick/HID/Third-party) ---
-                // Based on exact Mac Diagnostic Hardware Logs:
-                // A (Interact) = trigger / button0
-                // B (Dash) = button2
-                // X (Process) = button3 (Assuming standard HID layout since B=2)
-                gamepadInteract |= CheckButton(myDevice, new string[] { "buttonSouth", "button0", "a", "cross", "trigger" });
-                gamepadProcess |= CheckButton(myDevice, new string[] { "buttonWest", "button3", "x", "square", "button13" }, true);
-                gamepadDash |= CheckButton(myDevice, new string[] { "buttonEast", "button2", "b", "circle", "button12" });
-            }
-        }
-
-        // Apply gamepad input if it exists
-        if (gamepadInput.sqrMagnitude > 0.05f)
-        {
-            if (gamepadInput.sqrMagnitude > moveInput.sqrMagnitude) moveInput = gamepadInput;
-        }
-
-        if (gamepadInteract) interactPressed = true;
-        if (gamepadProcess) processPressed = true;
-        if (gamepadDash) dashPressed = true;
-        // ---------------------
+        PollInput(out Vector2 moveInput, out bool interactPressed, out bool processPressed, out bool dashPressed);
 
         if (moveInput.sqrMagnitude > 1)
         {
@@ -336,6 +244,110 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         {
             TryProcess();
         }
+    }
+
+    // Reads keyboard + gamepad/joystick state for this player. Extracted from Update
+    // to keep the per-frame movement loop readable.
+    private void PollInput(out Vector2 moveInput, out bool interactPressed, out bool processPressed, out bool dashPressed)
+    {
+        // Allocation-free controller caching
+        if (controllersDirty)
+        {
+            cachedControllers.Clear();
+            foreach (var device in InputSystem.devices)
+            {
+                if (device is Gamepad || device is Joystick) cachedControllers.Add(device);
+            }
+            controllersDirty = false;
+        }
+
+        int controllerCount = cachedControllers.Count;
+        bool isDualControllerMode = (controllerCount >= 2);
+
+        moveInput = Vector2.zero;
+        interactPressed = false;
+        processPressed = false;
+        dashPressed = false;
+
+        // Keyboard inputs always work for their respective players
+        if (playerIndex == 0)
+        {
+            if (Keyboard.current != null)
+            {
+                if (Keyboard.current.wKey.isPressed) moveInput.y += 1;
+                if (Keyboard.current.sKey.isPressed) moveInput.y -= 1;
+                if (Keyboard.current.aKey.isPressed) moveInput.x -= 1;
+                if (Keyboard.current.dKey.isPressed) moveInput.x += 1;
+
+                if (Keyboard.current.eKey.wasPressedThisFrame) interactPressed = true;
+                if (Keyboard.current.rKey.isPressed) processPressed = true;
+                if (Keyboard.current.spaceKey.wasPressedThisFrame) dashPressed = true;
+            }
+        }
+        else if (playerIndex == 1)
+        {
+            if (Keyboard.current != null)
+            {
+                if (Keyboard.current.upArrowKey.isPressed) moveInput.y += 1;
+                if (Keyboard.current.downArrowKey.isPressed) moveInput.y -= 1;
+                if (Keyboard.current.leftArrowKey.isPressed) moveInput.x -= 1;
+                if (Keyboard.current.rightArrowKey.isPressed) moveInput.x += 1;
+
+                if (Keyboard.current.rightShiftKey.wasPressedThisFrame) interactPressed = true;
+                if (Keyboard.current.rightCtrlKey.isPressed || Keyboard.current.rightCommandKey.isPressed) processPressed = true;
+                if (Keyboard.current.slashKey.wasPressedThisFrame || Keyboard.current.minusKey.wasPressedThisFrame) dashPressed = true;
+            }
+        }
+
+        // --- Gamepad / Joystick Logic ---
+        Vector2 gamepadInput = Vector2.zero;
+        bool gamepadInteract = false;
+        bool gamepadProcess = false;
+        bool gamepadDash = false;
+
+        if (controllerCount > 0)
+        {
+            InputDevice myDevice = null;
+            if (isDualControllerMode)
+            {
+                if (playerIndex < controllerCount) myDevice = cachedControllers[playerIndex];
+            }
+            else if (playerIndex == activeGamepadPlayerIndex)
+            {
+                myDevice = cachedControllers[0];
+            }
+
+            if (myDevice != null)
+            {
+                gamepadInput = GetCorrectedInput(myDevice);
+
+                if (myDevice is Gamepad g)
+                {
+                    if (g.buttonSouth.wasPressedThisFrame) gamepadInteract = true;
+                    if (g.buttonWest.isPressed) gamepadProcess = true;
+                    if (g.buttonEast.wasPressedThisFrame) gamepadDash = true;
+                }
+
+                // --- UNIVERSAL MAPPING (Works for Joystick/HID/Third-party) ---
+                // Based on exact Mac Diagnostic Hardware Logs:
+                // A (Interact) = trigger / button0
+                // B (Dash) = button2
+                // X (Process) = button3 (Assuming standard HID layout since B=2)
+                gamepadInteract |= CheckButton(myDevice, InteractButtonAliases);
+                gamepadProcess |= CheckButton(myDevice, ProcessButtonAliases, true);
+                gamepadDash |= CheckButton(myDevice, DashButtonAliases);
+            }
+        }
+
+        // Apply gamepad input if it exists
+        if (gamepadInput.sqrMagnitude > 0.05f)
+        {
+            if (gamepadInput.sqrMagnitude > moveInput.sqrMagnitude) moveInput = gamepadInput;
+        }
+
+        if (gamepadInteract) interactPressed = true;
+        if (gamepadProcess) processPressed = true;
+        if (gamepadDash) dashPressed = true;
     }
 
     private void TryProcess()
@@ -438,11 +450,15 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
     private void LateUpdate()
     {
-        if (useBoundaries)
+        if (useBoundaries && rb != null)
         {
-            float clampedX = Mathf.Clamp(transform.position.x, minBounds.x, maxBounds.x);
-            float clampedZ = Mathf.Clamp(transform.position.z, minBounds.y, maxBounds.y);
-            transform.position = new Vector3(clampedX, transform.position.y, clampedZ);
+            // Use rb.position instead of transform.position to keep the physics
+            // engine in sync — setting transform.position directly on a Rigidbody
+            // desyncs its internal state and breaks collision detection.
+            Vector3 pos = rb.position;
+            pos.x = Mathf.Clamp(pos.x, minBounds.x, maxBounds.x);
+            pos.z = Mathf.Clamp(pos.z, minBounds.y, maxBounds.y);
+            rb.position = pos;
         }
     }
 
@@ -500,132 +516,154 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         // drop item on the floor if hitting empty space and we didn't interact
         if (!interacted && heldItem != null)
         {
-            PickupObject pickup = heldItem.GetComponent<PickupObject>();
-            if (pickup != null)
+            PlaceHeldItem(interactionCenter);
+        }
+    }
+
+    // Places the held item: snaps to a nearby counter or the floor, clamps to
+    // room bounds, resolves the drop height, and refuses positions that would
+    // clip into stairs/platforms. Extracted from TryInteract.
+    private void PlaceHeldItem(Vector3 interactionCenter)
+    {
+        PickupObject pickup = heldItem.GetComponent<PickupObject>();
+        if (pickup == null) return;
+
+        // Snap dropping to grid centers (X: integer, Z: half-integer)
+        float dX = Mathf.Round(interactionCenter.x);
+        float dZ = Mathf.Floor(interactionCenter.z) + 0.5f;
+
+        // CHECK FOR COUNTERS/DESKS NEARBY TO SNAP TO THEM DIRECTLY!
+        Collider[] nearbyColliders = Physics.OverlapSphere(interactionCenter, 0.8f);
+        float closestDist = 99f;
+        Vector3 targetSnapPos = Vector3.zero;
+        bool snappedToCounter = false;
+
+        foreach (var cHit in nearbyColliders)
+        {
+            if (cHit.gameObject != this.gameObject && cHit.gameObject != heldItem)
             {
-                // Snap dropping to grid centers (X: integer, Z: half-integer)
-                float dX = Mathf.Round(interactionCenter.x);
-                float dZ = Mathf.Floor(interactionCenter.z) + 0.5f;
-
-                // CHECK FOR COUNTERS/DESKS NEARBY TO SNAP TO THEM DIRECTLY!
-                Collider[] nearbyColliders = Physics.OverlapSphere(interactionCenter, 0.8f);
-                float closestDist = 99f;
-                Vector3 targetSnapPos = Vector3.zero;
-                bool snappedToCounter = false;
-
-                foreach (var cHit in nearbyColliders)
+                Counter counter = cHit.GetComponent<Counter>();
+                if (counter == null)
                 {
-                    if (cHit.gameObject != this.gameObject && cHit.gameObject != heldItem)
-                    {
-                        Counter counter = cHit.GetComponent<Counter>();
-                        if (counter == null)
-                        {
-                            counter = cHit.GetComponentInParent<Counter>();
-                        }
+                    counter = cHit.GetComponentInParent<Counter>();
+                }
 
-                        if (counter != null)
-                        {
-                            Vector3 counterPos = counter.counterTopPoint != null ? counter.counterTopPoint.position : counter.transform.position;
-                            float dist = Vector2.Distance(new Vector2(interactionCenter.x, interactionCenter.z), new Vector2(counterPos.x, counterPos.z));
-                            if (dist < closestDist)
-                            {
-                                closestDist = dist;
-                                targetSnapPos = counterPos;
-                                snappedToCounter = true;
-                            }
-                        }
+                if (counter != null)
+                {
+                    Vector3 counterPos = counter.counterTopPoint != null ? counter.counterTopPoint.position : counter.transform.position;
+                    float dist = Vector2.Distance(new Vector2(interactionCenter.x, interactionCenter.z), new Vector2(counterPos.x, counterPos.z));
+                    if (dist < closestDist)
+                    {
+                        closestDist = dist;
+                        targetSnapPos = counterPos;
+                        snappedToCounter = true;
                     }
                 }
-
-                if (snappedToCounter)
-                {
-                    dX = targetSnapPos.x;
-                    dZ = targetSnapPos.z;
-                }
-                else
-                {
-                    // Dynamically fetch room_base boundaries to prevent dropping over the edge/walls
-                    GameObject roomBase = GameObject.Find("room_base");
-                    if (roomBase != null)
-                    {
-                        Collider col = roomBase.GetComponent<Collider>();
-                        if (col != null)
-                        {
-                            Bounds bounds = col.bounds;
-                            float wallThickness = 0.5f; // Set to 0.5m
-                            
-                            // Inner boundaries of the room floor
-                            float leftWallX = bounds.min.x + wallThickness;
-                            float rightWallX = bounds.max.x - wallThickness;
-                            float backWallZ = bounds.max.z - wallThickness;
-                            float frontEdgeZ = bounds.min.z; // no wall
-
-                            // Clamp drop centers to stay within inner floor boundaries
-                            float minX = leftWallX + 0.3f;
-                            float maxX = rightWallX - 0.3f;
-                            float minZ = frontEdgeZ + 0.3f;
-                            float maxZ = backWallZ - 0.3f;
-
-                            dX = Mathf.Clamp(dX, minX, maxX);
-                            dZ = Mathf.Clamp(dZ, minZ, maxZ);
-                        }
-                    }
-                    else
-                    {
-                        // Fallback to controller bounds if room_base not found
-                        dX = Mathf.Clamp(dX, minBounds.x, maxBounds.x);
-                        dZ = Mathf.Clamp(dZ, minBounds.y, maxBounds.y);
-                    }
-                }
-                
-                // Determine drop height dynamically using a Raycast down from above the target position
-                float dropY = transform.position.y - 0.5f; // Fallback to estimated foot level
-                if (snappedToCounter)
-                {
-                    dropY = targetSnapPos.y;
-                }
-                else
-                {
-                    Vector3 rayStart = new Vector3(dX, transform.position.y + 1.5f, dZ);
-                    RaycastHit[] hits = Physics.RaycastAll(rayStart, Vector3.down, 10f);
-                    float bestY = -99f;
-                    bool foundFloor = false;
-                    foreach (var hit in hits)
-                    {
-                        if (hit.collider != null && !hit.collider.isTrigger)
-                        {
-                            if (hit.collider.gameObject != this.gameObject && 
-                                hit.collider.gameObject != heldItem && 
-                                hit.collider.GetComponent<SimplePlayerController>() == null)
-                            {
-                                // We want the highest solid surface below the ray start
-                                if (hit.point.y > bestY && hit.point.y <= transform.position.y + 0.5f)
-                                {
-                                    bestY = hit.point.y;
-                                    foundFloor = true;
-                                }
-                            }
-                        }
-                    }
-                    if (foundFloor)
-                    {
-                        dropY = bestY;
-                    }
-                }
-
-                // Add offset based on the item's collider size to sit exactly on the surface
-                float heightOffset = 0.1f;
-                BoxCollider itemCol = pickup.GetComponent<BoxCollider>();
-                if (itemCol != null)
-                {
-                    heightOffset = itemCol.size.y * 0.5f;
-                }
-                Vector3 dropPos = new Vector3(dX, dropY + heightOffset, dZ);
-
-                pickup.Drop(dropPos);
-                heldItem = null;
             }
         }
+
+        if (snappedToCounter)
+        {
+            dX = targetSnapPos.x;
+            dZ = targetSnapPos.z;
+        }
+        else
+        {
+            // Dynamically fetch room_base boundaries to prevent dropping over the edge/walls
+            GameObject roomBase = GameObject.Find("room_base");
+            if (roomBase != null)
+            {
+                Collider col = roomBase.GetComponent<Collider>();
+                if (col != null)
+                {
+                    Bounds bounds = col.bounds;
+                    float wallThickness = 0.5f; // Set to 0.5m
+
+                    // Inner boundaries of the room floor
+                    float leftWallX = bounds.min.x + wallThickness;
+                    float rightWallX = bounds.max.x - wallThickness;
+                    float backWallZ = bounds.max.z - wallThickness;
+                    float frontEdgeZ = bounds.min.z; // no wall
+
+                    // Clamp drop centers to stay within inner floor boundaries
+                    float minX = leftWallX + 0.3f;
+                    float maxX = rightWallX - 0.3f;
+                    float minZ = frontEdgeZ + 0.3f;
+                    float maxZ = backWallZ - 0.3f;
+
+                    dX = Mathf.Clamp(dX, minX, maxX);
+                    dZ = Mathf.Clamp(dZ, minZ, maxZ);
+                }
+            }
+            else
+            {
+                // Fallback to controller bounds if room_base not found
+                dX = Mathf.Clamp(dX, minBounds.x, maxBounds.x);
+                dZ = Mathf.Clamp(dZ, minBounds.y, maxBounds.y);
+            }
+        }
+
+        // Determine drop height dynamically using a Raycast down from above the target position
+        float dropY = transform.position.y - 0.5f; // Fallback to estimated foot level
+        if (snappedToCounter)
+        {
+            dropY = targetSnapPos.y;
+        }
+        else
+        {
+            Vector3 rayStart = new Vector3(dX, transform.position.y + 1.5f, dZ);
+            RaycastHit[] hits = Physics.RaycastAll(rayStart, Vector3.down, 10f);
+            float bestY = -99f;
+            bool foundFloor = false;
+            foreach (var hit in hits)
+            {
+                if (hit.collider != null && !hit.collider.isTrigger)
+                {
+                    if (hit.collider.gameObject != this.gameObject &&
+                        hit.collider.gameObject != heldItem &&
+                        hit.collider.GetComponent<SimplePlayerController>() == null)
+                    {
+                        // We want the highest solid surface below the ray start
+                        if (hit.point.y > bestY && hit.point.y <= transform.position.y + 0.5f)
+                        {
+                            bestY = hit.point.y;
+                            foundFloor = true;
+                        }
+                    }
+                }
+            }
+            if (foundFloor)
+            {
+                dropY = bestY;
+            }
+        }
+
+        // Add offset based on the item's collider size to sit exactly on the surface
+        float heightOffset = 0.1f;
+        BoxCollider itemCol = pickup.GetComponent<BoxCollider>();
+        if (itemCol != null)
+        {
+            heightOffset = itemCol.size.y * 0.5f;
+        }
+        Vector3 dropPos = new Vector3(dX, dropY + heightOffset, dZ);
+
+        // Prevent placing items so they clip into stairs/platforms.
+        // The box is shrunk to 85% so resting ON TOP of a platform is still allowed;
+        // only positions that actually overlap the geometry are rejected.
+        Vector3 blockHalf = (itemCol != null ? itemCol.size : new Vector3(0.5f, 0.3f, 0.5f)) * 0.5f * 0.85f;
+        Collider[] blockHits = Physics.OverlapBox(dropPos, blockHalf, Quaternion.identity, ~0, QueryTriggerInteraction.Ignore);
+        foreach (Collider bh in blockHits)
+        {
+            string bn = bh.gameObject.name.ToLower();
+            if (bn.StartsWith("platform") || bn.StartsWith("stairs"))
+            {
+                // Would overlap a platform/stairs — keep holding instead of dropping.
+                return;
+            }
+        }
+
+        pickup.Drop(dropPos);
+        heldItem = null;
     }
 
     public void Freeze(float duration)

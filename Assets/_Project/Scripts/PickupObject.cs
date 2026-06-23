@@ -12,7 +12,9 @@ public class PickupObject : MonoBehaviour, IInteractable
 {
     public ItemType itemType = ItemType.Standard;
     public int value = 0;
-    
+    // Set true on scene-placed items to keep their authored pivot position.
+    [SerializeField] private bool skipPivotCentering = false;
+
     private Rigidbody rb;
     private Collider col;
 
@@ -24,7 +26,8 @@ public class PickupObject : MonoBehaviour, IInteractable
         {
             rb.isKinematic = true;
         }
-        CenterPivotAroundVisuals();
+        if (!skipPivotCentering)
+            CenterPivotAroundVisuals();
     }
 
     private void CenterPivotAroundVisuals()
@@ -95,9 +98,19 @@ public class PickupObject : MonoBehaviour, IInteractable
 
             Vector3 worldScaleBeforePickup = transform.lossyScale;
 
+            // Compute visual center offset BEFORE reparenting (world space, stable across parenting)
+            // For items where pivot == visual center this is zero; for FBX items with off-center
+            // pivots it offsets localPosition so the visual appears at the holdPoint.
+            Vector3 pivotToCenterWorld = Vector3.zero;
+            MeshRenderer[] mrs = GetComponentsInChildren<MeshRenderer>();
+            if (mrs.Length > 0)
+            {
+                Bounds b = mrs[0].bounds;
+                for (int i = 1; i < mrs.Length; i++) b.Encapsulate(mrs[i].bounds);
+                pivotToCenterWorld = b.center - transform.position;
+            }
+
             transform.SetParent(player.holdPoint);
-            transform.localPosition = Vector3.zero;
-            transform.localRotation = Quaternion.identity;
 
             // Counteract holdPoint scale so item doesn't shrink/grow when picked up
             Vector3 holdScale = player.holdPoint.lossyScale;
@@ -106,6 +119,9 @@ public class PickupObject : MonoBehaviour, IInteractable
                 holdScale.y != 0 ? worldScaleBeforePickup.y / holdScale.y : worldScaleBeforePickup.y,
                 holdScale.z != 0 ? worldScaleBeforePickup.z / holdScale.z : worldScaleBeforePickup.z
             );
+
+            // Place pivot so the visual center lands at holdPoint origin
+            transform.localPosition = -player.holdPoint.InverseTransformVector(pivotToCenterWorld);
 
             // Stop rotation Update when held
             this.enabled = false;
