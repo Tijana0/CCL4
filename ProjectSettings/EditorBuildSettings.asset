@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/_Project/Scenes/DevScenes/Bootstrap.unity
     guid: 6f9334514bc3e4628be662b6e005c062
   - enabled: 1
+    path: Assets/_Project/Scenes/DevScenes/Start_Scene.unity
+    guid: 462e55b55ec2a41d2b63eba0a8e39a3d
+  - enabled: 1
     path: Assets/_Project/Scenes/HubScene.unity
     guid: ced3d993d48ae490abf91bdf603627ee
   - enabled: 1
