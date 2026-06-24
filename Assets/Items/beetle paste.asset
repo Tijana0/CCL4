@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97340c5b42f311744bbcde4a2c5d3980, type: 3}
+  m_Name: beetle paste
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: beetle paste
+  icon: {fileID: 0}
+  prefab: {fileID: 5005644215027018312, guid: d25bafa1ff96aa44db55bd5494607a29, type: 3}
+  potionColour: {r: 0.07835529, g: 0.37797585, b: 0.5849056, a: 1}
+  isColourless: 0
+  processingRules: []
+  combineRules: []
+  allowedStationTypes: 
+  requiresProcessingBeforeCauldron: 0
+  isDisposable: 1
