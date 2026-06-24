@@ -11,6 +11,7 @@ public class PauseManager : MonoBehaviour
     public bool isPaused = false;
     private GameObject pausePanel;
     private GameObject firstSelectedButton;
+    private SettingsMenu settingsMenu;
 
     // Constant button-alias set, hoisted out of the per-frame check to avoid array allocations.
     private static readonly string[] PauseButtonAliases = { "start", "button9", "options", "menu" };
@@ -63,26 +64,27 @@ public class PauseManager : MonoBehaviour
         titleRect.sizeDelta = new Vector2(400, 100);
 
         // Resume Button
-        Button resumeBtn = CreateButton(pausePanel.transform, "ResumeButton", "Resume", new Vector2(0.5f, 0.5f));
+        Button resumeBtn = CreateButton(pausePanel.transform, "ResumeButton", "Resume", new Vector2(0.5f, 0.55f));
         resumeBtn.onClick.AddListener(ResumeGame);
         firstSelectedButton = resumeBtn.gameObject;
 
+        // Settings Button
+        Button settingsBtn = CreateButton(pausePanel.transform, "SettingsButton", "Settings", new Vector2(0.5f, 0.42f));
+        settingsBtn.onClick.AddListener(OpenSettings);
+
         // Hub Button
-        Button hubBtn = CreateButton(pausePanel.transform, "HubButton", "Return to Hub", new Vector2(0.5f, 0.35f));
+        Button hubBtn = CreateButton(pausePanel.transform, "HubButton", "Return to Hub", new Vector2(0.5f, 0.29f));
         hubBtn.onClick.AddListener(ReturnToHub);
 
-        // Setup Explicit Navigation reversed to counteract inverted Y-axis Gamepads
-        Navigation resNav = resumeBtn.navigation;
-        resNav.mode = Navigation.Mode.Explicit;
-        resNav.selectOnUp = hubBtn;    // Inverted: Up goes to bottom button
-        resNav.selectOnDown = hubBtn;  // Also map Down just in case
-        resumeBtn.navigation = resNav;
+        // Build the settings screen (hidden until opened)
+        settingsMenu = gameObject.AddComponent<SettingsMenu>();
+        settingsMenu.Build(canvas, OnSettingsClosed);
 
-        Navigation hubNav = hubBtn.navigation;
-        hubNav.mode = Navigation.Mode.Explicit;
-        hubNav.selectOnUp = resumeBtn;   // Also map Up just in case
-        hubNav.selectOnDown = resumeBtn; // Inverted: Down goes to top button
-        hubBtn.navigation = hubNav;
+        // Explicit navigation, inverted to counteract inverted Y-axis gamepads
+        // (up cycles visually down, down cycles visually up — matches existing scheme).
+        SetNav(resumeBtn,   up: settingsBtn, down: hubBtn);
+        SetNav(settingsBtn, up: hubBtn,      down: resumeBtn);
+        SetNav(hubBtn,      up: resumeBtn,   down: settingsBtn);
 
         pausePanel.SetActive(false);
     }
@@ -131,6 +133,30 @@ public class PauseManager : MonoBehaviour
         return button;
     }
 
+    private void SetNav(Button b, Button up, Button down)
+    {
+        Navigation n = b.navigation;
+        n.mode = Navigation.Mode.Explicit;
+        n.selectOnUp = up;
+        n.selectOnDown = down;
+        b.navigation = n;
+    }
+
+    private void OpenSettings()
+    {
+        if (settingsMenu != null) settingsMenu.Open();
+    }
+
+    private void OnSettingsClosed()
+    {
+        // Re-focus the pause menu for gamepad users.
+        if (firstSelectedButton != null && UnityEngine.EventSystems.EventSystem.current != null)
+        {
+            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(firstSelectedButton);
+        }
+    }
+
     private void Update()
     {
         bool pausePressed = false;
@@ -158,7 +184,9 @@ public class PauseManager : MonoBehaviour
 
         if (pausePressed)
         {
-            if (isPaused) ResumeGame();
+            // If the settings screen is open, the pause/back press closes it first.
+            if (settingsMenu != null && settingsMenu.IsOpen) settingsMenu.Close();
+            else if (isPaused) ResumeGame();
             else PauseGame();
         }
     }
@@ -200,6 +228,7 @@ public class PauseManager : MonoBehaviour
     {
         isPaused = false;
         Time.timeScale = 1f;
+        if (settingsMenu != null && settingsMenu.IsOpen) settingsMenu.Close();
         if (pausePanel != null) pausePanel.SetActive(false);
     }
 

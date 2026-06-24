@@ -16,12 +16,15 @@ public class PickupObject : MonoBehaviour, IInteractable
     [SerializeField] private bool skipPivotCentering = false;
 
     private Rigidbody rb;
-    private Collider col;
+    private Collider[] cols;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        col = GetComponent<Collider>();
+        // Cache every collider (root + children). Some items are scaled-FBX prefabs
+        // with their real collider on a child mesh, so disabling only the root
+        // collider on pickup left a live collider that shoved the holder into walls.
+        cols = GetComponentsInChildren<Collider>(true);
         if (rb != null)
         {
             rb.isKinematic = true;
@@ -105,8 +108,8 @@ public class PickupObject : MonoBehaviour, IInteractable
             player.heldItem = this.gameObject;
             
             if (rb != null) rb.isKinematic = true;
-            // disable collider so overlapbox ignores it while held
-            if (col != null) col.enabled = false; 
+            // disable all colliders so overlapbox ignores it AND it can't push the holder while held
+            SetCollidersEnabled(false);
 
             Vector3 worldScaleBeforePickup = transform.lossyScale;
 
@@ -158,7 +161,14 @@ public class PickupObject : MonoBehaviour, IInteractable
             rb.angularDamping = 10f; // High angular drag so they don't roll forever
             rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Keep upright
         }
-        // reenable collider to allow pickup again
-        if (col != null) col.enabled = true; 
+        // reenable colliders to allow pickup again
+        SetCollidersEnabled(true);
+    }
+
+    private void SetCollidersEnabled(bool on)
+    {
+        if (cols == null) return;
+        foreach (var c in cols)
+            if (c != null) c.enabled = on;
     }
 }
