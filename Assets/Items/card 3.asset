@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: card 3
   icon: {fileID: 0}
   prefab: {fileID: 3814741143795606384, guid: 18b1a63f64bb5584cb7adb5b28e5280c, type: 3}
-  potionColour: {r: 1, g: 1, b: 1, a: 1}
+  potionColour: {r: 0.7311321, g: 0.15864186, b: 0.15864186, a: 1}
   isColourless: 0
   processingRules: []
   combineRules: []
