@@ -101,7 +101,7 @@ public class SettingsManager : MonoBehaviour
     private void ApplyMasterVolume()
     {
         // TODO(audio): needs a "MasterVolume" RTPC bound to the Master bus in Wwise.
-        // AkUnitySoundEngine.SetRTPCValue("MasterVolume", masterVolume);
+        AkUnitySoundEngine.SetRTPCValue("MasterVolume", masterVolume);
     }
 
     public void SetMusicEnabled(bool on)
@@ -109,7 +109,7 @@ public class SettingsManager : MonoBehaviour
         musicEnabled = on;
         PlayerPrefs.SetInt(K_MusicOn, on ? 1 : 0);
         // TODO(audio): start/stop background music when wiring is finalized.
-        // if (AudioManager.Instance != null) { if (on) AudioManager.Instance.StartMusic(); else AudioManager.Instance.StopMusic(); }
+        if (AudioManager.Instance != null) { if (on) AudioManager.Instance.StartMusic(); else AudioManager.Instance.StopMusic(); }
     }
 
     public void SetMusicVolume(float v)
@@ -121,7 +121,7 @@ public class SettingsManager : MonoBehaviour
     private void ApplyMusicVolume()
     {
         // TODO(audio): connect to MusicVolume RTPC.
-        // if (AudioManager.Instance != null) AudioManager.Instance.SetMusicVolume(musicVolume);
+        if (AudioManager.Instance != null) AudioManager.Instance.SetMusicVolume(musicVolume);
     }
 
     public void SetSfxVolume(float v)
@@ -133,7 +133,7 @@ public class SettingsManager : MonoBehaviour
     private void ApplySfxVolume()
     {
         // TODO(audio): needs an "SfxVolume" RTPC bound to the SFX bus in Wwise.
-        // AkUnitySoundEngine.SetRTPCValue("SfxVolume", sfxVolume);
+        AkUnitySoundEngine.SetRTPCValue("SfxVolume", sfxVolume);
     }
 
     // ── Display (applied for real) ─────────────────────────────────────────────

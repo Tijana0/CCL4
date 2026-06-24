@@ -82,6 +82,28 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    // ── Background music management ──────────────────────────────
+    private AK.Wwise.Event currentMusicStop;
+
+    /// Plays a music track, stopping whatever music was playing before.
+    public void PlayMusic(AK.Wwise.Event startEvent, AK.Wwise.Event stopEvent)
+    {
+        // Stop the previous track first — this is what prevents overlap
+        if (currentMusicStop != null && currentMusicStop.IsValid())
+            currentMusicStop.Post(gameObject);
+
+        if (startEvent != null && startEvent.IsValid())
+            startEvent.Post(gameObject);
+
+        currentMusicStop = stopEvent;   // remember how to stop THIS track later
+    }
+
+    public void StopCurrentMusic()
+    {
+        if (currentMusicStop != null && currentMusicStop.IsValid())
+            currentMusicStop.Post(gameObject);
+        currentMusicStop = null;
+    }
     public void StartMusic() => Play(musicStart, gameObject);
     public void StopMusic()  => Play(musicStop, gameObject);
     public void PlayLevelStart() => Play(levelStart, gameObject);
