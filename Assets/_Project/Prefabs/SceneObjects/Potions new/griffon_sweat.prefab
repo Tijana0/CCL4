@@ -70,7 +70,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: f368892a7f5074a7cb042f42f10b3f50, type: 2}
     - target: {fileID: 919132149155446097, guid: 13a31f43ac58ac949946b742640289c9, type: 3}
       propertyPath: m_Name
-      value: griffon_tears
+      value: griffon_sweat
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -85,6 +85,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 13a31f43ac58ac949946b742640289c9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4330153493923182889}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 13a31f43ac58ac949946b742640289c9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6150119350338611430}
   m_SourcePrefab: {fileID: 100100000, guid: 13a31f43ac58ac949946b742640289c9, type: 3}
 --- !u!1 &2886585361255166204 stripped
 GameObject:
@@ -141,3 +144,30 @@ MonoBehaviour:
   itemType: 0
   value: 0
   skipPivotCentering: 0
+--- !u!54 &6150119350338611430
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2886585361255166204}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
