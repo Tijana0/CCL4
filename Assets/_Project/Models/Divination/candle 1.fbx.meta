@@ -1,14 +1,9 @@
 fileFormatVersion: 2
-guid: 86454fe78d5299543933eafb3d386e2c
+guid: 17721717d09d2db46860f7672c7c7f5c
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: TEacup_Mat
-    second: {fileID: 2100000, guid: 039850c83bccf8545949e3fa8c4412d2, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0

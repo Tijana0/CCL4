@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 86454fe78d5299543933eafb3d386e2c
+guid: c23ad80d87edc5643bf0222616e663ea
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -7,8 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: TEacup_Mat
-    second: {fileID: 2100000, guid: 039850c83bccf8545949e3fa8c4412d2, type: 2}
+      name: Card4_Mat
+    second: {fileID: 2100000, guid: 8de8b75ede3132547a7e341f7962d106, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
