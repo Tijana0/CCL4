@@ -58,7 +58,7 @@
 						</Action>
 					</ChildrenList>
 				</Event>
-				<Event Name="stop_Background" ID="{F8740921-0443-42F0-8617-2F88EC130BD2}">
+				<Event Name="stop_Divination_Background" ID="{F8740921-0443-42F0-8617-2F88EC130BD2}">
 					<ChildrenList>
 						<Action Name="" ID="{78909AA4-B6C0-49AB-974A-6290594FDCFA}" ShortID="740098245">
 							<PropertyList>
@@ -364,6 +364,34 @@
 				<Event Name="play_Start_Background" ID="{2A283E7B-9C9B-4CA7-91AC-4576EF06746F}">
 					<ChildrenList>
 						<Action Name="" ID="{779BA1BE-1A63-4998-A0DD-5E74459B847F}" ShortID="831597420">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Start_Background" ID="{F5ED9609-BBB2-4545-AEDA-F7201A41765B}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="stop_Potion_Background" ID="{0ED1E166-F1DC-4146-8BB9-A3E71309E0AA}">
+					<ChildrenList>
+						<Action Name="" ID="{30F9E253-9E5F-4C3C-8E3B-0CD3E0A7C21E}" ShortID="884533949">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Potion_Background" ID="{EF217B59-8806-412C-A7ED-FD4B207E8D85}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="stop_Start_Background" ID="{CF253303-527A-458A-8134-A611B1FCE716}">
+					<ChildrenList>
+						<Action Name="" ID="{7462CAA4-C6B3-40FE-A444-59ED7CD809E6}" ShortID="618575809">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
 									<ObjectRef Name="Start_Background" ID="{F5ED9609-BBB2-4545-AEDA-F7201A41765B}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>

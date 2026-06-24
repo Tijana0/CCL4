@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5e446663cef8f48559e112823dd19d9f, type: 3}
-  m_Name: F8740921-0443-42F0-8617-2F88EC130BD2
+  m_Name: 0ED1E166-F1DC-4146-8BB9-A3E71309E0AA
   m_EditorClassIdentifier: AK.Wwise.Unity.API.WwiseTypes::WwiseEventReference
-  objectName: stop_Background
-  id: 1244803444
-  guid: F8740921-0443-42F0-8617-2F88EC130BD2
-  IsInUserDefinedSoundBank: 1
+  objectName: stop_Potion_Background
+  id: 4171638308
+  guid: 0ED1E166-F1DC-4146-8BB9-A3E71309E0AA
+  IsInUserDefinedSoundBank: 0

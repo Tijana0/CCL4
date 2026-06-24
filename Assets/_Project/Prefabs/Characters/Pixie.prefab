@@ -186,6 +186,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pixie_Sound
       objectReference: {fileID: 0}
+    - target: {fileID: 8124339021632407288, guid: 726150ddc4a134019a50bb683d71a2a1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
