@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 /// <summary>
@@ -40,12 +41,32 @@ public class PortableCooker : MonoBehaviour
     [Tooltip("How close a HeatSource must be to count as 'on the fire'. Checked every frame.")]
     public float heatDetectionRange = 0.6f;
 
+    [Header("Home Dock (snaps back to its stand when set down nearby)")]
+    [Tooltip("The transform this pot rests on (e.g. the stove's stand point). When set down within range, it snaps back here instead of being left as a loose physics object.")]
+    public Transform homeAnchor;
+    [Tooltip("Resting local position relative to homeAnchor.")]
+    public Vector3 homeLocalPosition;
+    [Tooltip("Resting local rotation (euler) relative to homeAnchor.")]
+    public Vector3 homeLocalEuler;
+    [Tooltip("How close (when not held) the pot must be to its home before it snaps back onto the stand.")]
+    public float homeSnapRange = 2.5f;
+
     [Header("Recipes")]
     public List<MultiIngredientRecipe> recipes = new List<MultiIngredientRecipe>();
     [Tooltip("Fallback output if ingredients don't match any recipe when cooking completes.")]
     public ItemData improvisedResultItem;
     [Tooltip("Default cooking time if ingredients are present but match no specific recipe yet.")]
     public float defaultCookingTime = 6f;
+
+    [Header("Overcook (left on the fire too long)")]
+    [Tooltip("If true, a finished brew left on the fire too long evaporates — the pot empties back to a plain (empty) teapot.")]
+    public bool enableOvercook = true;
+    [Tooltip("Seconds after the brew finishes (the flashing-red warning window) before it evaporates. Only counts while still on the fire.")]
+    public float overcookDelay = 5f;
+
+    [Header("Progress Bar (auto-built world-space bar, like the brazier)")]
+    public Image progressBarFill;
+    public GameObject progressBarContainer;
 
     [Header("Visuals (optional)")]
     [Tooltip("Shown when empty.")]
@@ -64,8 +85,17 @@ public class PortableCooker : MonoBehaviour
     private float currentCookTime = 6f;
     private bool isDone = false;
     private ItemData lastBrewedResult = null;
+    private float overcookTimer = 0f;
 
     private HeatSource currentHeatSource = null;
+
+    private void Awake()
+    {
+        if (progressBarContainer == null)
+            BuildProgressBar();
+        if (progressBarContainer != null)
+            progressBarContainer.SetActive(false);
+    }
 
     public bool IsEmpty => ingredients.Count == 0 && !isDone;
     public bool IsDone => isDone;
@@ -73,8 +103,19 @@ public class PortableCooker : MonoBehaviour
 
     private void Update()
     {
+        // When set down near its stand (not carried), snap it back onto the stand so it
+        // returns exactly where it started instead of being left as a loose physics object.
+        if (homeAnchor != null && !IsHeld() && transform.parent != homeAnchor)
+        {
+            Vector3 homeWorld = homeAnchor.TransformPoint(homeLocalPosition);
+            if (Vector3.Distance(transform.position, homeWorld) <= homeSnapRange)
+                DockAtHome();
+        }
+
         currentHeatSource = FindNearbyHeatSource();
-        bool onFire = currentHeatSource != null;
+        // Only cook when actually SET DOWN on the fire — not while a player carries it
+        // near the stove. Held items are parented under the player.
+        bool onFire = currentHeatSource != null && !IsHeld();
 
         if (onFire && !isDone && ingredients.Count > 0)
         {
@@ -91,7 +132,102 @@ public class PortableCooker : MonoBehaviour
             CancelCooking();
         }
 
+        // Overcook: a finished brew left on the fire too long evaporates back to empty.
+        if (enableOvercook && isDone && onFire)
+        {
+            overcookTimer += Time.deltaTime;
+            if (overcookTimer >= overcookDelay)
+                Evaporate();
+        }
+        else if (!isDone)
+        {
+            overcookTimer = 0f;
+        }
+
+        UpdateProgressBar(onFire);
         UpdateVisuals();
+    }
+
+    private void UpdateProgressBar(bool onFire)
+    {
+        if (progressBarContainer == null) return;
+
+        bool cooking     = isCooking && !isDone;
+        bool overcooking = enableOvercook && isDone && onFire;
+        bool show        = cooking || overcooking;
+
+        if (progressBarContainer.activeSelf != show) progressBarContainer.SetActive(show);
+        if (!show) return;
+
+        // Float the bar above the (movable) pot and face the camera.
+        progressBarContainer.transform.position = transform.position + Vector3.up * 0.9f;
+        if (Camera.main != null)
+            progressBarContainer.transform.rotation = Camera.main.transform.rotation;
+
+        if (progressBarFill == null) return;
+        if (overcooking)
+        {
+            progressBarFill.fillAmount = 1f;
+            float a = 0.3f + 0.7f * Mathf.Abs(Mathf.Sin(Time.time * 6f)); // flash red
+            progressBarFill.color = new Color(0.9f, 0.1f, 0.1f, a);
+        }
+        else
+        {
+            progressBarFill.fillAmount = Mathf.Clamp01(cookProgress);
+            progressBarFill.color = new Color(1f, 0.5f, 0.1f, 1f); // fiery orange
+        }
+    }
+
+    /// <summary>
+    /// Finished brew was left on the fire past the warning window — it evaporates:
+    /// the pot empties back to a plain (empty) teapot, contents lost.
+    /// </summary>
+    private void Evaporate()
+    {
+        ClearContents();
+        overcookTimer = 0f;
+        if (progressBarContainer != null) progressBarContainer.SetActive(false);
+        Debug.Log("[PortableCooker] Left on the fire too long — brew evaporated, teapot is empty again.");
+    }
+
+    private void BuildProgressBar()
+    {
+        Sprite white = Sprite.Create(
+            Texture2D.whiteTexture,
+            new Rect(0, 0, Texture2D.whiteTexture.width, Texture2D.whiteTexture.height),
+            new Vector2(0.5f, 0.5f));
+
+        GameObject canvasGO = new GameObject(name + "_CookProgress");
+        canvasGO.transform.localScale = Vector3.one * 0.01f;
+        Canvas canvas = canvasGO.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.WorldSpace;
+        ((RectTransform)canvasGO.transform).sizeDelta = new Vector2(120f, 18f);
+
+        GameObject bg = new GameObject("Background");
+        bg.transform.SetParent(canvasGO.transform, false);
+        Image bgImg = bg.AddComponent<Image>();
+        bgImg.sprite = white;
+        bgImg.color = new Color(0.1f, 0.1f, 0.15f, 0.85f);
+        RectTransform bgRect = bg.GetComponent<RectTransform>();
+        bgRect.anchorMin = Vector2.zero; bgRect.anchorMax = Vector2.one;
+        bgRect.offsetMin = Vector2.zero; bgRect.offsetMax = Vector2.zero;
+
+        GameObject fill = new GameObject("Fill");
+        fill.transform.SetParent(canvasGO.transform, false);
+        Image fillImg = fill.AddComponent<Image>();
+        fillImg.sprite = white;
+        fillImg.color = new Color(1f, 0.5f, 0.1f, 1f);
+        fillImg.type = Image.Type.Filled;
+        fillImg.fillMethod = Image.FillMethod.Horizontal;
+        fillImg.fillOrigin = (int)Image.OriginHorizontal.Left;
+        fillImg.fillAmount = 0f;
+        RectTransform fillRect = fill.GetComponent<RectTransform>();
+        fillRect.anchorMin = Vector2.zero; fillRect.anchorMax = Vector2.one;
+        fillRect.offsetMin = new Vector2(2f, 2f); fillRect.offsetMax = new Vector2(-2f, -2f);
+
+        progressBarContainer = canvasGO;
+        progressBarFill = fillImg;
+        canvasGO.SetActive(false);
     }
 
     // ── Public API — called by interaction scripts ──────────────────────────
@@ -181,6 +317,7 @@ public class PortableCooker : MonoBehaviour
         isCooking = false;
         isDone = true;
         cookProgress = 1f;
+        overcookTimer = 0f;
 
         MultiIngredientRecipe match = FindMatchingRecipe();
         lastBrewedResult = match != null ? match.outputItem : improvisedResultItem;
@@ -205,6 +342,33 @@ public class PortableCooker : MonoBehaviour
             if (allMatch && remaining.Count == 0) return recipe;
         }
         return null;
+    }
+
+    /// <summary>True while a player is carrying this pot (it's parented under the player).</summary>
+    private bool IsHeld()
+    {
+        return GetComponentInParent<SimplePlayerController>() != null;
+    }
+
+    /// <summary>Parks the pot back on its stand at the original resting pose (kinematic,
+    /// colliders left enabled so it can still be picked up / have ingredients added).</summary>
+    private void DockAtHome()
+    {
+        transform.SetParent(homeAnchor);
+        transform.localPosition = homeLocalPosition;
+        transform.localRotation = Quaternion.Euler(homeLocalEuler);
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb == null) rb = GetComponentInChildren<Rigidbody>();
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
+        }
+        // A docked pot must stay interactable (pick up / add ingredients), so make sure
+        // its colliders are on even if it was last set down straight from being carried.
+        foreach (var col in GetComponentsInChildren<Collider>(true))
+            col.enabled = true;
     }
 
     private HeatSource FindNearbyHeatSource()
