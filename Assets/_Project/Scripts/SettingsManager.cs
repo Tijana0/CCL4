@@ -16,6 +16,11 @@ public class SettingsManager : MonoBehaviour
 {
     public static SettingsManager Instance { get; private set; }
 
+    [Header("Wwise RTPC References")]
+    public AK.Wwise.RTPC masterVolumeRTPC;
+    public AK.Wwise.RTPC musicVolumeRTPC;
+    public AK.Wwise.RTPC sfxVolumeRTPC;
+
     // ── Curated resolution options ─────────────────────────────────────────────
     public static readonly Vector2Int[] Resolutions =
     {
@@ -67,6 +72,19 @@ public class SettingsManager : MonoBehaviour
         ApplyAll();
     }
 
+    private void Start()
+    {
+        // Re-apply at Start to ensure Wwise is fully initialized and ready to receive RTPCs
+        ApplyAll();
+        
+        // Apply music state at start
+        if (AudioManager.Instance != null)
+        {
+            if (musicEnabled) AudioManager.Instance.StartMusic();
+            else AudioManager.Instance.StopMusic();
+        }
+    }
+
     private void Load()
     {
         masterVolume    = PlayerPrefs.GetFloat(K_Master,  100f);
@@ -91,7 +109,7 @@ public class SettingsManager : MonoBehaviour
         // the BackgroundMusic event at boot; wire fully when audio routing is ready.
     }
 
-    // ── Audio (stubbed apply — option B) ───────────────────────────────────────
+    // ── Audio (fully wired with Wwise RTPC) ───────────────────────────────────────
     public void SetMasterVolume(float v)
     {
         masterVolume = v;
@@ -100,16 +118,19 @@ public class SettingsManager : MonoBehaviour
     }
     private void ApplyMasterVolume()
     {
-        // TODO(audio): needs a "MasterVolume" RTPC bound to the Master bus in Wwise.
-        // AkUnitySoundEngine.SetRTPCValue("MasterVolume", masterVolume);
+        if (masterVolumeRTPC != null && masterVolumeRTPC.IsValid())
+            masterVolumeRTPC.SetGlobalValue(masterVolume);
     }
 
     public void SetMusicEnabled(bool on)
     {
         musicEnabled = on;
         PlayerPrefs.SetInt(K_MusicOn, on ? 1 : 0);
-        // TODO(audio): start/stop background music when wiring is finalized.
-        // if (AudioManager.Instance != null) { if (on) AudioManager.Instance.StartMusic(); else AudioManager.Instance.StopMusic(); }
+        if (AudioManager.Instance != null)
+        {
+            if (on) AudioManager.Instance.StartMusic();
+            else AudioManager.Instance.StopMusic();
+        }
     }
 
     public void SetMusicVolume(float v)
@@ -120,8 +141,11 @@ public class SettingsManager : MonoBehaviour
     }
     private void ApplyMusicVolume()
     {
-        // TODO(audio): connect to MusicVolume RTPC.
-        // if (AudioManager.Instance != null) AudioManager.Instance.SetMusicVolume(musicVolume);
+        if (musicVolumeRTPC != null && musicVolumeRTPC.IsValid())
+            musicVolumeRTPC.SetGlobalValue(musicVolume);
+
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.SetMusicVolume(musicVolume);
     }
 
     public void SetSfxVolume(float v)
@@ -132,8 +156,8 @@ public class SettingsManager : MonoBehaviour
     }
     private void ApplySfxVolume()
     {
-        // TODO(audio): needs an "SfxVolume" RTPC bound to the SFX bus in Wwise.
-        // AkUnitySoundEngine.SetRTPCValue("SfxVolume", sfxVolume);
+        if (sfxVolumeRTPC != null && sfxVolumeRTPC.IsValid())
+            sfxVolumeRTPC.SetGlobalValue(sfxVolume);
     }
 
     // ── Display (applied for real) ─────────────────────────────────────────────
