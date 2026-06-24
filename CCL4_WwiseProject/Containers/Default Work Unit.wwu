@@ -1038,7 +1038,7 @@
 						<ActiveSource Name="Burning_in_Fire_1" ID="{CDFF80B4-B72A-4F56-B7C0-EE921726F2FA}" Platform="Linked"/>
 					</ActiveSourceList>
 				</Sound>
-				<Sound Name="Background" ID="{01C50359-2CF8-40F1-93F2-93B8E381A1E8}" ShortID="240490024">
+				<Sound Name="Divination_Background" ID="{01C50359-2CF8-40F1-93F2-93B8E381A1E8}" ShortID="240490024">
 					<PropertyList>
 						<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
 						<Property Name="IsStreamingEnabled" Type="bool">
@@ -2969,6 +2969,79 @@
 						</Sound>
 					</ChildrenList>
 				</BlendContainer>
+				<Sound Name="Potion_Background" ID="{EF217B59-8806-412C-A7ED-FD4B207E8D85}" ShortID="79007258">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="Potions_Background" ID="{E4981315-10F9-4C40-AB5A-E237FCE41EA1}">
+							<Language>SFX</Language>
+							<AudioFile>Potions_Background.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="188206472"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="Potions_Background" ID="{E4981315-10F9-4C40-AB5A-E237FCE41EA1}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="Start_Background" ID="{F5ED9609-BBB2-4545-AEDA-F7201A41765B}" ShortID="85566131">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="Start_Background" ID="{C3E77546-4CB5-4FB4-AAC6-404FD978BB22}">
+							<Language>SFX</Language>
+							<AudioFile>Start_Background.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="750273450"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="Start_Background" ID="{C3E77546-4CB5-4FB4-AAC6-404FD978BB22}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="Beeping" ID="{26C0A1D4-1B4E-44DA-82A5-1782B810B3FF}" ShortID="918068240">
+					<PropertyList>
+						<Property Name="Pitch" Type="int32">
+							<ValueList>
+								<Value>-710</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="Beeping_Sound" ID="{B578A46B-538E-48B8-B059-46ADB125AF99}">
+							<Language>SFX</Language>
+							<AudioFile>Beeping_Sound.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="717670813"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="Beeping_Sound" ID="{B578A46B-538E-48B8-B059-46ADB125AF99}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
 			</ChildrenList>
 		</WorkUnit>
 	</Containers>

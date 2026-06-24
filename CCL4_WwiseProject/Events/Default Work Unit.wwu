@@ -14,12 +14,12 @@
 						</Action>
 					</ChildrenList>
 				</Event>
-				<Event Name="play_Background" ID="{6EF1217B-8A73-45C9-B43D-F69DC74627FA}">
+				<Event Name="play_Divination_Background" ID="{6EF1217B-8A73-45C9-B43D-F69DC74627FA}">
 					<ChildrenList>
 						<Action Name="" ID="{9D978964-EA91-4375-BBD1-145ED8F2C32B}" ShortID="173304834">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="Background" ID="{01C50359-2CF8-40F1-93F2-93B8E381A1E8}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
+									<ObjectRef Name="Divination_Background" ID="{01C50359-2CF8-40F1-93F2-93B8E381A1E8}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -66,7 +66,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="Background" ID="{01C50359-2CF8-40F1-93F2-93B8E381A1E8}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
+									<ObjectRef Name="Divination_Background" ID="{01C50359-2CF8-40F1-93F2-93B8E381A1E8}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -345,6 +345,28 @@
 							<ReferenceList>
 								<Reference Name="Target">
 									<ObjectRef Name="Pixie" ID="{93C2DDD3-D7FF-48D5-A60C-3C829BFB2EFD}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="play_Potion_Background" ID="{89E8F1B5-6FA8-4D25-A662-FCAC4D115813}">
+					<ChildrenList>
+						<Action Name="" ID="{2FF646D7-F657-4770-88AB-B1408C784A89}" ShortID="613900860">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Potion_Background" ID="{EF217B59-8806-412C-A7ED-FD4B207E8D85}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="play_Start_Background" ID="{2A283E7B-9C9B-4CA7-91AC-4576EF06746F}">
+					<ChildrenList>
+						<Action Name="" ID="{779BA1BE-1A63-4998-A0DD-5E74459B847F}" ShortID="831597420">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Start_Background" ID="{F5ED9609-BBB2-4545-AEDA-F7201A41765B}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
