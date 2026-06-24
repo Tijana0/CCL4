@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: burnt herb 3
   icon: {fileID: 0}
   prefab: {fileID: 1411471602414515229, guid: b0fdfd808136f5b41ba2f450648f6550, type: 3}
-  potionColour: {r: 1, g: 1, b: 1, a: 1}
+  potionColour: {r: 0.21568628, g: 0.21568628, b: 0.21568628, a: 1}
   isColourless: 0
   processingRules: []
   combineRules: []

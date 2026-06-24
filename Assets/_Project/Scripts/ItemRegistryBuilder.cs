@@ -133,7 +133,7 @@ public class ItemRegistryBuilder : EditorWindow
     }
 
     private void RemoveFromRegistry(ItemData item)
-    {
+    { 
         registry.items.Remove(item);
         EditorUtility.SetDirty(registry);
         AssetDatabase.SaveAssets();

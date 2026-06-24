@@ -58,6 +58,16 @@ public class InstantStation : StationBase
 
     private void HandleBin(SimplePlayerController player)
     {
+        // Special case: PortableCooker items (e.g. Teapot) are NEVER destroyed
+        // at the Bin — their contents are cleared instead, keeping the item reusable.
+        PortableCooker cooker = player.heldItem.GetComponent<PortableCooker>();
+        if (cooker != null)
+        {
+            cooker.ClearContents();
+            Debug.Log("[Bin] Cleared contents — item kept in hand, now empty.");
+            return;
+        }
+
         WorldItem wi = player.heldItem.GetComponent<WorldItem>();
 
         if (wi != null && !wi.itemData.isDisposable)
