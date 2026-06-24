@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97340c5b42f311744bbcde4a2c5d3980, type: 3}
+  m_Name: Prophecy_card 5
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: prophecy card 5
+  icon: {fileID: 21300000, guid: 9707664d971ca4c029780fc813bd7f2c, type: 3}
+  prefab: {fileID: 2528910626853977348, guid: 8621e048379be184e8f384830cd2ef2d, type: 3}
+  potionColour: {r: 1, g: 1, b: 1, a: 1}
+  isColourless: 0
+  processingRules: []
+  combineRules: []
+  allowedStationTypes: 
+  requiresProcessingBeforeCauldron: 0
+  isDisposable: 1

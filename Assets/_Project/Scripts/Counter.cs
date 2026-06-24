@@ -1,67 +1,91 @@
 using UnityEngine;
+using System.Collections.Generic;
 
-public class Counter : MonoBehaviour, IInteractable
+/// <summary>
+/// Plain counter — holds one item, but supports combining two items into one.
+/// Combine rules can be defined directly on this station (checked first),
+/// or fall back to ItemData combine rules.
+/// </summary>
+public class Counter : StationBase
 {
-    public Transform counterTopPoint;
-    public GameObject itemOnCounter;
+    [Header("Combine Rules (defined on this station)")]
+    [Tooltip("Define what two items become when combined here. Checked before ItemData combine rules.")]
+    public List<StationCombineRule> combineRules = new List<StationCombineRule>();
+
+    private void Awake()
+    {
+        stationType = StationType.Counter;
+    }
 
     private void Start()
     {
-        // If an item was placed on the counter in the editor, link it up
-        if (itemOnCounter != null)
+        if (itemOnStation != null)
+            PlaceItemOnStation(itemOnStation, null);
+    }
+
+    protected override void TryCombineOrSwap(SimplePlayerController player)
+    {
+        WorldItem heldWI = player.heldItem.GetComponent<WorldItem>();
+        WorldItem stationWI = itemOnStation.GetComponent<WorldItem>();
+
+        if (heldWI == null || stationWI == null)
         {
-            SetupItemOnCounter(itemOnCounter);
+            Debug.Log("[Counter] One of the items has no WorldItem component — cannot combine.");
+            return;
+        }
+
+        // Check station-defined combine rules first
+        ItemData result = GetStationCombineResult(heldWI.itemData, stationWI.itemData);
+
+        // Fall back to ItemData combine rules
+        if (result == null)
+            result = heldWI.itemData.GetCombineResult(stationWI.itemData);
+
+        if (result == null)
+        {
+            Debug.Log($"[Counter] No combine rule between {heldWI.itemData.itemName} and {stationWI.itemData.itemName}");
+            return;
+        }
+
+        Destroy(player.heldItem);
+        Destroy(itemOnStation);
+        player.heldItem = null;
+        itemOnStation = null;
+
+        Transform anchor = counterTopPoint != null ? counterTopPoint : transform;
+        Vector3 spawnPos = anchor.position + Vector3.up * 0.2f;
+
+        WorldItem combined = WorldItem.CreateCombined(result, spawnPos, anchor);
+        if (combined != null)
+        {
+            PlaceItemOnStation(combined.gameObject, null);
+            Debug.Log($"[Counter] Combined into {result.itemName}!");
         }
     }
 
-    public bool CanInteract()
+    private ItemData GetStationCombineResult(ItemData a, ItemData b)
     {
-        return true; 
-    }
-
-    public void Interact(SimplePlayerController player)
-    {
-        // place item on empty counter
-        if (player.heldItem != null && itemOnCounter == null)
+        foreach (var rule in combineRules)
         {
-            itemOnCounter = player.heldItem;
-            player.heldItem = null;
-            SetupItemOnCounter(itemOnCounter);
+            if ((rule.itemA == a && rule.itemB == b) ||
+                (rule.itemA == b && rule.itemB == a))
+                return rule.outputItem;
         }
-        // take item from counter
-        else if (player.heldItem == null && itemOnCounter != null)
-        {
-            GameObject itemToTake = itemOnCounter;
-            itemOnCounter = null;
-
-            // CRITICAL: Ensure collider is disabled BEFORE parenting to player
-            // This prevents the "physics push" glitch
-            Collider col = itemToTake.GetComponent<Collider>();
-            if (col != null) col.enabled = false;
-
-            player.heldItem = itemToTake;
-            itemToTake.transform.SetParent(player.holdPoint);
-            itemToTake.transform.localPosition = Vector3.zero;
-            itemToTake.transform.localRotation = Quaternion.identity;
-        }
+        return null;
     }
+}
 
-    private void SetupItemOnCounter(GameObject item)
-    {
-        item.transform.SetParent(counterTopPoint != null ? counterTopPoint : this.transform);
-        item.transform.localRotation = Quaternion.identity;
-        
-        // Disable collider so it doesn't block interaction or cause physics jitter
-        Collider itemCol = item.GetComponent<Collider>();
-        if (itemCol != null) itemCol.enabled = false;
-
-        // Ensure Rigidbody is kinematic
-        Rigidbody rb = item.GetComponent<Rigidbody>();
-        if (rb != null) rb.isKinematic = true;
-
-        // SIMPLE OFFSET: 
-        // Based on your 1x1 grid and item scale, 0.2 is the exact half-height 
-        // for most of your objects. This is much more reliable than bounds checks.
-        item.transform.localPosition = new Vector3(0, 0.2f, 0);
-    }
+/// <summary>
+/// A combine rule defined directly on a Counter station.
+/// Order of itemA/itemB does not matter.
+/// </summary>
+[System.Serializable]
+public class StationCombineRule
+{
+    [Tooltip("First item")]
+    public ItemData itemA;
+    [Tooltip("Second item")]
+    public ItemData itemB;
+    [Tooltip("What they combine into")]
+    public ItemData outputItem;
 }

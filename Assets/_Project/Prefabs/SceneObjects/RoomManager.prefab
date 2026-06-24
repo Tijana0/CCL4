@@ -1,0 +1,147 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7980546270596634955
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5984223422183582713}
+  - component: {fileID: 5601866021472316106}
+  - component: {fileID: 4887866094995855152}
+  m_Layer: 0
+  m_Name: RoomManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5984223422183582713
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7980546270596634955}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5601866021472316106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7980546270596634955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89d71286cbc67f4489378b4190a7f451, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomConfig
+  roomName: Divination_Room
+  availableItems:
+  - {fileID: 11400000, guid: 7dad8d659d886494cafd9a0cae0d05ff, type: 2}
+  - {fileID: 11400000, guid: 46843358b60e618478e061dc56520b2e, type: 2}
+  - {fileID: 11400000, guid: 223230be2e336574daebb5033bf479df, type: 2}
+  - {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
+  - {fileID: 11400000, guid: a7ecdd1fb995d67438d40bcfa3a87f34, type: 2}
+  - {fileID: 11400000, guid: af636c11872cf284795fa75905c1ff4a, type: 2}
+  - {fileID: 11400000, guid: d03e934b1b9ad3043a087124b094d9db, type: 2}
+  - {fileID: 11400000, guid: 3c79bfca8707b064384531601be7ce36, type: 2}
+  - {fileID: 11400000, guid: c81c24fdc78032841bacdf73a3d127e3, type: 2}
+  - {fileID: 11400000, guid: 62b0faeeeb1e49b4c98af7293678d069, type: 2}
+  - {fileID: 11400000, guid: 8790034690bd84140b16c03fbea88fa9, type: 2}
+  - {fileID: 11400000, guid: a00f73ea82f64c84b87f6355129ff7dc, type: 2}
+  - {fileID: 11400000, guid: ca67862dda8aee34499d31dd703b854a, type: 2}
+  - {fileID: 11400000, guid: f6855555dc9211a4eb82da049a112149, type: 2}
+  - {fileID: 11400000, guid: fea76895d7a1a134cac8013005554114, type: 2}
+  - {fileID: 11400000, guid: d3892b62306ad834fbba16c05db537aa, type: 2}
+  - {fileID: 11400000, guid: 1c1204dcc904d984ea453a6aa3519125, type: 2}
+  - {fileID: 11400000, guid: 2d5bed9f00b21844795c1fa889383b80, type: 2}
+  - {fileID: 11400000, guid: 1d2b350b54d170b41a9a1899c66ff800, type: 2}
+  - {fileID: 11400000, guid: 61136e0156001834180f9439bcb0e0a7, type: 2}
+  - {fileID: 11400000, guid: 8f5a9a47c85b90b4bbf4bdb0b93a3818, type: 2}
+  - {fileID: 11400000, guid: 98374cb1f414b004f89f92bd25ebc646, type: 2}
+  - {fileID: 11400000, guid: 6a338b691806fc649aa00e6a7ac90a99, type: 2}
+  - {fileID: 11400000, guid: 1aef00a9bb5786747bf5022a9bdb823e, type: 2}
+  - {fileID: 11400000, guid: b109e5496fa49ad47af34e94a896c08b, type: 2}
+  - {fileID: 11400000, guid: cd9381aa552a24d448f1f1423c05f484, type: 2}
+  - {fileID: 11400000, guid: db76c9450d643f74cb82ea6e1ae17b07, type: 2}
+  - {fileID: 11400000, guid: c76270bce1cacdf479e686cf8162fb1a, type: 2}
+  - {fileID: 11400000, guid: 3d64a75fd8a7bb94b82e9c4e3fcfc19a, type: 2}
+  - {fileID: 11400000, guid: f036a665a93c2564e9dc832a8ea4cb1f, type: 2}
+  - {fileID: 11400000, guid: 12f5508274813ed479090a80abe4c67a, type: 2}
+  useProceduralGeneration: 1
+  recipes:
+  - recipeName: Tea 1
+    requiredOutput: {fileID: 11400000, guid: 98374cb1f414b004f89f92bd25ebc646, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  - recipeName: Tea 2
+    requiredOutput: {fileID: 11400000, guid: 6a338b691806fc649aa00e6a7ac90a99, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  - recipeName: Tea 3
+    requiredOutput: {fileID: 11400000, guid: 1aef00a9bb5786747bf5022a9bdb823e, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  - recipeName: Vision 1
+    requiredOutput: {fileID: 11400000, guid: 3d64a75fd8a7bb94b82e9c4e3fcfc19a, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  - recipeName: Vision 2
+    requiredOutput: {fileID: 11400000, guid: f036a665a93c2564e9dc832a8ea4cb1f, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  - recipeName: Prophecy 1
+    requiredOutput: {fileID: 11400000, guid: d3892b62306ad834fbba16c05db537aa, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  - recipeName: Prophecy 2
+    requiredOutput: {fileID: 11400000, guid: 1c1204dcc904d984ea453a6aa3519125, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  - recipeName: Prophecy 3
+    requiredOutput: {fileID: 11400000, guid: 2d5bed9f00b21844795c1fa889383b80, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  - recipeName: Prophecy 4
+    requiredOutput: {fileID: 11400000, guid: 1d2b350b54d170b41a9a1899c66ff800, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  - recipeName: Prophecy 5
+    requiredOutput: {fileID: 11400000, guid: 61136e0156001834180f9439bcb0e0a7, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  - recipeName: Prophecy 6
+    requiredOutput: {fileID: 11400000, guid: f19342264fad3514583e1913b7e1e8b7, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  stationConfigs:
+  - stationType: 8
+    allowedItems:
+    - {fileID: 11400000, guid: ca67862dda8aee34499d31dd703b854a, type: 2}
+    - {fileID: 11400000, guid: f6855555dc9211a4eb82da049a112149, type: 2}
+    - {fileID: 11400000, guid: fea76895d7a1a134cac8013005554114, type: 2}
+  - stationType: 0
+    allowedItems: []
+--- !u!114 &4887866094995855152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7980546270596634955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3716233294bcdda42a46b78c45fde079, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomManager
+  orderManager: {fileID: 0}
