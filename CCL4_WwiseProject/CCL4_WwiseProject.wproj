@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<WwiseDocument Type="Project" SchemaVersion="133" WwiseVersion="v2025.1.6" WwiseBuild="9117">
+<WwiseDocument Type="Project" SchemaVersion="133" WwiseVersion="v2025.1.5" WwiseBuild="9095">
 	<ProjectInfo>
 		<Project Name="CCL4_WwiseProject" ID="{21F33BB2-4557-4F6C-8361-4E0C5C3107B8}">
 			<Platforms>
@@ -28,8 +28,6 @@
 				</Property>
 				<Property Name="SoundBankGenerateHeaderFile" Type="bool" Value="True" />
 				<Property Name="SoundBankGenerateEstimatedDuration" Type="bool" Value="True" /><Property Name="SoundBankHeaderFilePath" Type="string" Value="GeneratedSoundBanks\" />
-				<Property Name="SoundBankGenerateHeaderFile" Type="bool" Value="True" />
-				<Property Name="SoundBankGenerateEstimatedDuration" Type="bool" Value="True" /><Property Name="SoundBankHeaderFilePath" Type="string" Value="GeneratedSoundbanks\" />
 				<Property Name="SoundBankPaths" Type="string">
 					<ValueList>
 						<Value Platform="Windows">GeneratedSoundBanks\Windows\</Value>
