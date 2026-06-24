@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 3720458995627837695}
   - component: {fileID: 1925589186761304504}
   - component: {fileID: 8822433782681841994}
+  - component: {fileID: 2511254390838019616}
+  - component: {fileID: 5509989420355652656}
   m_Layer: 0
   m_Name: Teapot
   m_TagString: Untagged
@@ -113,6 +115,69 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2511254390838019616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 137518175886192598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb52431c83e6d1f458ee03952760b609, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PortableCooker
+  emptyStateItem: {fileID: 0}
+  maxIngredients: 4
+  acceptedIngredients:
+  - {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
+  - {fileID: 11400000, guid: a7ecdd1fb995d67438d40bcfa3a87f34, type: 2}
+  - {fileID: 11400000, guid: af636c11872cf284795fa75905c1ff4a, type: 2}
+  - {fileID: 11400000, guid: d03e934b1b9ad3043a087124b094d9db, type: 2}
+  heatDetectionRange: 0.6
+  recipes:
+  - recipeName: Tea 1
+    requiredIngredients:
+    - {fileID: 0}
+    - {fileID: 0}
+    outputItem: {fileID: 11400000, guid: 98374cb1f414b004f89f92bd25ebc646, type: 2}
+    cookingTime: 0
+    orderMatters: 0
+    wrongOrderResult: {fileID: 0}
+  - recipeName: Tea 2
+    requiredIngredients:
+    - {fileID: 0}
+    - {fileID: 0}
+    outputItem: {fileID: 11400000, guid: 6a338b691806fc649aa00e6a7ac90a99, type: 2}
+    cookingTime: 0
+    orderMatters: 0
+    wrongOrderResult: {fileID: 0}
+  - recipeName: Tea 3
+    requiredIngredients:
+    - {fileID: 0}
+    - {fileID: 0}
+    outputItem: {fileID: 11400000, guid: 1aef00a9bb5786747bf5022a9bdb823e, type: 2}
+    cookingTime: 0
+    orderMatters: 0
+    wrongOrderResult: {fileID: 0}
+  improvisedResultItem: {fileID: 11400000, guid: b109e5496fa49ad47af34e94a896c08b, type: 2}
+  defaultCookingTime: 6
+  emptyVisual: {fileID: 0}
+  filledVisual: {fileID: 0}
+  cookingVisual: {fileID: 0}
+  doneVisual: {fileID: 0}
+--- !u!114 &5509989420355652656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 137518175886192598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 261ddb35a44d0d746a3552492ca686a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PortableCookerInteraction
 --- !u!1001 &1917737079608319852
 PrefabInstance:
   m_ObjectHideFlags: 0
