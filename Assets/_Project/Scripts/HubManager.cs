@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -14,10 +16,17 @@ public class HubManager : MonoBehaviour
     public Button level2Button;
     public TextMeshProUGUI level2StarsText;
 
+    [Header("Footstep Trail (order them Level 1 -> Level 2)")]
+    public List<RawImage> footsteps = new List<RawImage>();
+    public float stepInterval = 0.18f;
+    public float stepFadeTime = 0.12f;
+    public bool animateOnlyOnce = true;
+
+    private static bool hasWalkedThisSession = false;
+
     private void Awake()
     {
         // Add generic joystick fallbacks for UI SUBMIT
-        // This ensures the A button on generic controllers works on the Hub screen
         var eventSystem = Object.FindFirstObjectByType<UnityEngine.EventSystems.EventSystem>();
         if (eventSystem != null)
         {
@@ -34,16 +43,14 @@ public class HubManager : MonoBehaviour
 
     private void Start()
     {
-        // Build indices mapping (based on Build Settings)
-        // 0 = Bootstrap, 1 = HubScene, 2 = Level 1, 3 = Level 2
-        int level1Index = 2;
-        int level2Index = 3;
+        // 0 = Bootstrap, 1 = Startscreen, 2 = HubScene, 3 = Level 1, 4 = Level 2
+        int level1Index = 3;
+        int level2Index = 4;
 
         bool level1Completed = false;
 
         if (PersistentGameState.Instance != null)
         {
-            // Check Level 1
             if (PersistentGameState.Instance.starsPerLevel.ContainsKey(level1Index))
             {
                 int stars = PersistentGameState.Instance.starsPerLevel[level1Index];
@@ -52,10 +59,9 @@ public class HubManager : MonoBehaviour
             }
             else
             {
-                level1StarsText.text = ""; // Don't show anything if unplayed
+                level1StarsText.text = "";
             }
 
-            // Check Level 2
             if (PersistentGameState.Instance.starsPerLevel.ContainsKey(level2Index))
             {
                 int stars = PersistentGameState.Instance.starsPerLevel[level2Index];
@@ -72,10 +78,8 @@ public class HubManager : MonoBehaviour
             level2StarsText.text = "Locked";
         }
 
-        // Setup Level 2 Lock State
         level2Button.interactable = level1Completed;
 
-        // Bind Button Listeners
         if (level1Button != null)
         {
             level1Button.onClick.RemoveAllListeners();
@@ -88,19 +92,74 @@ public class HubManager : MonoBehaviour
             level2Button.onClick.AddListener(() => LoadLevel(level2Index));
         }
 
-        // Auto-select for gamepad support
         if (level1Button != null) level1Button.Select();
+
+        // --- FOOTSTEP TRAIL ---
+        SetupFootsteps(level1Completed);
+    }
+
+    private void SetupFootsteps(bool unlocked)
+    {
+        if (footsteps == null || footsteps.Count == 0) return;
+
+        if (!unlocked)
+        {
+            foreach (var f in footsteps)
+                if (f != null) f.enabled = false;
+            return;
+        }
+
+        bool shouldAnimate = !animateOnlyOnce || !hasWalkedThisSession;
+
+        if (shouldAnimate)
+        {
+            foreach (var f in footsteps)
+                if (f != null) { f.enabled = true; SetAlpha(f, 0f); }
+
+            StartCoroutine(WalkFootsteps());
+            hasWalkedThisSession = true;
+        }
+        else
+        {
+            foreach (var f in footsteps)
+                if (f != null) { f.enabled = true; SetAlpha(f, 1f); }
+        }
+    }
+
+    private IEnumerator WalkFootsteps()
+    {
+        foreach (var f in footsteps)
+        {
+            if (f == null) continue;
+            yield return StartCoroutine(FadeIn(f));
+            yield return new WaitForSeconds(stepInterval);
+        }
+    }
+
+    private IEnumerator FadeIn(RawImage img)
+    {
+        float t = 0f;
+        while (t < stepFadeTime)
+        {
+            t += Time.deltaTime;
+            SetAlpha(img, Mathf.Clamp01(t / stepFadeTime));
+            yield return null;
+        }
+        SetAlpha(img, 1f);
+    }
+
+    private void SetAlpha(RawImage img, float a)
+    {
+        Color c = img.color;
+        c.a = a;
+        img.color = c;
     }
 
     private void LoadLevel(int buildIndex)
     {
         if (SceneLoader.Instance != null)
-        {
             SceneLoader.Instance.LoadScene(buildIndex);
-        }
         else
-        {
             SceneManager.LoadScene(buildIndex);
-        }
     }
 }

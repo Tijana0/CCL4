@@ -14,12 +14,12 @@
 						</Action>
 					</ChildrenList>
 				</Event>
-				<Event Name="play_Background" ID="{6EF1217B-8A73-45C9-B43D-F69DC74627FA}">
+				<Event Name="play_Divination_Background" ID="{6EF1217B-8A73-45C9-B43D-F69DC74627FA}">
 					<ChildrenList>
 						<Action Name="" ID="{9D978964-EA91-4375-BBD1-145ED8F2C32B}" ShortID="173304834">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="Background" ID="{01C50359-2CF8-40F1-93F2-93B8E381A1E8}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
+									<ObjectRef Name="Divination_Background" ID="{01C50359-2CF8-40F1-93F2-93B8E381A1E8}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -58,7 +58,7 @@
 						</Action>
 					</ChildrenList>
 				</Event>
-				<Event Name="stop_Background" ID="{F8740921-0443-42F0-8617-2F88EC130BD2}">
+				<Event Name="stop_Divination_Background" ID="{F8740921-0443-42F0-8617-2F88EC130BD2}">
 					<ChildrenList>
 						<Action Name="" ID="{78909AA4-B6C0-49AB-974A-6290594FDCFA}" ShortID="740098245">
 							<PropertyList>
@@ -66,7 +66,7 @@
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="Background" ID="{01C50359-2CF8-40F1-93F2-93B8E381A1E8}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
+									<ObjectRef Name="Divination_Background" ID="{01C50359-2CF8-40F1-93F2-93B8E381A1E8}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -110,7 +110,7 @@
 						<Action Name="" ID="{55402C77-B773-4E26-999C-F00990036984}" ShortID="874375090">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="Put_Down" ID="{510073DC-8142-466D-88B5-22AD8B3B869F}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
+									<ObjectRef Name="Put_down" ID="{510073DC-8142-466D-88B5-22AD8B3B869F}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -121,7 +121,7 @@
 						<Action Name="" ID="{EF614768-8C66-4A17-874B-DDD7AB148499}" ShortID="541407631">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="Liquid_dropping" ID="{2C693D81-5EEF-427D-AB32-F7B3C1EE9C6D}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
+									<ObjectRef Name="Liquid_drop" ID="{2C693D81-5EEF-427D-AB32-F7B3C1EE9C6D}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -275,7 +275,7 @@
 						<Action Name="" ID="{33246BA6-623B-4B45-869B-BACA0CE0F262}" ShortID="648617448">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="Glass_Breaking" ID="{1C687988-BA26-4FA2-92D2-5BA9E525C237}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
+									<ObjectRef Name="Glass_drop" ID="{1C687988-BA26-4FA2-92D2-5BA9E525C237}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -286,7 +286,7 @@
 						<Action Name="" ID="{42FE0558-DD4C-4C69-849D-4A609506A667}" ShortID="286070282">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="Heavy_dropping" ID="{9F85D17E-8C37-4BF5-89B1-3004B2D1D676}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
+									<ObjectRef Name="Heavy_drop" ID="{9F85D17E-8C37-4BF5-89B1-3004B2D1D676}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -345,6 +345,67 @@
 							<ReferenceList>
 								<Reference Name="Target">
 									<ObjectRef Name="Pixie" ID="{93C2DDD3-D7FF-48D5-A60C-3C829BFB2EFD}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="play_Potion_Background" ID="{89E8F1B5-6FA8-4D25-A662-FCAC4D115813}">
+					<ChildrenList>
+						<Action Name="" ID="{2FF646D7-F657-4770-88AB-B1408C784A89}" ShortID="613900860">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Potion_Background" ID="{EF217B59-8806-412C-A7ED-FD4B207E8D85}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="play_Start_Background" ID="{2A283E7B-9C9B-4CA7-91AC-4576EF06746F}">
+					<ChildrenList>
+						<Action Name="" ID="{779BA1BE-1A63-4998-A0DD-5E74459B847F}" ShortID="831597420">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Start_Background" ID="{F5ED9609-BBB2-4545-AEDA-F7201A41765B}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="stop_Potion_Background" ID="{0ED1E166-F1DC-4146-8BB9-A3E71309E0AA}">
+					<ChildrenList>
+						<Action Name="" ID="{30F9E253-9E5F-4C3C-8E3B-0CD3E0A7C21E}" ShortID="884533949">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Potion_Background" ID="{EF217B59-8806-412C-A7ED-FD4B207E8D85}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="stop_Start_Background" ID="{CF253303-527A-458A-8134-A611B1FCE716}">
+					<ChildrenList>
+						<Action Name="" ID="{7462CAA4-C6B3-40FE-A444-59ED7CD809E6}" ShortID="618575809">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Start_Background" ID="{F5ED9609-BBB2-4545-AEDA-F7201A41765B}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="play_Beeping" ID="{5D527B7B-5D93-46FC-BCC4-67C545D65F95}">
+					<ChildrenList>
+						<Action Name="" ID="{18C23638-8766-41B4-83D6-BA7079456F3A}" ShortID="485975840">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Beeping" ID="{26C0A1D4-1B4E-44DA-82A5-1782B810B3FF}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>

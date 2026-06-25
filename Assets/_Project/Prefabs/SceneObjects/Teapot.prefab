@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 8822433782681841994}
   - component: {fileID: 2511254390838019616}
   - component: {fileID: 5509989420355652656}
+  - component: {fileID: 900138813936884260}
+  - component: {fileID: -7902964885932546511}
   m_Layer: 0
   m_Name: Teapot
   m_TagString: Untagged
@@ -66,6 +68,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickupObject
   itemType: 0
   value: 0
+  dropType: 0
   skipPivotCentering: 1
 --- !u!65 &1925589186761304504
 BoxCollider:
@@ -135,6 +138,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: af636c11872cf284795fa75905c1ff4a, type: 2}
   - {fileID: 11400000, guid: d03e934b1b9ad3043a087124b094d9db, type: 2}
   heatDetectionRange: 0.6
+  homeAnchor: {fileID: 0}
+  homeLocalPosition: {x: 0, y: 0, z: 0}
+  homeLocalEuler: {x: 0, y: 0, z: 0}
+  homeSnapRange: 2.5
   recipes:
   - recipeName: Tea 1
     requiredIngredients:
@@ -162,6 +169,10 @@ MonoBehaviour:
     wrongOrderResult: {fileID: 0}
   improvisedResultItem: {fileID: 11400000, guid: b109e5496fa49ad47af34e94a896c08b, type: 2}
   defaultCookingTime: 6
+  enableOvercook: 1
+  overcookDelay: 5
+  progressBarFill: {fileID: 0}
+  progressBarContainer: {fileID: 0}
   emptyVisual: {fileID: 0}
   filledVisual: {fileID: 0}
   cookingVisual: {fileID: 0}
@@ -178,6 +189,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 261ddb35a44d0d746a3552492ca686a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PortableCookerInteraction
+--- !u!114 &900138813936884260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 137518175886192598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4444770955a7f4b788a3b1a442653d40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TeapotPour
+  pourRange: 1.6
+--- !u!114 &-7902964885932546511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 137518175886192598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9aad361f0dc58ba49853cce92ae9a576, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PourSource
+  resetToItem: {fileID: 0}
+  pourRange: 1.5
 --- !u!1001 &1917737079608319852
 PrefabInstance:
   m_ObjectHideFlags: 0

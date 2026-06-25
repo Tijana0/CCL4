@@ -110,6 +110,97 @@ public class MultiIngredientStation : StationBase
 
     private void Start()
     {
+        if (stationType == StationType.CrystalBall)
+        {
+            if (activeVisual == null)
+            {
+                GameObject visualParent = new GameObject("CrystalBall_ActiveVisual");
+                visualParent.transform.SetParent(this.transform, false);
+                visualParent.transform.localPosition = new Vector3(0f, 0.8f, 0f);
+
+                GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                sphere.name = "ShiningSphere";
+                sphere.transform.SetParent(visualParent.transform, false);
+                sphere.transform.localPosition = Vector3.zero;
+                sphere.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+                Renderer sphereRenderer = sphere.GetComponent<Renderer>();
+                if (sphereRenderer != null)
+                {
+                    Shader unlitShader = Shader.Find("Universal Render Pipeline/Unlit")
+                                     ?? Shader.Find("Unlit/Color");
+                    Material glowMat = new Material(unlitShader);
+                    glowMat.SetColor("_BaseColor", new Color(1f, 0.95f, 0.6f, 1f));
+                    sphereRenderer.material = glowMat;
+                }
+                Collider sphereCollider = sphere.GetComponent<Collider>();
+                if (sphereCollider != null) sphereCollider.enabled = false;
+
+                GameObject lightObj = new GameObject("ShiningLight");
+                lightObj.transform.SetParent(visualParent.transform, false);
+                lightObj.transform.localPosition = Vector3.zero;
+                Light lightComponent = lightObj.AddComponent<Light>();
+                lightComponent.type = LightType.Point;
+                lightComponent.color = new Color(0.95f, 0.9f, 0.6f);
+                lightComponent.intensity = 8f;
+                lightComponent.range = 5f;
+                lightComponent.shadows = LightShadows.None;
+
+                activeVisual = visualParent;
+            }
+
+            // Build a world-space progress bar — no parenting, use world position directly
+            if (progressBarContainer == null && counterTopPoint != null)
+            {
+                GameObject canvasGO = new GameObject("CrystalBall_ProgressCanvas");
+                if (stationType == StationType.CrystalBall)
+                {
+                    Vector3 localOffset = new Vector3(-2.5f, 1.18f, 2.5f);
+                    BoxCollider col = GetComponent<BoxCollider>();
+                    if (col != null) localOffset = col.center;
+                    Vector3 visualCenter = counterTopPoint.position + counterTopPoint.rotation * localOffset;
+                    canvasGO.transform.position = visualCenter + new Vector3(0f, 1.3f, 0f);
+                }
+                else
+                {
+                    canvasGO.transform.position = counterTopPoint.position + new Vector3(-1.5f, 1.7f, 1.5f);
+                }
+                canvasGO.transform.localScale = Vector3.one * 0.01f;
+
+                Canvas canvas = canvasGO.AddComponent<Canvas>();
+                canvas.renderMode = RenderMode.WorldSpace;
+
+                RectTransform canvasRect = canvasGO.GetComponent<RectTransform>();
+                canvasRect.sizeDelta = new Vector2(120f, 18f);
+
+                GameObject bg = new GameObject("Background");
+                bg.transform.SetParent(canvasGO.transform, false);
+                UnityEngine.UI.Image bgImg = bg.AddComponent<UnityEngine.UI.Image>();
+                bgImg.color = new Color(0.1f, 0.1f, 0.15f, 0.85f);
+                RectTransform bgRect = bg.GetComponent<RectTransform>();
+                bgRect.anchorMin = Vector2.zero;
+                bgRect.anchorMax = Vector2.one;
+                bgRect.offsetMin = Vector2.zero;
+                bgRect.offsetMax = Vector2.zero;
+
+                GameObject fill = new GameObject("Fill");
+                fill.transform.SetParent(canvasGO.transform, false);
+                UnityEngine.UI.Image fillImg = fill.AddComponent<UnityEngine.UI.Image>();
+                fillImg.color = new Color(0.2f, 0.8f, 1f, 1f);
+                RectTransform fillRect = fill.GetComponent<RectTransform>();
+                fillRect.anchorMin = Vector2.zero;
+                fillRect.anchorMax = Vector2.one;
+                fillRect.offsetMin = new Vector2(2f, 2f);
+                fillRect.offsetMax = new Vector2(-2f, -2f);
+                // Pivot at left edge so localScale.x=0→empty, 1→full fills left-to-right
+                fillRect.pivot = new Vector2(0f, 0.5f);
+                fill.transform.localScale = new Vector3(0f, 1f, 1f);
+
+                progressBarContainer = canvasGO;
+                progressBarFill = fillImg;
+                canvasGO.SetActive(false);
+            }
+        }
+
         UpdateVisuals();
         if (progressBarContainer != null) progressBarContainer.SetActive(false);
     }
@@ -179,6 +270,10 @@ public class MultiIngredientStation : StationBase
         if (stationState != StationState.Cooking)
         {
             RestartCooking(player);
+            if (stationState == StationState.Cooking && stationType == StationType.CrystalBall)
+            {
+                AkUnitySoundEngine.PostEvent("Play_Crystal", gameObject);
+            }
         }
         else
         {
@@ -362,7 +457,18 @@ public class MultiIngredientStation : StationBase
         if (result != null)
         {
             resultItem = result.gameObject;
-            result.transform.localPosition = new Vector3(0, 0.3f, 0);
+            if (stationType == StationType.CrystalBall)
+            {
+                Vector3 localOffset = new Vector3(-2.5f, 1.18f, 2.5f);
+                BoxCollider col = GetComponent<BoxCollider>();
+                if (col != null) localOffset = col.center;
+                Vector3 visualCenter = anchor.position + anchor.rotation * localOffset;
+                result.transform.position = visualCenter + new Vector3(0f, 0.9f, 0f);
+            }
+            else
+            {
+                result.transform.position = anchor.position + new Vector3(-1.5f, 1.5f, 1.5f);
+            }
 
             Rigidbody rb = result.GetComponentInChildren<Rigidbody>();
             if (rb != null) rb.isKinematic = true;

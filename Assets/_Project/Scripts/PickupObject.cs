@@ -12,22 +12,40 @@ public class PickupObject : MonoBehaviour, IInteractable
 {
     public ItemType itemType = ItemType.Standard;
     public int value = 0;
+
+    [Header("Audio")]
+    public AudioManager.DropType dropType = AudioManager.DropType.Heavy;
     // Set true on scene-placed items to keep their authored pivot position.
     [SerializeField] private bool skipPivotCentering = false;
 
     private Rigidbody rb;
-    private Collider col;
+    private Collider[] cols;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        col = GetComponent<Collider>();
+        // Cache every collider (root + children). Some items are scaled-FBX prefabs
+        // with their real collider on a child mesh, so disabling only the root
+        // collider on pickup left a live collider that shoved the holder into walls.
+        cols = GetComponentsInChildren<Collider>(true);
         if (rb != null)
         {
             rb.isKinematic = true;
         }
         if (!skipPivotCentering)
             CenterPivotAroundVisuals();
+    }
+
+    private void Start()
+    {
+        // If the item is on the floor at startup (no parent), enable physics
+        if (transform.parent == null && rb != null)
+        {
+            rb.isKinematic = false;
+            rb.linearDamping = 10f; // High drag so they stop quickly when pushed
+            rb.angularDamping = 10f; // High angular drag so they don't roll forever
+            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Keep upright
+        }
     }
 
     private void CenterPivotAroundVisuals()
@@ -93,8 +111,8 @@ public class PickupObject : MonoBehaviour, IInteractable
             player.heldItem = this.gameObject;
             
             if (rb != null) rb.isKinematic = true;
-            // disable collider so overlapbox ignores it while held
-            if (col != null) col.enabled = false; 
+            // disable all colliders so overlapbox ignores it AND it can't push the holder while held
+            SetCollidersEnabled(false);
 
             Vector3 worldScaleBeforePickup = transform.lossyScale;
 
@@ -125,6 +143,9 @@ public class PickupObject : MonoBehaviour, IInteractable
 
             // Stop rotation Update when held
             this.enabled = false;
+
+            if(AudioManager.Instance != null)
+                AudioManager.Instance.PlayPickup(this.gameObject, false);
         }
     }
 
@@ -136,8 +157,24 @@ public class PickupObject : MonoBehaviour, IInteractable
         transform.position = dropPosition;
         transform.localScale = worldScaleBeforeDrop;
         
-        if (rb != null) rb.isKinematic = true;
-        // reenable collider to allow pickup again
-        if (col != null) col.enabled = true; 
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+            rb.linearDamping = 10f; // High drag so they stop quickly when pushed
+            rb.angularDamping = 10f; // High angular drag so they don't roll forever
+            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Keep upright
+        }
+        // reenable colliders to allow pickup again
+        SetCollidersEnabled(true);
+        Debug.Log("Drop called, dropType = " + dropType); 
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayDrop(this.gameObject, dropType);
+    }
+
+    private void SetCollidersEnabled(bool on)
+    {
+        if (cols == null) return;
+        foreach (var c in cols)
+            if (c != null) c.enabled = on;
     }
 }

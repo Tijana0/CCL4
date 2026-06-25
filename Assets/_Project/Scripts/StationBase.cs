@@ -115,6 +115,9 @@ public abstract class StationBase : MonoBehaviour, IInteractable
         // Re-use 'col' from above if it exists to disable it
         if (col != null) col.enabled = false;
 
+        if (player != null && AudioManager.Instance != null)
+            AudioManager.Instance.PlayPutDown(this.gameObject);
+
         OnItemPlaced(item);
     }
 
@@ -140,6 +143,9 @@ public abstract class StationBase : MonoBehaviour, IInteractable
 
         Collider col = item.GetComponent<Collider>();
         if (col != null) col.enabled = false;
+
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayPickup(this.gameObject, false);
 
         OnItemTaken(item);
     }

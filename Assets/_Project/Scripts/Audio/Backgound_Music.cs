@@ -3,19 +3,12 @@ using AK.Wwise;
 
 public class BackgroundMusic : MonoBehaviour
 {
-    public AK.Wwise.Event musicEvent;   // assign in Inspector
-    public AK.Wwise.Event musicStopEvent; // optional, for clean stop
+    public AK.Wwise.Event musicEvent;      // assign this scene's start event
+    public AK.Wwise.Event musicStopEvent;  // assign this scene's stop event
 
     void Start()
     {
-        if (musicEvent != null && musicEvent.IsValid())
-            musicEvent.Post(gameObject);
-    }
-
-    void OnDisable()
-    {
-        // optional: stop music when leaving the scene
-        if (musicStopEvent != null && musicStopEvent.IsValid())
-            musicStopEvent.Post(gameObject);
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayMusic(musicEvent, musicStopEvent);
     }
 }

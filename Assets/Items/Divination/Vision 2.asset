@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Vision 2
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: vision 2
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: b8e4e1214172b4056832de471c175ccb, type: 3}
   prefab: {fileID: 5110824968088348404, guid: 5cd240a04efe9bb4abc061197ec6fd88, type: 3}
   potionColour: {r: 0.55, g: 0.1, b: 0.85, a: 1}
   isColourless: 0

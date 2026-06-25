@@ -64,6 +64,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickupObject
   itemType: 0
   value: 0
+  skipPivotCentering: 1
 --- !u!65 &6628685732768240369
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -83,7 +84,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.450428, y: 0.3054396, z: 0.52727985}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &3602624197211642803
 Rigidbody:
@@ -122,31 +123,31 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 86454fe78d5299543933eafb3d386e2c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 26.99
+      value: 4.8509264
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 86454fe78d5299543933eafb3d386e2c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.29
+      value: -1.4699109
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 86454fe78d5299543933eafb3d386e2c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -15.24
+      value: -4.4675493
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 86454fe78d5299543933eafb3d386e2c, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.486385
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 86454fe78d5299543933eafb3d386e2c, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.48638496
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 86454fe78d5299543933eafb3d386e2c, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.51325405
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 86454fe78d5299543933eafb3d386e2c, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.513254
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 86454fe78d5299543933eafb3d386e2c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -160,6 +161,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 93.079
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 86454fe78d5299543933eafb3d386e2c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b733eac57a8e1ae4d9f22abc8fb5f1d3, type: 2}
+    - target: {fileID: -5754084199372789682, guid: 86454fe78d5299543933eafb3d386e2c, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -4832511759494001225, guid: 3a4174fa993efa54fa80c11a1224ecdd, type: 3}
     - target: {fileID: 919132149155446097, guid: 86454fe78d5299543933eafb3d386e2c, type: 3}
       propertyPath: m_Name
       value: tea (1)

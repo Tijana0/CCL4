@@ -28,8 +28,16 @@ public class PourTarget : MonoBehaviour
     }
 
     /// <summary>Called by PourSource when it pours into this object.</summary>
-    public void OnPoured(SimplePlayerController pourer)
+    public void OnPoured(SimplePlayerController pourer, ItemData pouredItem)
     {
+        // If we have a TeacupFillTarget, use its dynamic mappings!
+        TeacupFillTarget fillTarget = GetComponent<TeacupFillTarget>();
+        if (fillTarget != null && pouredItem != null)
+        {
+            PourDynamicMode(pouredItem);
+            return;
+        }
+
         if (filledItem != null)
         {
             PourFixedMode();
@@ -40,8 +48,63 @@ public class PourTarget : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("[PourTarget] No filledItem assigned and no MultiIngredientStation found — nothing to pour into.");
+            Debug.LogWarning("[PourTarget] No filledItem/TeacupFillTarget assigned and no MultiIngredientStation found — nothing to pour into.");
         }
+    }
+
+    // ── Dynamic Mode (e.g. Teacup with dynamic mappings) ──────────────────────
+
+    private void PourDynamicMode(ItemData pouredItem)
+    {
+        TeacupFillTarget fillTarget = GetComponent<TeacupFillTarget>();
+        if (fillTarget == null) return;
+
+        // Find the mapped result item for this poured item
+        ItemData resultItem = null;
+        foreach (var mapping in fillTarget.mappings)
+        {
+            if (mapping.teaItem == pouredItem)
+            {
+                resultItem = mapping.resultTeacupItem;
+                break;
+            }
+        }
+
+        if (resultItem == null)
+        {
+            Debug.LogWarning($"[PourTarget] No teacup mapping found for poured item: {pouredItem.itemName}");
+            return;
+        }
+
+        if (resultItem.prefab == null)
+        {
+            Debug.LogWarning($"[PourTarget] Mapped result item {resultItem.itemName} has no prefab assigned.");
+            return;
+        }
+
+        Transform parent = transform.parent;
+        Vector3 pos = transform.position;
+
+        GameObject newItem = Instantiate(resultItem.prefab, pos, Quaternion.identity, parent);
+        WorldItem wi = newItem.GetComponent<WorldItem>();
+        if (wi == null) wi = newItem.AddComponent<WorldItem>();
+        wi.itemData = resultItem;
+
+        newItem.transform.localPosition = transform.localPosition;
+        newItem.transform.localRotation = transform.localRotation; // Keep the same rotation!
+
+        Rigidbody rb = newItem.GetComponentInChildren<Rigidbody>();
+        if (rb != null) rb.isKinematic = true;
+        foreach (Collider col in newItem.GetComponentsInChildren<Collider>())
+            col.enabled = false;
+
+        // If sitting on a station (like a counter), update the station's reference to point to the new filled cup!
+        StationBase station = GetComponentInParent<StationBase>();
+        if (station != null && station.itemOnStation == gameObject)
+            station.itemOnStation = newItem;
+
+        Debug.Log($"[PourTarget] Dynamic Filled! Became {resultItem.itemName} at {pos}");
+        Destroy(gameObject);
     }
 
     // ── Fixed Mode ───────────────────────────────────────────────────────────

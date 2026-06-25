@@ -4,20 +4,21 @@ using AK.Wwise;
 
 public class VolumeSlider : MonoBehaviour
 {
-    public AK.Wwise.RTPC musicVolumeRTPC;  // assign the MusicVolume RTPC in Inspector
-    public Slider slider;                   // your UI slider (0 to 100)
+    public AK.Wwise.RTPC volumeRTPC;  // assign Master, Music, OR SFX RTPC per instance
+    public Slider slider;
 
     void Start()
     {
-        // optional: set slider to current value
         if (slider != null)
+        {
             slider.onValueChanged.AddListener(OnSliderChanged);
+            OnSliderChanged(slider.value);  // push initial value to the RTPC
+        }
     }
 
     void OnSliderChanged(float value)
     {
-        // global RTPC (no specific game object) for master/music volume
-        if (musicVolumeRTPC != null)
-            musicVolumeRTPC.SetGlobalValue(value);
+        if (volumeRTPC != null)
+            volumeRTPC.SetGlobalValue(value);
     }
 }

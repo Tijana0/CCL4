@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class SimplePlayerController : MonoBehaviour, IInteractable
 {
@@ -42,6 +43,10 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
     private Rigidbody rb;
     private Vector2 currentMoveInput;
+
+    /// <summary>Current movement input this frame (read-only). Used by PlayerAnimatorDriver.</summary>
+    public Vector2 MoveInput => currentMoveInput;
+    public bool IsDashing => isDashing;
 
     private static System.Collections.Generic.List<InputDevice> cachedControllers = new System.Collections.Generic.List<InputDevice>();
     private static bool controllersDirty = true;
@@ -474,6 +479,18 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
     private void TryInteract()
     {
+        // If holding an item with PourSource, and there is a PourTarget in range,
+        // prioritize pouring over normal interaction/dropping!
+        if (heldItem != null)
+        {
+            PourSource pourSource = heldItem.GetComponent<PourSource>();
+            if (pourSource != null && pourSource.CanPour())
+            {
+                pourSource.ExecutePour(this);
+                return;
+            }
+        }
+
         // Instead of strict grid snapping, use a hitbox directly in front of the player
         Vector3 interactionCenter = transform.position + transform.forward * 0.6f;
         interactionCenter.y = 0.5f; // Keep it low to hit floor items
@@ -483,34 +500,95 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         
         Collider[] hitColliders = Physics.OverlapBox(interactionCenter, halfExtents, transform.rotation);
 
-        bool interacted = false;
-
-        // prioritize interacting with something in the world (including other players)
+        // Find all valid interactable targets and assign priority/distance
+        List<InteractableTarget> targets = new List<InteractableTarget>();
         foreach (Collider hit in hitColliders)
         {
             // Don't interact with yourself!
             if (hit.gameObject == this.gameObject) continue;
 
-            if (hit.TryGetComponent<IInteractable>(out var interactable))
+            // Prefer a PortableCookerInteraction (teapot) over its sibling PickupObject, so that
+            // holding an item adds an ingredient instead of hitting the no-op pickup path.
+            IInteractable interactable = hit.GetComponent<PortableCookerInteraction>();
+            if (interactable == null) hit.TryGetComponent<IInteractable>(out interactable);
+            if (interactable != null && interactable.CanInteract())
             {
-                if (interactable.CanInteract())
+                int priority = 1; // Default priority (pickups, players)
+                if (interactable is StationBase station)
                 {
-                    // Skip empty stations (counters, sinks, bins) if player hands are also empty
-                    if (interactable is StationBase station)
-                    {
-                        bool playerHasItem = heldItem != null;
-                        bool stationHasItem = station.itemOnStation != null;
-                        if (!playerHasItem && !stationHasItem && !station.HasReadyResult && !(station is ItemContainerStation))
-                        {
-                            continue;
-                        }
-                    }
+                    if (station.stationType == StationType.Counter)
+                        priority = 0; // Generic counter gets lowest priority
+                    else if (station is ItemContainerStation dispenser
+                             && dispenser.extractionMode != ItemContainerStation.ExtractionMode.RequiresItem)
+                        priority = 1; // Empty-hand dispensers don't outrank a nearby pickup — closest wins
+                                      // (so a crystal dispenser next to a respawning mug doesn't steal it)
+                    else
+                        priority = 2; // Specialized stations get highest priority
+                }
 
-                    interactable.Interact(this);
-                    interacted = true;
-                    break;
+                float distance = Vector3.Distance(interactionCenter, hit.bounds.center);
+                targets.Add(new InteractableTarget
+                {
+                    interactable = interactable,
+                    priority = priority,
+                    distance = distance
+                });
+            }
+        }
+
+        // Sort targets: highest priority first, then closest distance first
+        targets.Sort((a, b) =>
+        {
+            if (a.priority != b.priority)
+                return b.priority.CompareTo(a.priority); // Descending priority
+            return a.distance.CompareTo(b.distance); // Ascending distance
+        });
+
+        bool interacted = false;
+        bool holdingCooker = heldItem != null && heldItem.GetComponent<PortableCooker>() != null;
+
+        foreach (var target in targets)
+        {
+            IInteractable interactable = target.interactable;
+
+            // Can't pick up another item while already holding one. Skip plain pickups so a
+            // no-op pickup doesn't swallow the interaction meant for placing the held item.
+            if (heldItem != null && interactable is PickupObject)
+                continue;
+
+            // Skip empty stations (counters, sinks, bins) if player hands are also empty
+            if (interactable is StationBase station)
+            {
+                bool playerHasItem = heldItem != null;
+                bool stationHasItem = station.itemOnStation != null;
+                if (!playerHasItem && !stationHasItem && !station.HasReadyResult && !(station is ItemContainerStation))
+                {
+                    continue;
+                }
+
+                // When holding an item, skip dispensers that require empty hands
+                // (Instant / HoldToExtract). They can't accept the held item, so they
+                // shouldn't "steal" the interaction from a station that can (bin, hand-in,
+                // counter, or a RequiresItem dispenser like the sink).
+                if (playerHasItem && station is ItemContainerStation ics
+                    && ics.extractionMode != ItemContainerStation.ExtractionMode.RequiresItem)
+                {
+                    continue;
+                }
+
+                // A held pot (PortableCooker, e.g. the Teapot) must never be consumed as an
+                // ingredient or parked on another station. Only a fill station (the sink) may
+                // act on it; everything else is skipped so the pot drops & docks at its stand.
+                if (holdingCooker)
+                {
+                    bool isFillStation = station is ItemContainerStation fics && fics.cookerFillItem != null;
+                    if (!isFillStation) continue;
                 }
             }
+
+            interactable.Interact(this);
+            interacted = true;
+            break;
         }
 
         // drop item on the floor if hitting empty space and we didn't interact
@@ -528,9 +606,9 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         PickupObject pickup = heldItem.GetComponent<PickupObject>();
         if (pickup == null) return;
 
-        // Snap dropping to grid centers (X: integer, Z: half-integer)
-        float dX = Mathf.Round(interactionCenter.x);
-        float dZ = Mathf.Floor(interactionCenter.z) + 0.5f;
+        // Use exact unsnapped coordinates (snapping only occurs if placed on a counter/station)
+        float dX = interactionCenter.x;
+        float dZ = interactionCenter.z;
 
         // CHECK FOR COUNTERS/DESKS NEARBY TO SNAP TO THEM DIRECTLY!
         Collider[] nearbyColliders = Physics.OverlapSphere(interactionCenter, 0.8f);
@@ -663,6 +741,45 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         }
 
         pickup.Drop(dropPos);
+        if (snappedToCounter)
+        {
+            Rigidbody rb = pickup.GetComponent<Rigidbody>();
+            if (rb != null) rb.isKinematic = true;
+        }
+        heldItem = null;
+    }
+
+    // Forcibly drops the held item onto the floor at the player's feet, regardless of
+    // nearby stations. Used when a station rejects an item (e.g. a non-herb shoved into
+    // the Brazier) — the item bounces off and falls to the ground as a physical object.
+    public void ForceDropHeldItem()
+    {
+        if (heldItem == null) return;
+        PickupObject pickup = heldItem.GetComponent<PickupObject>();
+        if (pickup == null) { heldItem = null; return; }
+
+        Vector3 p = transform.position;
+        float dropY = p.y - 0.5f;
+        Vector3 rayStart = new Vector3(p.x, p.y + 1.5f, p.z);
+        RaycastHit[] hits = Physics.RaycastAll(rayStart, Vector3.down, 10f);
+        float bestY = -99f; bool foundFloor = false;
+        foreach (var hit in hits)
+        {
+            if (hit.collider != null && !hit.collider.isTrigger &&
+                hit.collider.gameObject != this.gameObject &&
+                hit.collider.gameObject != heldItem &&
+                hit.collider.GetComponent<SimplePlayerController>() == null)
+            {
+                if (hit.point.y > bestY && hit.point.y <= p.y + 0.5f) { bestY = hit.point.y; foundFloor = true; }
+            }
+        }
+        if (foundFloor) dropY = bestY;
+
+        float heightOffset = 0.1f;
+        BoxCollider itemCol = pickup.GetComponent<BoxCollider>();
+        if (itemCol != null) heightOffset = itemCol.size.y * 0.5f;
+
+        pickup.Drop(new Vector3(p.x, dropY + heightOffset, p.z));
         heldItem = null;
     }
 
@@ -686,6 +803,13 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
     {
         isFrozen = false;
         if (freezeLabel != null) freezeLabel.gameObject.SetActive(false);
+    }
+
+    private struct InteractableTarget
+    {
+        public IInteractable interactable;
+        public int priority;
+        public float distance;
     }
 
     private void OnDrawGizmosSelected()

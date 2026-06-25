@@ -19,6 +19,13 @@ public class GameManager : MonoBehaviour
     public GameObject overallReportPanel;
     public TextMeshProUGUI finalScoreText;
 
+    [Header("Win / Report")]
+    public int targetScore = 100;     // points needed to PASS
+    public int twoStarScore = 150;
+    public int threeStarScore = 250;
+    public ReportCard reportCard;     // drag your ReportCardPanel here
+    public string classNameForReport = "Potions";   // set per scene
+
     [HideInInspector] public float timeRemaining;
     private int score = 0;
     private GameState currentState = GameState.WaitingToStart;
@@ -103,6 +110,18 @@ public class GameManager : MonoBehaviour
                 }
             }
 
+            UnityEngine.Transform rcPanel = canvas.transform.Find("ReportCardPanel");
+            if (rcPanel != null)
+            {
+                if (reportCard == null) reportCard = rcPanel.GetComponent<ReportCard>();
+                rcPanel.gameObject.SetActive(false);
+                Debug.Log("ReportCard found? " + (reportCard != null));   // ← add this
+            }
+            else
+            {
+                Debug.LogWarning("ReportCardPanel NOT found under UI_Canvas");  // ← and this
+            }
+
             UnityEngine.Transform repPanel = canvas.transform.Find("OverallReportPanel");
             if (repPanel != null)
             {
@@ -156,7 +175,7 @@ public class GameManager : MonoBehaviour
 
             if (timeRemaining <= 0)
             {
-                GameOver();
+                EndGame(score >= targetScore);
             }
         }
     }
@@ -190,54 +209,63 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void GameOver()
+public void WinGame()  => EndGame(true);
+public void LoseGame() => EndGame(false);
+
+public void EndGame(bool won)
+{
+    if (currentState == GameState.TimeUp) return;   // already ended
+    currentState = GameState.TimeUp;
+    Time.timeScale = 0f;
+
+    int stars = won ? CalculateStars() : 0;
+
+    int currentBuildIndex = SceneManager.GetActiveScene().buildIndex;
+    if (PersistentGameState.Instance != null)
     {
-        currentState = GameState.TimeUp;
-        Time.timeScale = 0f;
-
-        int currentBuildIndex = SceneManager.GetActiveScene().buildIndex;
-        if (PersistentGameState.Instance != null)
-        {
-            PersistentGameState.Instance.currentLevelIndex = currentBuildIndex;
-            // Temporarily award 3 stars automatically for completing the level
-            PersistentGameState.Instance.AwardStars(currentBuildIndex, 3);
-        }
-
-        if (gameOverPanel != null)
-        {
-            gameOverPanel.SetActive(true);
-            
-            if (finalScoreText != null)
-            {
-                finalScoreText.text = $"Final Score: {score}";
-            }
-
-            UnityEngine.UI.Button restartBtn = gameOverPanel.GetComponentInChildren<UnityEngine.UI.Button>();
-            if (restartBtn != null)
-            {
-                restartBtn.Select();
-            }
-        }
-
-        SimplePlayerController[] players = FindObjectsByType<SimplePlayerController>(FindObjectsSortMode.None);
-        foreach (var player in players)
-        {
-            Rigidbody rb = player.GetComponent<Rigidbody>();
-            if (rb != null) rb.linearVelocity = Vector3.zero;
-            player.enabled = false;
-        }
+        PersistentGameState.Instance.currentLevelIndex = currentBuildIndex;
+        PersistentGameState.Instance.AwardStars(currentBuildIndex, stars);
     }
+
+    if (reportCard != null)
+        reportCard.Show(classNameForReport, stars, score, won);
+    else if (gameOverPanel != null)   // fallback to old panel
+    {
+        gameOverPanel.SetActive(true);
+        if (finalScoreText != null) finalScoreText.text = $"Final Score: {score}";
+    }
+
+    FreezePlayers();
+}
+
+int CalculateStars()
+{
+    if (score >= threeStarScore) return 3;
+    if (score >= twoStarScore)   return 2;
+    return 1;
+}
+
+void FreezePlayers()
+{
+    SimplePlayerController[] players = FindObjectsByType<SimplePlayerController>(FindObjectsSortMode.None);
+    foreach (var player in players)
+    {
+        Rigidbody rb = player.GetComponent<Rigidbody>();
+        if (rb != null) rb.linearVelocity = Vector3.zero;
+        player.enabled = false;
+    }
+}
 
     public void ReturnToHub()
     {
         Time.timeScale = 1f;
         if (SceneLoader.Instance != null)
         {
-            SceneLoader.Instance.LoadScene(1); // Hub is now index 1
+            SceneLoader.Instance.LoadScene(2); // Hub is now index 2
         }
         else
         {
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(2);
         }
     }
 }
