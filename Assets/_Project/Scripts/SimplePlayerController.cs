@@ -502,6 +502,10 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                 {
                     if (station.stationType == StationType.Counter)
                         priority = 0; // Generic counter gets lowest priority
+                    else if (station is ItemContainerStation dispenser
+                             && dispenser.extractionMode != ItemContainerStation.ExtractionMode.RequiresItem)
+                        priority = 1; // Empty-hand dispensers don't outrank a nearby pickup — closest wins
+                                      // (so a crystal dispenser next to a respawning mug doesn't steal it)
                     else
                         priority = 2; // Specialized stations get highest priority
                 }
