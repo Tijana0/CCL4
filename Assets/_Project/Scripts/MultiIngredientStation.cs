@@ -437,7 +437,11 @@ public class MultiIngredientStation : StationBase
         UpdateVisuals(); // turn on the active visual (e.g. crystal ball glow) now that we're cooking
 
         if (progressBarContainer != null) progressBarContainer.SetActive(true);
-        if (progressBarFill != null) progressBarFill.fillAmount = 0f;
+        if (progressBarFill != null)
+        {
+            progressBarFill.fillAmount = 0f;
+            progressBarFill.transform.localScale = new Vector3(0f, 1f, 1f);
+        }
 
         Debug.Log($"[MultiIngredientStation] Cooking restarted with {ingredients.Count} ingredient(s) — {currentCookingTime}s");
     }
@@ -460,7 +464,10 @@ public class MultiIngredientStation : StationBase
 
         cookingProgress += Time.deltaTime / currentCookingTime;
         if (progressBarFill != null)
+        {
             progressBarFill.fillAmount = cookingProgress;
+            progressBarFill.transform.localScale = new Vector3(cookingProgress, 1f, 1f);
+        }
 
         if (cookingProgress >= 1f)
             CompleteCooking();
