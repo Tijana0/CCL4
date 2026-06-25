@@ -138,8 +138,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9401405cbad6f440a62df7a264ffa2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldItem
-  itemData: {fileID: 0}
-  stackedItems: []
+  itemData: {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+  stackedItems:
+  - {fileID: 0}
 --- !u!54 &4305412620284605634
 Rigidbody:
   m_ObjectHideFlags: 0
