@@ -1393,6 +1393,11 @@ MonoBehaviour:
   boilOverDelay: 25
   maxIngredients: 4
   defaultCookingTime: 10
+  blockedIngredients:
+  - {fileID: 11400000, guid: e30f46c97c2c16242b1fefd088f8c30f, type: 2}
+  - {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+  - {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
+  - {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
   recipes:
   - recipeName: immortality potion
     requiredIngredients:
@@ -6634,7 +6639,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89d71286cbc67f4489378b4190a7f451, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomConfig
-  roomName: New Room
+  roomName: Potions Room
   availableItems:
   - {fileID: 11400000, guid: 3de56b76625a1bd47a11b15e84ec5846, type: 2}
   - {fileID: 11400000, guid: 969bca60fdf70454b965ab8b82ac9d3e, type: 2}
@@ -8725,6 +8730,11 @@ MonoBehaviour:
   boilOverDelay: 25
   maxIngredients: 4
   defaultCookingTime: 10
+  blockedIngredients:
+  - {fileID: 11400000, guid: e30f46c97c2c16242b1fefd088f8c30f, type: 2}
+  - {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+  - {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
+  - {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
   recipes:
   - recipeName: immortality potion
     requiredIngredients:
@@ -9560,6 +9570,11 @@ MonoBehaviour:
   boilOverDelay: 25
   maxIngredients: 4
   defaultCookingTime: 10
+  blockedIngredients:
+  - {fileID: 11400000, guid: e30f46c97c2c16242b1fefd088f8c30f, type: 2}
+  - {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+  - {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
+  - {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
   recipes:
   - recipeName: immortality potion
     requiredIngredients:
@@ -11898,6 +11913,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 85499cfa8f8cd4649b367699fd4110cf, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1828082838}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 85499cfa8f8cd4649b367699fd4110cf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1828082841}
   m_SourcePrefab: {fileID: 100100000, guid: 85499cfa8f8cd4649b367699fd4110cf, type: 3}
 --- !u!4 &1828082836 stripped
 Transform:
@@ -11931,6 +11949,22 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 5177936278377131922, guid: 85499cfa8f8cd4649b367699fd4110cf, type: 3}
+--- !u!114 &1828082841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1828082837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 999a586d5bd625f448850fac169f4879, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InstantStation
+  stationType: 6
+  counterTopPoint: {fileID: 0}
+  itemOnStation: {fileID: 0}
+  orderManager: {fileID: 914804834}
 --- !u!1 &1831975558
 GameObject:
   m_ObjectHideFlags: 0
@@ -11992,6 +12026,11 @@ MonoBehaviour:
   boilOverDelay: 25
   maxIngredients: 4
   defaultCookingTime: 10
+  blockedIngredients:
+  - {fileID: 11400000, guid: e30f46c97c2c16242b1fefd088f8c30f, type: 2}
+  - {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+  - {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
+  - {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
   recipes:
   - recipeName: immortality potion
     requiredIngredients:

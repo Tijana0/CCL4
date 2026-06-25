@@ -52,6 +52,10 @@ public class MultiIngredientStation : StationBase
     [Tooltip("Default cooking time if no matching recipe is found yet.")]
     public float defaultCookingTime = 5f;
 
+    [Header("Blocked Ingredients (optional blacklist)")]
+    [Tooltip("Items in this list are REJECTED and returned to the player. Leave empty to accept anything. Easier than listing every allowed item — just block the ones that shouldn't go in.")]
+    public List<ItemData> blockedIngredients = new List<ItemData>();
+
     [Header("Recipes")]
     public List<MultiIngredientRecipe> recipes = new List<MultiIngredientRecipe>();
 
@@ -190,6 +194,13 @@ public class MultiIngredientStation : StationBase
         if (wi == null)
         {
             Debug.Log("[MultiIngredientStation] Item has no WorldItem component.");
+            return;
+        }
+
+        // Check blocked ingredients blacklist
+        if (blockedIngredients.Count > 0 && blockedIngredients.Contains(wi.itemData))
+        {
+            Debug.Log($"[MultiIngredientStation] {wi.itemData.itemName} is not allowed here.");
             return;
         }
 
