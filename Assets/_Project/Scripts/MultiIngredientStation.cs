@@ -436,7 +436,14 @@ public class MultiIngredientStation : StationBase
         if (result != null)
         {
             resultItem = result.gameObject;
-            result.transform.position = anchor.position + new Vector3(-1.5f, 1.5f, 1.5f);
+            if (stationType == StationType.CrystalBall)
+            {
+                result.transform.position = anchor.position + new Vector3(-0.5f, 0.9f, 0.5f);
+            }
+            else
+            {
+                result.transform.position = anchor.position + new Vector3(-1.5f, 1.5f, 1.5f);
+            }
 
             Rigidbody rb = result.GetComponentInChildren<Rigidbody>();
             if (rb != null) rb.isKinematic = true;
@@ -679,7 +686,7 @@ public class MultiIngredientStation : StationBase
     private void UpdateVisuals()
     {
         if (emptyVisual  != null) emptyVisual.SetActive(stationState == StationState.Empty);
-        if (activeVisual != null) activeVisual.SetActive(stationState == StationState.Cooking || stationState == StationState.HasIngredients);
+        if (activeVisual != null) activeVisual.SetActive(stationState == StationState.Cooking);
         if (doneVisual   != null) doneVisual.SetActive(stationState == StationState.Done);
         if (ruinedVisual != null) ruinedVisual.SetActive(stationState == StationState.Ruined);
     }
