@@ -31,10 +31,18 @@ public class ProcessingStation : StationBase
     public GameObject progressBarContainer;
 
     [Header("Overcook (optional)")]
-    [Tooltip("If true, a finished result left unattended too long is destroyed instead of waiting forever. Used by the Brazier to evaporate burnt herbs.")]
+    [Tooltip("If true, a finished result left unattended too long is overcooked. During the grace period the progress bar turns red and flashes as a warning.")]
     public bool enableOvercook = false;
-    [Tooltip("Seconds after completion before the result evaporates/destroys. Only used if Enable Overcook is checked.")]
+    [Tooltip("Seconds after completion (the flashing-red warning window) before the result overcooks. Only used if Enable Overcook is checked.")]
     public float overcookDelay = 8f;
+    [Tooltip("If set, an overcooked result turns into THIS item (e.g. a charred black herb) instead of being destroyed. Leave null to evaporate it.")]
+    public ItemData overcookResultItem;
+
+    [Header("Auto / Rejection behaviour")]
+    [Tooltip("If true, processing starts automatically the moment a valid item is placed — the player does NOT need to hold the Process button. Used by the Brazier.")]
+    public bool autoProcess = false;
+    [Tooltip("If true, an item with no transform rule for this station is dropped to the floor instead of staying in the player's hands. Used by the Brazier.")]
+    public bool dropRejectedItems = false;
 
     private bool isProcessing = false;
     private float processingProgress = 0f;
@@ -43,32 +51,125 @@ public class ProcessingStation : StationBase
     private int lastProcessedFrame = -1;
     private bool resultReady = false;
     private float overcookTimer = 0f;
+    private bool overcooked = false;
 
     private void Awake()
     {
+        // Auto-build a world-space progress bar above the station if none was assigned.
+        if (progressBarContainer == null && counterTopPoint != null)
+            BuildProgressBar();
         if (progressBarContainer != null)
             progressBarContainer.SetActive(false);
     }
 
     private void Update()
     {
-        // If no one called StartProcessingIfValid this frame (player walked away
-        // or released Process), cancel. We detect this by checking if the
-        // frame counter wasn't bumped since last Update.
-        if (isProcessing && lastProcessedFrame != Time.frameCount - 1 && lastProcessedFrame != Time.frameCount)
+        // Auto mode: drive processing on our own, without the player holding Process.
+        if (autoProcess && itemOnStation != null && !resultReady)
+        {
+            WorldItem awi = itemOnStation.GetComponent<WorldItem>();
+            var (autoOut, autoTime) = awi != null ? GetTransform(awi.itemData) : (null, 2f);
+            if (autoOut != null)
+            {
+                lastProcessedFrame = Time.frameCount; // keep the hold-mode cancel guard satisfied
+                if (!isProcessing) BeginProcessing(null, autoTime);
+                processingProgress += Time.deltaTime / processingDuration;
+                if (progressBarFill != null) progressBarFill.fillAmount = processingProgress;
+                if (processingProgress >= 1f) CompleteProcessing();
+            }
+        }
+
+        // Hold mode: if no one called StartProcessingIfValid this frame (player walked
+        // away or released Process), cancel.
+        if (!autoProcess && isProcessing && lastProcessedFrame != Time.frameCount - 1 && lastProcessedFrame != Time.frameCount)
         {
             CancelProcessing();
         }
 
-        // Overcook: result finished and sitting unattended too long evaporates entirely
-        if (enableOvercook && resultReady && itemOnStation != null)
+        // The result was picked up — clear any leftover state and hide the bar.
+        if (resultReady && itemOnStation == null)
+        {
+            resultReady = false;
+            overcooked = false;
+            overcookTimer = 0f;
+            if (progressBarContainer != null) progressBarContainer.SetActive(false);
+        }
+
+        // Overcook: a finished result left unattended too long chars/evaporates.
+        // During the grace window the bar shows full and flashes red as a warning.
+        if (enableOvercook && resultReady && !overcooked && itemOnStation != null)
         {
             overcookTimer += Time.deltaTime;
+
+            if (progressBarContainer != null)
+            {
+                if (!progressBarContainer.activeSelf) progressBarContainer.SetActive(true);
+                if (progressBarFill != null)
+                {
+                    progressBarFill.fillAmount = 1f;
+                    float a = 0.3f + 0.7f * Mathf.Abs(Mathf.Sin(Time.time * 6f)); // flash
+                    progressBarFill.color = new Color(0.9f, 0.1f, 0.1f, a);
+                }
+            }
+
             if (overcookTimer >= overcookDelay)
             {
-                Evaporate();
+                if (overcookResultItem != null) Overcook();
+                else Evaporate();
             }
         }
+
+        // Billboard the progress bar toward the camera
+        if (progressBarContainer != null && progressBarContainer.activeSelf && Camera.main != null)
+            progressBarContainer.transform.rotation = Camera.main.transform.rotation;
+    }
+
+    /// <summary>
+    /// Builds a small world-space progress bar above the station's counter point.
+    /// Uses a runtime white sprite (no asset dependency) so the Image's fillAmount
+    /// renders correctly.
+    /// </summary>
+    private void BuildProgressBar()
+    {
+        Sprite white = Sprite.Create(
+            Texture2D.whiteTexture,
+            new Rect(0, 0, Texture2D.whiteTexture.width, Texture2D.whiteTexture.height),
+            new Vector2(0.5f, 0.5f));
+
+        GameObject canvasGO = new GameObject(name + "_ProgressCanvas");
+        canvasGO.transform.position = counterTopPoint.position + new Vector3(0f, 1.2f, 0f);
+        canvasGO.transform.localScale = Vector3.one * 0.01f;
+
+        Canvas canvas = canvasGO.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.WorldSpace;
+        RectTransform canvasRect = canvasGO.GetComponent<RectTransform>();
+        canvasRect.sizeDelta = new Vector2(120f, 18f);
+
+        GameObject bg = new GameObject("Background");
+        bg.transform.SetParent(canvasGO.transform, false);
+        Image bgImg = bg.AddComponent<Image>();
+        bgImg.sprite = white;
+        bgImg.color = new Color(0.1f, 0.1f, 0.15f, 0.85f);
+        RectTransform bgRect = bg.GetComponent<RectTransform>();
+        bgRect.anchorMin = Vector2.zero; bgRect.anchorMax = Vector2.one;
+        bgRect.offsetMin = Vector2.zero; bgRect.offsetMax = Vector2.zero;
+
+        GameObject fill = new GameObject("Fill");
+        fill.transform.SetParent(canvasGO.transform, false);
+        Image fillImg = fill.AddComponent<Image>();
+        fillImg.sprite = white;
+        fillImg.color = new Color(1f, 0.5f, 0.1f, 1f); // fiery orange
+        fillImg.type = Image.Type.Filled;
+        fillImg.fillMethod = Image.FillMethod.Horizontal;
+        fillImg.fillOrigin = (int)Image.OriginHorizontal.Left;
+        fillImg.fillAmount = 0f;
+        RectTransform fillRect = fill.GetComponent<RectTransform>();
+        fillRect.anchorMin = Vector2.zero; fillRect.anchorMax = Vector2.one;
+        fillRect.offsetMin = new Vector2(2f, 2f); fillRect.offsetMax = new Vector2(-2f, -2f);
+
+        progressBarContainer = canvasGO;
+        progressBarFill = fillImg;
+        canvasGO.SetActive(false);
     }
 
     /// <summary>
@@ -85,6 +186,35 @@ public class ProcessingStation : StationBase
         resultReady = false;
         overcookTimer = 0f;
         Debug.Log($"[ProcessingStation] {stationType} evaporated — left too long.");
+    }
+
+    /// <summary>
+    /// Replaces the finished result with the charred overcookResultItem (e.g. a black
+    /// herb) when it's been left on the station past the grace period. The charred
+    /// result stays put and can still be picked up.
+    /// </summary>
+    private void Overcook()
+    {
+        Transform anchor = counterTopPoint != null ? counterTopPoint : transform;
+        Vector3 spawnPos = anchor.position + Vector3.up * 0.2f;
+
+        if (itemOnStation != null) { Destroy(itemOnStation); itemOnStation = null; }
+
+        WorldItem charred = WorldItem.CreateCombined(overcookResultItem, spawnPos, anchor);
+        if (charred != null)
+        {
+            itemOnStation = charred.gameObject;
+            charred.transform.localPosition = new Vector3(0, 0.2f, 0);
+            Rigidbody rb = charred.GetComponentInChildren<Rigidbody>();
+            if (rb != null) rb.isKinematic = true;
+            foreach (Collider col in charred.GetComponentsInChildren<Collider>())
+                col.enabled = false;
+        }
+
+        overcooked = true;      // don't overcook again
+        overcookTimer = 0f;
+        if (progressBarContainer != null) progressBarContainer.SetActive(false);
+        Debug.Log($"[ProcessingStation] Overcooked into {overcookResultItem.itemName} — left too long.");
     }
 
     /// <summary>
@@ -145,6 +275,8 @@ public class ProcessingStation : StationBase
         if (output == null)
         {
             Debug.Log($"[ProcessingStation] {worldItem.itemData.itemName} has no transform rule for {stationType}.");
+            // Wrong item — bounce it off and drop to the floor instead of keeping it in hand.
+            if (dropRejectedItems) player.ForceDropHeldItem();
             return;
         }
 
@@ -160,7 +292,11 @@ public class ProcessingStation : StationBase
         processingDuration = duration > 0 ? duration : 2f;
 
         if (progressBarContainer != null) progressBarContainer.SetActive(true);
-        if (progressBarFill != null) progressBarFill.fillAmount = 0f;
+        if (progressBarFill != null)
+        {
+            progressBarFill.fillAmount = 0f;
+            progressBarFill.color = new Color(1f, 0.5f, 0.1f, 1f); // reset to fiery orange (overcook turns it red)
+        }
 
         Debug.Log($"[ProcessingStation] Hold Process to work... ({processingDuration}s)");
     }
@@ -195,6 +331,7 @@ public class ProcessingStation : StationBase
 
         processingPlayer = null;
         resultReady = true;
+        overcooked = false;
         overcookTimer = 0f;
         Debug.Log($"[ProcessingStation] Done! Result: {outputItem.itemName}");
     }

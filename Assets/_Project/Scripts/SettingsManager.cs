@@ -16,6 +16,11 @@ public class SettingsManager : MonoBehaviour
 {
     public static SettingsManager Instance { get; private set; }
 
+    [Header("Wwise RTPC References")]
+    public AK.Wwise.RTPC masterVolumeRTPC;
+    public AK.Wwise.RTPC musicVolumeRTPC;
+    public AK.Wwise.RTPC sfxVolumeRTPC;
+
     // ── Curated resolution options ─────────────────────────────────────────────
     public static readonly Vector2Int[] Resolutions =
     {
@@ -67,6 +72,19 @@ public class SettingsManager : MonoBehaviour
         ApplyAll();
     }
 
+    private void Start()
+    {
+        // Re-apply at Start to ensure Wwise is fully initialized and ready to receive RTPCs
+        ApplyAll();
+        
+        // Apply music state at start
+        if (AudioManager.Instance != null)
+        {
+            if (musicEnabled) AudioManager.Instance.StartMusic();
+            else AudioManager.Instance.StopMusic();
+        }
+    }
+
     private void Load()
     {
         masterVolume    = PlayerPrefs.GetFloat(K_Master,  100f);
@@ -91,7 +109,7 @@ public class SettingsManager : MonoBehaviour
         // the BackgroundMusic event at boot; wire fully when audio routing is ready.
     }
 
-    // ── Audio (stubbed apply — option B) ───────────────────────────────────────
+    // ── Audio (fully wired with Wwise RTPC) ───────────────────────────────────────
     public void SetMasterVolume(float v)
     {
         masterVolume = v;

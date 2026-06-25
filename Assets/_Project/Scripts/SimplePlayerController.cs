@@ -491,27 +491,28 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             // Don't interact with yourself!
             if (hit.gameObject == this.gameObject) continue;
 
-            if (hit.TryGetComponent<IInteractable>(out var interactable))
+            // Prefer a PortableCookerInteraction (teapot) over its sibling PickupObject, so that
+            // holding an item adds an ingredient instead of hitting the no-op pickup path.
+            IInteractable interactable = hit.GetComponent<PortableCookerInteraction>();
+            if (interactable == null) hit.TryGetComponent<IInteractable>(out interactable);
+            if (interactable != null && interactable.CanInteract())
             {
-                if (interactable.CanInteract())
+                int priority = 1; // Default priority (pickups, players)
+                if (interactable is StationBase station)
                 {
-                    int priority = 1; // Default priority (pickups, players)
-                    if (interactable is StationBase station)
-                    {
-                        if (station.stationType == StationType.Counter)
-                            priority = 0; // Generic counter gets lowest priority
-                        else
-                            priority = 2; // Specialized stations get highest priority
-                    }
-
-                    float distance = Vector3.Distance(interactionCenter, hit.bounds.center);
-                    targets.Add(new InteractableTarget
-                    {
-                        interactable = interactable,
-                        priority = priority,
-                        distance = distance
-                    });
+                    if (station.stationType == StationType.Counter)
+                        priority = 0; // Generic counter gets lowest priority
+                    else
+                        priority = 2; // Specialized stations get highest priority
                 }
+
+                float distance = Vector3.Distance(interactionCenter, hit.bounds.center);
+                targets.Add(new InteractableTarget
+                {
+                    interactable = interactable,
+                    priority = priority,
+                    distance = distance
+                });
             }
         }
 
@@ -524,10 +525,16 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         });
 
         bool interacted = false;
+        bool holdingCooker = heldItem != null && heldItem.GetComponent<PortableCooker>() != null;
 
         foreach (var target in targets)
         {
             IInteractable interactable = target.interactable;
+
+            // Can't pick up another item while already holding one. Skip plain pickups so a
+            // no-op pickup doesn't swallow the interaction meant for placing the held item.
+            if (heldItem != null && interactable is PickupObject)
+                continue;
 
             // Skip empty stations (counters, sinks, bins) if player hands are also empty
             if (interactable is StationBase station)
@@ -547,6 +554,15 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                     && ics.extractionMode != ItemContainerStation.ExtractionMode.RequiresItem)
                 {
                     continue;
+                }
+
+                // A held pot (PortableCooker, e.g. the Teapot) must never be consumed as an
+                // ingredient or parked on another station. Only a fill station (the sink) may
+                // act on it; everything else is skipped so the pot drops & docks at its stand.
+                if (holdingCooker)
+                {
+                    bool isFillStation = station is ItemContainerStation fics && fics.cookerFillItem != null;
+                    if (!isFillStation) continue;
                 }
             }
 
@@ -705,6 +721,40 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         }
 
         pickup.Drop(dropPos);
+        heldItem = null;
+    }
+
+    // Forcibly drops the held item onto the floor at the player's feet, regardless of
+    // nearby stations. Used when a station rejects an item (e.g. a non-herb shoved into
+    // the Brazier) — the item bounces off and falls to the ground as a physical object.
+    public void ForceDropHeldItem()
+    {
+        if (heldItem == null) return;
+        PickupObject pickup = heldItem.GetComponent<PickupObject>();
+        if (pickup == null) { heldItem = null; return; }
+
+        Vector3 p = transform.position;
+        float dropY = p.y - 0.5f;
+        Vector3 rayStart = new Vector3(p.x, p.y + 1.5f, p.z);
+        RaycastHit[] hits = Physics.RaycastAll(rayStart, Vector3.down, 10f);
+        float bestY = -99f; bool foundFloor = false;
+        foreach (var hit in hits)
+        {
+            if (hit.collider != null && !hit.collider.isTrigger &&
+                hit.collider.gameObject != this.gameObject &&
+                hit.collider.gameObject != heldItem &&
+                hit.collider.GetComponent<SimplePlayerController>() == null)
+            {
+                if (hit.point.y > bestY && hit.point.y <= p.y + 0.5f) { bestY = hit.point.y; foundFloor = true; }
+            }
+        }
+        if (foundFloor) dropY = bestY;
+
+        float heightOffset = 0.1f;
+        BoxCollider itemCol = pickup.GetComponent<BoxCollider>();
+        if (itemCol != null) heightOffset = itemCol.size.y * 0.5f;
+
+        pickup.Drop(new Vector3(p.x, dropY + heightOffset, p.z));
         heldItem = null;
     }
 

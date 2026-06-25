@@ -41,6 +41,8 @@ public class ItemContainerStation : StationBase
     public List<RequiredItemSwap> requiredItemSwaps = new List<RequiredItemSwap>();
     [Tooltip("If true the required item is consumed. If false it stays in player hands alongside the output.")]
     public bool consumeRequiredItem = true;
+    [Tooltip("If set, interacting while holding a PortableCooker (e.g. the Teapot) pours THIS item into the cooker as an ingredient instead of swapping it. Used by the Sink to add Water to the teapot.")]
+    public ItemData cookerFillItem;
 
     [Header("Optional Visuals")]
     public SpriteRenderer itemIconRenderer;
@@ -158,6 +160,23 @@ public class ItemContainerStation : StationBase
         {
             Debug.Log("[ItemContainerStation] You need to be holding an item to use this station.");
             return;
+        }
+
+        // If holding a PortableCooker (e.g. the Teapot), pour our fill item (e.g. Water)
+        // into it as an ingredient instead of swapping the held item.
+        if (cookerFillItem != null)
+        {
+            PortableCooker cooker = player.heldItem.GetComponent<PortableCooker>();
+            if (cooker != null)
+            {
+                if (cooker.TryAddIngredient(cookerFillItem))
+                {
+                    if (AudioManager.Instance != null)
+                        AudioManager.Instance.PlayPickup(player.heldItem, false);
+                    Debug.Log($"[ItemContainerStation] Poured {cookerFillItem.itemName} into the cooker.");
+                }
+                return;
+            }
         }
 
         WorldItem heldWI = player.heldItem.GetComponent<WorldItem>();

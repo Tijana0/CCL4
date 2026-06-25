@@ -57,7 +57,14 @@ public class PortableCookerInteraction : MonoBehaviour, IInteractable
                 Destroy(player.heldItem);
                 player.heldItem = null;
             }
+            return;
         }
+
+        // Empty hands and nothing finished to take -> pick up the pot itself.
+        // This component is chosen over the sibling PickupObject, so we delegate to it
+        // here to keep normal pickup working.
+        PickupObject pickup = GetComponent<PickupObject>();
+        if (pickup != null) pickup.Interact(player);
     }
 
     private void TakeResult(SimplePlayerController player)
