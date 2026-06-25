@@ -6,14 +6,14 @@ using UnityEngine.EventSystems;
 using TMPro;
 
 /// <summary>
-/// Code-built Settings screen: a scrollable panel with three labelled sections
-/// (Audio, Controls, Display). Opened from the pause menu. Reads/writes through
-/// SettingsManager. Built at runtime (no prefab), matching how PauseManager builds
-/// its UI.
+/// Code-built Settings screen. A centred card that fills the screen with two
+/// columns (Audio / Display) — no scrolling, everything visible at once.
+/// Opened from the pause menu. Reads/writes through SettingsManager.
 ///
-/// Supports full controller navigation (explicit up/down between every control,
-/// auto-scrolls the view to keep the selected control visible) and clamps the
-/// scroll so you can't drag past the content into empty space.
+/// Full controller support: every control is reachable with up/down (the chain
+/// snakes down the left column then the right, then Back). Left/right on a
+/// selected slider adjusts its value; on a dropdown opens it. A control is always
+/// selected while the menu is open, so a controller can always drive it.
 /// </summary>
 public class SettingsMenu : MonoBehaviour
 {
@@ -24,110 +24,90 @@ public class SettingsMenu : MonoBehaviour
     private Slider musicVolumeSlider;
 
     private DefaultControls.Resources uiRes;
-
-    private ScrollRect scrollRect;
     private readonly List<Selectable> navItems = new List<Selectable>();
 
     // Theme
-    private static readonly Color Gold     = new Color(0.85f, 0.62f, 0.25f);
-    private static readonly Color PanelBg  = new Color(0.07f, 0.06f, 0.11f, 1f);
-    private static readonly Color CardBg   = new Color(1f, 1f, 1f, 0.05f);
-    private static readonly Color TextCol  = new Color(0.92f, 0.92f, 0.95f);
+    private static readonly Color Dim     = new Color(0.02f, 0.02f, 0.04f, 0.9f);
+    private static readonly Color CardBg  = new Color(0.11f, 0.10f, 0.16f, 1f);
+    private static readonly Color CardEdge= new Color(0.85f, 0.62f, 0.25f, 1f);
+    private static readonly Color Gold    = new Color(0.88f, 0.66f, 0.28f);
+    private static readonly Color TextCol = new Color(0.93f, 0.93f, 0.96f);
 
     public bool IsOpen => panel != null && panel.activeSelf;
 
     public void Build(Canvas canvas, Action backCallback)
     {
         onBack = backCallback;
-        // Leave sprites null — DefaultControls builds fully-functional controls without
-        // them (they just render as plain solid shapes). Loading built-in editor sprites
-        // via Resources.GetBuiltinResource fails at runtime and logs errors.
         uiRes = new DefaultControls.Resources();
-
         var s = SettingsManager.Instance;
 
-        // Full-screen opaque panel (sits on top of the pause menu)
+        // Full-screen dim behind the card
         panel = NewRect("SettingsPanel", canvas.transform);
         Stretch(panel.GetComponent<RectTransform>());
-        panel.AddComponent<Image>().color = PanelBg;
+        panel.AddComponent<Image>().color = Dim;
 
-        // Title + gold underline accent
-        var title = NewText("SettingsTitle", panel.transform, "SETTINGS", 46, TextAlignmentOptions.Center);
+        // Gold edge (slightly bigger than the card) for a framed look
+        var edge = NewRect("CardEdge", panel.transform);
+        var edgeRT = edge.GetComponent<RectTransform>();
+        edgeRT.anchorMin = new Vector2(0.085f, 0.075f); edgeRT.anchorMax = new Vector2(0.915f, 0.925f);
+        edgeRT.offsetMin = Vector2.zero; edgeRT.offsetMax = Vector2.zero;
+        edge.AddComponent<Image>().color = CardEdge;
+
+        // Card
+        var card = NewRect("Card", panel.transform);
+        var cardRT = card.GetComponent<RectTransform>();
+        cardRT.anchorMin = new Vector2(0.09f, 0.08f); cardRT.anchorMax = new Vector2(0.91f, 0.92f);
+        cardRT.offsetMin = Vector2.zero; cardRT.offsetMax = Vector2.zero;
+        card.AddComponent<Image>().color = CardBg;
+
+        // Title + gold underline
+        var title = NewText("SettingsTitle", card.transform, "SETTINGS", 40, TextAlignmentOptions.Center);
         title.fontStyle = FontStyles.Bold;
         var tr = title.rectTransform;
         tr.anchorMin = new Vector2(0f, 1f); tr.anchorMax = new Vector2(1f, 1f); tr.pivot = new Vector2(0.5f, 1f);
-        tr.anchoredPosition = new Vector2(0f, -18f); tr.sizeDelta = new Vector2(0f, 60f);
+        tr.anchoredPosition = new Vector2(0f, -14f); tr.sizeDelta = new Vector2(0f, 52f);
 
-        var underline = NewRect("TitleAccent", panel.transform);
-        var ulRT = underline.GetComponent<RectTransform>();
+        var ul = NewRect("TitleAccent", card.transform);
+        var ulRT = ul.GetComponent<RectTransform>();
         ulRT.anchorMin = new Vector2(0.5f, 1f); ulRT.anchorMax = new Vector2(0.5f, 1f); ulRT.pivot = new Vector2(0.5f, 1f);
-        ulRT.anchoredPosition = new Vector2(0f, -78f); ulRT.sizeDelta = new Vector2(120f, 3f);
-        underline.AddComponent<Image>().color = Gold;
+        ulRT.anchoredPosition = new Vector2(0f, -64f); ulRT.sizeDelta = new Vector2(110f, 3f);
+        ul.AddComponent<Image>().color = Gold;
 
-        // ── Scroll view ─────────────────────────────────────────────────────────
-        var scrollGO = NewRect("Scroll", panel.transform);
-        var scrollRT = scrollGO.GetComponent<RectTransform>();
-        scrollRT.anchorMin = new Vector2(0.1f, 0f); scrollRT.anchorMax = new Vector2(0.9f, 1f);
-        scrollRT.offsetMin = new Vector2(0f, 92f);    // leave room for Back button
-        scrollRT.offsetMax = new Vector2(0f, -92f);   // leave room for title + accent
-        scrollRect = scrollGO.AddComponent<ScrollRect>();
-        scrollRect.horizontal = false; scrollRect.vertical = true; scrollRect.scrollSensitivity = 24f;
-        scrollRect.movementType = ScrollRect.MovementType.Clamped; // no over-scroll into blank space
-        scrollGO.AddComponent<Image>().color = CardBg;
-        scrollGO.AddComponent<RectMask2D>();
-        scrollRect.viewport = scrollRT;
+        // Two columns
+        var left  = Column(card.transform, new Vector2(0.05f, 0.16f), new Vector2(0.49f, 0.80f));
+        var right = Column(card.transform, new Vector2(0.51f, 0.16f), new Vector2(0.95f, 0.80f));
 
-        var content = NewRect("Content", scrollGO.transform);
-        var contentRT = content.GetComponent<RectTransform>();
-        contentRT.anchorMin = new Vector2(0f, 1f); contentRT.anchorMax = new Vector2(1f, 1f); contentRT.pivot = new Vector2(0.5f, 1f);
-        contentRT.sizeDelta = Vector2.zero;
-        var vlg = content.AddComponent<VerticalLayoutGroup>();
-        vlg.childControlWidth = true; vlg.childForceExpandWidth = true;
-        vlg.childControlHeight = true; vlg.childForceExpandHeight = false;
-        vlg.spacing = 10f; vlg.padding = new RectOffset(20, 20, 16, 16);
-        var fitter = content.AddComponent<ContentSizeFitter>();
-        fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-        scrollRect.content = contentRT;
-
-        // ── AUDIO ────────────────────────────────────────────────────────────────
-        AddHeader(content.transform, "AUDIO");
-        AddSlider(content.transform, "Master Volume", s.masterVolume, v => SettingsManager.Instance.SetMasterVolume(v), out _, out _);
-
-        AddToggle(content.transform, "Background Music", s.musicEnabled, on =>
+        // ── LEFT: AUDIO ────────────────────────────────────────────────────────
+        AddHeader(left, "AUDIO");
+        AddSlider(left, "Master", s.masterVolume, v => SettingsManager.Instance.SetMasterVolume(v), out _, out _);
+        AddToggle(left, "Background Music", s.musicEnabled, on =>
         {
             SettingsManager.Instance.SetMusicEnabled(on);
             SetMusicVolumeEnabled(on);
         });
-
-        AddSlider(content.transform, "Music Volume", s.musicVolume, v => SettingsManager.Instance.SetMusicVolume(v),
+        AddSlider(left, "Music", s.musicVolume, v => SettingsManager.Instance.SetMusicVolume(v),
                   out musicVolumeSlider, out musicVolumeGroup);
         SetMusicVolumeEnabled(s.musicEnabled);
+        AddSlider(left, "SFX", s.sfxVolume, v => SettingsManager.Instance.SetSfxVolume(v), out _, out _);
 
-        AddSlider(content.transform, "SFX Volume", s.sfxVolume, v => SettingsManager.Instance.SetSfxVolume(v), out _, out _);
-
-        // ── CONTROLS ──────────────────────────────────────────────────────────────
-        AddHeader(content.transform, "CONTROLS");
-        AddControlsPlaceholder(content.transform);
-
-        // ── DISPLAY ────────────────────────────────────────────────────────────────
-        AddHeader(content.transform, "DISPLAY");
-        AddDropdown(content.transform, "Resolution",
+        // ── RIGHT: DISPLAY ─────────────────────────────────────────────────────
+        AddHeader(right, "DISPLAY");
+        AddDropdown(right, "Resolution",
             new List<string>(SettingsManager.ResolutionLabels()), s.resolutionIndex,
             idx => SettingsManager.Instance.SetResolutionIndex(idx));
-        AddDropdown(content.transform, "Window Mode",
+        AddDropdown(right, "Window Mode",
             new List<string> { "Fullscreen", "Windowed" }, s.fullscreen ? 0 : 1,
             idx => SettingsManager.Instance.SetFullscreen(idx == 0));
 
-        // ── Back button ──────────────────────────────────────────────────────────
-        var back = MakeButton(panel.transform, "BackButton", "Back");
+        // ── Back button ────────────────────────────────────────────────────────
+        var back = MakeButton(card.transform, "BackButton", "Back");
         var backRT = back.GetComponent<RectTransform>();
         backRT.anchorMin = new Vector2(0.5f, 0f); backRT.anchorMax = new Vector2(0.5f, 0f); backRT.pivot = new Vector2(0.5f, 0f);
-        backRT.anchoredPosition = new Vector2(0f, 22f); backRT.sizeDelta = new Vector2(240f, 54f);
+        backRT.anchoredPosition = new Vector2(0f, 18f); backRT.sizeDelta = new Vector2(220f, 48f);
         back.onClick.AddListener(Close);
         navItems.Add(back);
 
         SetupNavigation();
-
         panel.SetActive(false);
     }
 
@@ -136,7 +116,6 @@ public class SettingsMenu : MonoBehaviour
         if (panel == null) return;
         panel.transform.SetAsLastSibling();
         panel.SetActive(true);
-        if (scrollRect != null) scrollRect.verticalNormalizedPosition = 1f; // start at top
         FocusFirst();
     }
 
@@ -153,37 +132,13 @@ public class SettingsMenu : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(navItems[0].gameObject);
     }
 
-    // Keep the selected control in view when navigating with a controller.
+    // Keep a control selected while open, so a controller can always drive the menu.
     private void Update()
     {
-        if (!IsOpen || scrollRect == null || EventSystem.current == null) return;
+        if (!IsOpen || EventSystem.current == null) return;
         var sel = EventSystem.current.currentSelectedGameObject;
-        if (sel == null) return;
-        var selRT = sel.GetComponent<RectTransform>();
-        if (selRT == null || scrollRect.content == null || !selRT.IsChildOf(scrollRect.content)) return;
-        EnsureVisible(selRT);
-    }
-
-    private void EnsureVisible(RectTransform target)
-    {
-        RectTransform vp = scrollRect.viewport;
-        RectTransform ct = scrollRect.content;
-        if (vp == null || ct == null) return;
-
-        var v = new Vector3[4]; vp.GetWorldCorners(v);
-        var t = new Vector3[4]; target.GetWorldCorners(t);
-        float vTop = v[1].y, vBot = v[0].y;
-        float tTop = t[1].y, tBot = t[0].y;
-
-        const float pad = 6f;
-        Vector2 ap = ct.anchoredPosition;
-        if (tTop > vTop - pad) ap.y -= (tTop - vTop) + pad;          // target above view -> scroll up
-        else if (tBot < vBot + pad) ap.y += (vBot - tBot) + pad;     // target below view -> scroll down
-        else return;
-
-        float maxY = Mathf.Max(0f, ct.rect.height - vp.rect.height);
-        ap.y = Mathf.Clamp(ap.y, 0f, maxY);
-        ct.anchoredPosition = ap;
+        if (sel == null || !sel.activeInHierarchy || !sel.transform.IsChildOf(panel.transform))
+            FocusFirst();
     }
 
     private void SetupNavigation()
@@ -194,8 +149,7 @@ public class SettingsMenu : MonoBehaviour
             nav.mode = Navigation.Mode.Explicit;
             nav.selectOnUp   = navItems[(i - 1 + navItems.Count) % navItems.Count];
             nav.selectOnDown = navItems[(i + 1) % navItems.Count];
-            // left/right are left for the sliders/dropdowns to consume (value change)
-            nav.selectOnLeft = null; nav.selectOnRight = null;
+            nav.selectOnLeft = null; nav.selectOnRight = null; // left/right adjust sliders / open dropdowns
             navItems[i].navigation = nav;
         }
     }
@@ -212,6 +166,19 @@ public class SettingsMenu : MonoBehaviour
     }
 
     // ── Builders ───────────────────────────────────────────────────────────────
+    private Transform Column(Transform card, Vector2 aMin, Vector2 aMax)
+    {
+        var col = NewRect("Column", card);
+        var rt = col.GetComponent<RectTransform>();
+        rt.anchorMin = aMin; rt.anchorMax = aMax; rt.offsetMin = Vector2.zero; rt.offsetMax = Vector2.zero;
+        var vlg = col.AddComponent<VerticalLayoutGroup>();
+        vlg.childControlWidth = true; vlg.childForceExpandWidth = true;
+        vlg.childControlHeight = true; vlg.childForceExpandHeight = false;
+        vlg.childAlignment = TextAnchor.UpperCenter;
+        vlg.spacing = 14f; vlg.padding = new RectOffset(4, 4, 0, 0);
+        return col.transform;
+    }
+
     private GameObject Row(Transform parent, float height)
     {
         var row = NewRect("Row", parent);
@@ -221,63 +188,61 @@ public class SettingsMenu : MonoBehaviour
 
     private void AddHeader(Transform parent, string text)
     {
-        var row = Row(parent, 46f);
-        var t = NewText("Header", row.transform, text, 26, TextAlignmentOptions.BottomLeft);
-        t.fontStyle = FontStyles.Bold;
-        t.color = Gold;
-        var rt = t.rectTransform;
-        rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one;
+        var row = Row(parent, 40f);
+        var t = NewText("Header", row.transform, text, 24, TextAlignmentOptions.BottomLeft);
+        t.fontStyle = FontStyles.Bold; t.color = Gold;
+        var rt = t.rectTransform; rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one;
         rt.offsetMin = new Vector2(2f, 6f); rt.offsetMax = Vector2.zero;
-        // thin underline rule
         var rule = NewRect("Rule", row.transform);
         var rr = rule.GetComponent<RectTransform>();
         rr.anchorMin = new Vector2(0f, 0f); rr.anchorMax = new Vector2(1f, 0f); rr.pivot = new Vector2(0.5f, 0f);
-        rr.anchoredPosition = new Vector2(0f, 2f); rr.sizeDelta = new Vector2(0f, 2f);
+        rr.anchoredPosition = new Vector2(0f, 1f); rr.sizeDelta = new Vector2(0f, 2f);
         rule.AddComponent<Image>().color = new Color(Gold.r, Gold.g, Gold.b, 0.35f);
     }
 
     private void AddSlider(Transform parent, string label, float value, UnityEngine.Events.UnityAction<float> cb,
                            out Slider slider, out CanvasGroup group)
     {
-        var row = Row(parent, 48f);
+        var row = Row(parent, 50f);
         group = row.AddComponent<CanvasGroup>();
-        LabelLeft(row.transform, label);
 
-        // numeric value readout on the far right
+        var lab = NewText("Label", row.transform, label, 20, TextAlignmentOptions.Left);
+        var lrt = lab.rectTransform; lrt.anchorMin = new Vector2(0f, 1f); lrt.anchorMax = new Vector2(0.6f, 1f);
+        lrt.pivot = new Vector2(0f, 1f); lrt.offsetMin = new Vector2(2f, -22f); lrt.offsetMax = new Vector2(0f, 0f);
+
         var valText = NewText("Value", row.transform, Mathf.RoundToInt(value) + "%", 20, TextAlignmentOptions.Right);
         valText.color = new Color(1f, 1f, 1f, 0.75f);
-        var vt = valText.rectTransform;
-        vt.anchorMin = new Vector2(1f, 0f); vt.anchorMax = new Vector2(1f, 1f); vt.pivot = new Vector2(1f, 0.5f);
-        vt.sizeDelta = new Vector2(56f, 0f); vt.anchoredPosition = new Vector2(0f, 0f);
+        var vt = valText.rectTransform; vt.anchorMin = new Vector2(0.6f, 1f); vt.anchorMax = new Vector2(1f, 1f);
+        vt.pivot = new Vector2(1f, 1f); vt.offsetMin = new Vector2(0f, -22f); vt.offsetMax = new Vector2(0f, 0f);
 
         var sliderGO = DefaultControls.CreateSlider(uiRes);
         sliderGO.name = "Slider";
         sliderGO.transform.SetParent(row.transform, false);
-        // sit between the label (left half) and the value readout (right ~60px)
         var srt = sliderGO.GetComponent<RectTransform>();
-        srt.anchorMin = new Vector2(0.5f, 0.5f); srt.anchorMax = new Vector2(1f, 0.5f); srt.pivot = new Vector2(0.5f, 0.5f);
-        srt.offsetMin = new Vector2(8f, -10f); srt.offsetMax = new Vector2(-64f, 10f);
+        srt.anchorMin = new Vector2(0f, 0f); srt.anchorMax = new Vector2(1f, 0f); srt.pivot = new Vector2(0.5f, 0f);
+        srt.offsetMin = new Vector2(2f, 4f); srt.offsetMax = new Vector2(-2f, 18f);
 
         slider = sliderGO.GetComponent<Slider>();
         slider.minValue = 0f; slider.maxValue = 100f; slider.wholeNumbers = false;
         slider.value = value;
-        var sliderRef = slider; var valRef = valText;
+        var valRef = valText;
         slider.onValueChanged.AddListener(v => { valRef.text = Mathf.RoundToInt(v) + "%"; cb(v); });
         navItems.Add(slider);
     }
 
     private void AddToggle(Transform parent, string label, bool value, UnityEngine.Events.UnityAction<bool> cb)
     {
-        var row = Row(parent, 42f);
-        LabelLeft(row.transform, label);
+        var row = Row(parent, 38f);
+        var lab = NewText("Label", row.transform, label, 20, TextAlignmentOptions.Left);
+        var lrt = lab.rectTransform; lrt.anchorMin = new Vector2(0f, 0f); lrt.anchorMax = new Vector2(0.8f, 1f);
+        lrt.offsetMin = new Vector2(2f, 0f); lrt.offsetMax = Vector2.zero;
 
         var toggleGO = DefaultControls.CreateToggle(uiRes);
         toggleGO.name = "Toggle";
         toggleGO.transform.SetParent(row.transform, false);
         var rt = toggleGO.GetComponent<RectTransform>();
-        rt.anchorMin = new Vector2(0.5f, 0.5f); rt.anchorMax = new Vector2(0.5f, 0.5f);
-        rt.pivot = new Vector2(0f, 0.5f); rt.anchoredPosition = Vector2.zero; rt.sizeDelta = new Vector2(30f, 30f);
-        // hide the default "Toggle" text label that ships inside the control
+        rt.anchorMin = new Vector2(1f, 0.5f); rt.anchorMax = new Vector2(1f, 0.5f);
+        rt.pivot = new Vector2(1f, 0.5f); rt.anchoredPosition = new Vector2(-2f, 0f); rt.sizeDelta = new Vector2(28f, 28f);
         var lbl = toggleGO.GetComponentInChildren<Text>();
         if (lbl != null) lbl.gameObject.SetActive(false);
 
@@ -289,51 +254,27 @@ public class SettingsMenu : MonoBehaviour
 
     private void AddDropdown(Transform parent, string label, List<string> options, int value, UnityEngine.Events.UnityAction<int> cb)
     {
-        var row = Row(parent, 48f);
-        LabelLeft(row.transform, label);
+        var row = Row(parent, 56f);
+        var lab = NewText("Label", row.transform, label, 20, TextAlignmentOptions.Left);
+        var lrt = lab.rectTransform; lrt.anchorMin = new Vector2(0f, 1f); lrt.anchorMax = new Vector2(1f, 1f);
+        lrt.pivot = new Vector2(0f, 1f); lrt.offsetMin = new Vector2(2f, -22f); lrt.offsetMax = new Vector2(0f, 0f);
 
         var ddGO = DefaultControls.CreateDropdown(uiRes);
         ddGO.name = "Dropdown";
         ddGO.transform.SetParent(row.transform, false);
-        PlaceRight(ddGO.GetComponent<RectTransform>(), 0f);
+        var drt = ddGO.GetComponent<RectTransform>();
+        drt.anchorMin = new Vector2(0f, 0f); drt.anchorMax = new Vector2(1f, 0f); drt.pivot = new Vector2(0.5f, 0f);
+        drt.offsetMin = new Vector2(2f, 2f); drt.offsetMax = new Vector2(-2f, 30f);
 
         var dd = ddGO.GetComponent<Dropdown>();
-        dd.ClearOptions();
-        dd.AddOptions(options);
+        dd.ClearOptions(); dd.AddOptions(options);
         dd.value = Mathf.Clamp(value, 0, options.Count - 1);
         dd.RefreshShownValue();
         dd.onValueChanged.AddListener(cb);
         navItems.Add(dd);
     }
 
-    private void AddControlsPlaceholder(Transform parent)
-    {
-        var row = Row(parent, 96f);
-        var img = NewRect("ControlsPlaceholder", row.transform);
-        Stretch(img.GetComponent<RectTransform>());
-        img.AddComponent<Image>().color = new Color(1f, 1f, 1f, 0.06f);
-        var t = NewText("PlaceholderLabel", img.transform,
-            "Keyboard & Controller layout\n(image coming soon)", 18, TextAlignmentOptions.Center);
-        t.color = new Color(1f, 1f, 1f, 0.5f);
-        Stretch(t.rectTransform);
-    }
-
     // ── Low-level helpers ────────────────────────────────────────────────────────
-    private void LabelLeft(Transform row, string text)
-    {
-        var t = NewText("Label", row, text, 22, TextAlignmentOptions.Left);
-        var rt = t.rectTransform;
-        rt.anchorMin = new Vector2(0f, 0f); rt.anchorMax = new Vector2(0.5f, 1f);
-        rt.offsetMin = new Vector2(2f, 0f); rt.offsetMax = Vector2.zero;
-    }
-
-    private void PlaceRight(RectTransform rt, float inset)
-    {
-        rt.anchorMin = new Vector2(0.5f, 0.5f); rt.anchorMax = new Vector2(1f, 0.5f);
-        rt.pivot = new Vector2(0.5f, 0.5f);
-        rt.offsetMin = new Vector2(inset, -14f); rt.offsetMax = new Vector2(-inset, 14f);
-    }
-
     private GameObject NewRect(string name, Transform parent)
     {
         var go = new GameObject(name, typeof(RectTransform));
@@ -347,7 +288,7 @@ public class SettingsMenu : MonoBehaviour
         go.transform.SetParent(parent, false);
         var t = go.AddComponent<TextMeshProUGUI>();
         t.text = text; t.fontSize = size; t.alignment = align; t.color = TextCol;
-        t.enableWordWrapping = true;
+        t.enableWordWrapping = false;
         return t;
     }
 
@@ -365,13 +306,13 @@ public class SettingsMenu : MonoBehaviour
         var btn = go.AddComponent<Button>();
         btn.transition = Selectable.Transition.ColorTint;
         var cb = btn.colors;
-        cb.normalColor = new Color(0.22f, 0.2f, 0.26f, 1f);
-        cb.highlightedColor = new Color(0.85f, 0.62f, 0.25f, 1f);
-        cb.pressedColor = new Color(0.6f, 0.4f, 0.12f, 1f);
-        cb.selectedColor = new Color(0.85f, 0.62f, 0.25f, 1f);
+        cb.normalColor = new Color(0.24f, 0.22f, 0.3f, 1f);
+        cb.highlightedColor = Gold;
+        cb.pressedColor = new Color(0.6f, 0.42f, 0.14f, 1f);
+        cb.selectedColor = Gold;
         cb.fadeDuration = 0.1f;
         btn.colors = cb;
-        var t = NewText("Text", go.transform, text, 24, TextAlignmentOptions.Center);
+        var t = NewText("Text", go.transform, text, 22, TextAlignmentOptions.Center);
         Stretch(t.rectTransform);
         return btn;
     }
