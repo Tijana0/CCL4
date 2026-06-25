@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Prophecy_card 1
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: prophecy card 1
-  icon: {fileID: 21300000, guid: 342365573c83843bab2bdb49081f7c8b, type: 3}
+  icon: {fileID: 21300000, guid: a5c083d33237f44689abea6abcb9b967, type: 3}
   prefab: {fileID: 8078371980906140268, guid: df5ce733e84cf9249aa4a16c82c76f8a, type: 3}
   potionColour: {r: 1, g: 1, b: 1, a: 1}
   isColourless: 0

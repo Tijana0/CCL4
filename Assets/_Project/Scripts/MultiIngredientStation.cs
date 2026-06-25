@@ -92,10 +92,17 @@ public class MultiIngredientStation : StationBase
     [Header("Result Spawn Point (optional)")]
     public Transform resultSpawnPoint;
 
+    [Header("Ingredient Display (optional)")]
+    [Tooltip("If set, each accepted ingredient is shown resting here (e.g. on the card deck) until processing finishes. Leave empty to keep the old invisible behaviour.")]
+    public Transform ingredientDisplayAnchor;
+    [Tooltip("Vertical gap between stacked accepted ingredients on the display anchor.")]
+    public float ingredientStackHeight = 0.05f;
+
     public override bool HasReadyResult => resultItem != null;
 
     // ── Runtime state ────────────────────────────────────────────────────────
     private List<ItemData> ingredients = new List<ItemData>();
+    private readonly List<GameObject> ingredientVisuals = new List<GameObject>();
     private StationState stationState = StationState.Empty;
     private float cookingProgress = 0f;
     private float currentCookingTime = 5f;
@@ -199,6 +206,41 @@ public class MultiIngredientStation : StationBase
             }
         }
 
+        // Prophecy table: build a world-space progress bar hovering above the table,
+        // same style as the crystal ball's, shown while processing.
+        if (stationType == StationType.ProphecyTable && progressBarContainer == null && counterTopPoint != null)
+        {
+            GameObject canvasGO = new GameObject("Prophecy_ProgressCanvas");
+            canvasGO.transform.position = counterTopPoint.position + new Vector3(0f, 1.2f, 0f);
+            canvasGO.transform.localScale = Vector3.one * 0.01f;
+
+            Canvas canvas = canvasGO.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.WorldSpace;
+            canvasGO.GetComponent<RectTransform>().sizeDelta = new Vector2(120f, 18f);
+
+            GameObject bg = new GameObject("Background");
+            bg.transform.SetParent(canvasGO.transform, false);
+            UnityEngine.UI.Image bgImg = bg.AddComponent<UnityEngine.UI.Image>();
+            bgImg.color = new Color(0.12f, 0.08f, 0.18f, 0.9f);
+            RectTransform bgRect = bg.GetComponent<RectTransform>();
+            bgRect.anchorMin = Vector2.zero; bgRect.anchorMax = Vector2.one;
+            bgRect.offsetMin = Vector2.zero; bgRect.offsetMax = Vector2.zero;
+
+            GameObject fill = new GameObject("Fill");
+            fill.transform.SetParent(canvasGO.transform, false);
+            UnityEngine.UI.Image fillImg = fill.AddComponent<UnityEngine.UI.Image>();
+            fillImg.color = new Color(0.86f, 0.68f, 0.33f, 1f); // gold, matches the card theme
+            RectTransform fillRect = fill.GetComponent<RectTransform>();
+            fillRect.anchorMin = Vector2.zero; fillRect.anchorMax = Vector2.one;
+            fillRect.offsetMin = new Vector2(2f, 2f); fillRect.offsetMax = new Vector2(-2f, -2f);
+            fillRect.pivot = new Vector2(0f, 0.5f);
+            fill.transform.localScale = new Vector3(0f, 1f, 1f);
+
+            progressBarContainer = canvasGO;
+            progressBarFill = fillImg;
+            canvasGO.SetActive(false);
+        }
+
         UpdateVisuals();
     }
 
@@ -282,6 +324,51 @@ public class MultiIngredientStation : StationBase
         }
     }
 
+    // ── Ingredient display (rests accepted items on the deck/anchor) ──────────
+
+    /// <summary>Spawns a non-interactive copy of an accepted ingredient resting on
+    /// the display anchor (e.g. the card deck), stacked by index.</summary>
+    private void ShowIngredientOnAnchor(ItemData data, int index)
+    {
+        if (ingredientDisplayAnchor == null || data == null || data.prefab == null) return;
+
+        GameObject vis = Instantiate(data.prefab);
+        vis.name = "StationIngredient_" + data.itemName;
+        // strip interactivity / physics so it just sits there
+        foreach (var pu in vis.GetComponentsInChildren<PickupObject>()) Destroy(pu);
+        foreach (var col in vis.GetComponentsInChildren<Collider>()) col.enabled = false;
+        foreach (var rb in vis.GetComponentsInChildren<Rigidbody>()) rb.isKinematic = true;
+
+        vis.transform.SetParent(ingredientDisplayAnchor, false);
+        vis.transform.localPosition = Vector3.zero;
+        vis.transform.rotation = ingredientDisplayAnchor.rotation;
+
+        // Rest the item's base on the anchor, fanned/stacked so multiple are visible.
+        var rends = vis.GetComponentsInChildren<Renderer>();
+        if (rends.Length > 0)
+        {
+            // Lay "tall" items (e.g. a book standing on its edge) flat on the deck.
+            Bounds pre = rends[0].bounds;
+            for (int i = 1; i < rends.Length; i++) pre.Encapsulate(rends[i].bounds);
+            if (pre.size.y > 0.5f * Mathf.Max(pre.size.x, pre.size.z))
+                vis.transform.RotateAround(pre.center, Vector3.right, 90f);
+
+            Bounds b = rends[0].bounds;
+            for (int i = 1; i < rends.Length; i++) b.Encapsulate(rends[i].bounds);
+            Vector3 fan = ingredientDisplayAnchor.rotation * new Vector3((index % 2 == 0 ? -0.07f : 0.07f), 0f, index * 0.05f);
+            Vector3 targetCenterXZ = ingredientDisplayAnchor.position + fan;
+            float targetBaseY = ingredientDisplayAnchor.position.y + index * ingredientStackHeight;
+            vis.transform.position += new Vector3(targetCenterXZ.x - b.center.x, targetBaseY - b.min.y, targetCenterXZ.z - b.center.z);
+        }
+        ingredientVisuals.Add(vis);
+    }
+
+    private void ClearIngredientVisuals()
+    {
+        foreach (var v in ingredientVisuals) if (v != null) Destroy(v);
+        ingredientVisuals.Clear();
+    }
+
     // ── Ingredient handling ──────────────────────────────────────────────────
 
     private void TryAddIngredient(SimplePlayerController player)
@@ -302,6 +389,7 @@ public class MultiIngredientStation : StationBase
 
         // Add ingredient
         ingredients.Add(wi.itemData);
+        ShowIngredientOnAnchor(wi.itemData, ingredients.Count - 1);
         Destroy(player.heldItem);
         player.heldItem = null;
 
@@ -431,12 +519,14 @@ public class MultiIngredientStation : StationBase
             }
 
             ingredients.Clear();
+            ClearIngredientVisuals();
             UpdateVisuals();
             return;
         }
 
         SpawnResult(resultData, null);
         ingredients.Clear();
+        ClearIngredientVisuals();
         UpdateVisuals();
         Debug.Log($"[MultiIngredientStation] Done! Result: {resultData.itemName}");
     }
@@ -458,6 +548,13 @@ public class MultiIngredientStation : StationBase
                 if (col != null) localOffset = col.center;
                 Vector3 visualCenter = anchor.position + anchor.rotation * localOffset;
                 result.transform.position = visualCenter + new Vector3(0f, 0.9f, 0f);
+            }
+            else if (stationType == StationType.ProphecyTable)
+            {
+                // Float the finished prophecy card above the table, like a vision
+                // hovers over the crystal ball.
+                result.transform.position = anchor.position + new Vector3(0f, 0.8f, 0f);
+                result.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
             }
             else
             {
@@ -718,6 +815,7 @@ public class MultiIngredientStation : StationBase
         if (resultItem != null) Destroy(resultItem);
         resultItem = null;
         ingredients.Clear();
+        ClearIngredientVisuals();
         stationState = StationState.Empty;
         cookingProgress = 0f;
         boilOverTimer = 0f;

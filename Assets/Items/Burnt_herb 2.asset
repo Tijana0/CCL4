@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Burnt_herb 2
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: burnt herb 2
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 7da1bf5893d3e43a5a173a9c389d5df2, type: 3}
   prefab: {fileID: 4087836362745972669, guid: 10c51f2dc7f51844181e8d79a0b669c0, type: 3}
   potionColour: {r: 1, g: 1, b: 1, a: 1}
   isColourless: 0

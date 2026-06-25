@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: RedPotion
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: RedPotion
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: ee80bbc244c9c44c4973ba7062e56218, type: 3}
   prefab: {fileID: 6540012189298079678, guid: ad52c9e3f99b94a4b8452e2d62162d12, type: 3}
+  potionColour: {r: 1, g: 1, b: 1, a: 1}
+  isColourless: 0
   processingRules: []
   combineRules:
   - otherItem: {fileID: 11400000, guid: 267d71f9afd8c5d47bf74fbab29dc37e, type: 2}

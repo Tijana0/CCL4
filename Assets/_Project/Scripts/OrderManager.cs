@@ -267,6 +267,32 @@ public class OrderManager : MonoBehaviour
         List<ItemData> ings = new List<ItemData>();
         if (target == null) return ings;
 
+        // ── Station recipes are the real source of truth ──────────────────────
+        // Visions (crystal ball), prophecy cards (prophecy table) and teas (teapot)
+        // are produced by stations, not by ItemData combine/process rules. Look
+        // there first so an order shows the ingredients it's actually made of
+        // (e.g. vision 2 = bookblue + crystal).
+        foreach (var st in FindObjectsByType<MultiIngredientStation>(FindObjectsSortMode.None))
+        {
+            if (st.recipes == null) continue;
+            foreach (var r in st.recipes)
+            {
+                if (r == null || r.outputItem != target || r.requiredIngredients == null) continue;
+                foreach (var ing in r.requiredIngredients) if (ing != null) ings.Add(ing);
+                if (ings.Count > 0) return ings;
+            }
+        }
+        foreach (var pc in FindObjectsByType<PortableCooker>(FindObjectsSortMode.None))
+        {
+            if (pc.recipes == null) continue;
+            foreach (var r in pc.recipes)
+            {
+                if (r == null || r.outputItem != target || r.requiredIngredients == null) continue;
+                foreach (var ing in r.requiredIngredients) if (ing != null) ings.Add(ing);
+                if (ings.Count > 0) return ings;
+            }
+        }
+
         // Check combinations (looking for results in other items)
         // Note: This is a simple 1-level search. 
         // We'll search all items in the project or room to see who produces this target.
