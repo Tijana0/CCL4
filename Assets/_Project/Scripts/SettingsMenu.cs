@@ -26,6 +26,7 @@ public class SettingsMenu : MonoBehaviour
     private DefaultControls.Resources uiRes;
     private readonly List<Selectable> navItems = new List<Selectable>();
     private ScrollRect scrollRect;
+    private GameObject lastSelected;
 
     private static readonly Color Dim     = new Color(0.02f, 0.02f, 0.04f, 0.9f);
     private static readonly Color CardBg  = new Color(0.11f, 0.10f, 0.16f, 1f);
@@ -134,12 +135,14 @@ public class SettingsMenu : MonoBehaviour
         panel.transform.SetAsLastSibling();
         panel.SetActive(true);
         if (scrollRect != null) scrollRect.verticalNormalizedPosition = 1f;
+        lastSelected = null;
         FocusFirst();
     }
 
     public void Close()
     {
         if (panel != null) panel.SetActive(false);
+        lastSelected = null;
         onBack?.Invoke();
     }
 
@@ -155,9 +158,14 @@ public class SettingsMenu : MonoBehaviour
         if (!IsOpen || EventSystem.current == null) return;
         var sel = EventSystem.current.currentSelectedGameObject;
         if (sel == null || !sel.activeInHierarchy || !sel.transform.IsChildOf(panel.transform)) { FocusFirst(); return; }
-        var selRT = sel.GetComponent<RectTransform>();
-        if (scrollRect != null && scrollRect.content != null && selRT != null && selRT.IsChildOf(scrollRect.content))
-            EnsureVisible(selRT);
+        
+        if (sel != lastSelected)
+        {
+            lastSelected = sel;
+            var selRT = sel.GetComponent<RectTransform>();
+            if (scrollRect != null && scrollRect.content != null && selRT != null && selRT.IsChildOf(scrollRect.content))
+                EnsureVisible(selRT);
+        }
     }
 
     private void EnsureVisible(RectTransform target)
