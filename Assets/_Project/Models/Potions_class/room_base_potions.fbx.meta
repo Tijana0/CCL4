@@ -3,7 +3,12 @@ guid: 8af8810b27cf1834bae03a07c1a2197c
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Floor_Potions.001
+    second: {fileID: 2100000, guid: dec4dd32184f4ef48bd96e357375f1e8, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
