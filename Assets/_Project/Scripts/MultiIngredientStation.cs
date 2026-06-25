@@ -150,7 +150,18 @@ public class MultiIngredientStation : StationBase
             if (progressBarContainer == null && counterTopPoint != null)
             {
                 GameObject canvasGO = new GameObject("CrystalBall_ProgressCanvas");
-                canvasGO.transform.position = counterTopPoint.position + new Vector3(-1.5f, 1.7f, 1.5f);
+                if (stationType == StationType.CrystalBall)
+                {
+                    Vector3 localOffset = new Vector3(-2.5f, 1.18f, 2.5f);
+                    BoxCollider col = GetComponent<BoxCollider>();
+                    if (col != null) localOffset = col.center;
+                    Vector3 visualCenter = counterTopPoint.position + counterTopPoint.rotation * localOffset;
+                    canvasGO.transform.position = visualCenter + new Vector3(0f, 1.3f, 0f);
+                }
+                else
+                {
+                    canvasGO.transform.position = counterTopPoint.position + new Vector3(-1.5f, 1.7f, 1.5f);
+                }
                 canvasGO.transform.localScale = Vector3.one * 0.01f;
 
                 Canvas canvas = canvasGO.AddComponent<Canvas>();
@@ -440,7 +451,18 @@ public class MultiIngredientStation : StationBase
         if (result != null)
         {
             resultItem = result.gameObject;
-            result.transform.position = anchor.position + new Vector3(-1.5f, 1.5f, 1.5f);
+            if (stationType == StationType.CrystalBall)
+            {
+                Vector3 localOffset = new Vector3(-2.5f, 1.18f, 2.5f);
+                BoxCollider col = GetComponent<BoxCollider>();
+                if (col != null) localOffset = col.center;
+                Vector3 visualCenter = anchor.position + anchor.rotation * localOffset;
+                result.transform.position = visualCenter + new Vector3(0f, 0.9f, 0f);
+            }
+            else
+            {
+                result.transform.position = anchor.position + new Vector3(-1.5f, 1.5f, 1.5f);
+            }
 
             Rigidbody rb = result.GetComponentInChildren<Rigidbody>();
             if (rb != null) rb.isKinematic = true;
@@ -683,7 +705,7 @@ public class MultiIngredientStation : StationBase
     private void UpdateVisuals()
     {
         if (emptyVisual  != null) emptyVisual.SetActive(stationState == StationState.Empty);
-        if (activeVisual != null) activeVisual.SetActive(stationState == StationState.Cooking || stationState == StationState.HasIngredients);
+        if (activeVisual != null) activeVisual.SetActive(stationState == StationState.Cooking);
         if (doneVisual   != null) doneVisual.SetActive(stationState == StationState.Done);
         if (ruinedVisual != null) ruinedVisual.SetActive(stationState == StationState.Ruined);
     }
