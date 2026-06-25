@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2226632816997675238}
   - component: {fileID: 2687464575893148113}
   - component: {fileID: -1698082353274933880}
+  - component: {fileID: 1936513598489406848}
   m_Layer: 0
   m_Name: Teacup
   m_TagString: Untagged
@@ -130,6 +131,19 @@ MonoBehaviour:
   mappings:
   - teaItem: {fileID: 0}
     resultTeacupItem: {fileID: 0}
+--- !u!114 &1936513598489406848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3934103876839999394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4444770955a7f4b788a3b1a442653d40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TeapotPour
+  pourRange: 1.6
 --- !u!1001 &7233214332446782164
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -180,7 +194,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 86454fe78d5299543933eafb3d386e2c, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
-      value:
+      value: 
       objectReference: {fileID: 2100000, guid: b23ce8cd6a40c44858c5572c1576262d, type: 2}
     - target: {fileID: 919132149155446097, guid: 86454fe78d5299543933eafb3d386e2c, type: 3}
       propertyPath: m_Name

@@ -34,12 +34,9 @@ public class PortableCookerInteraction : MonoBehaviour, IInteractable
 
     public void Interact(SimplePlayerController player)
     {
-        // Player holding empty hands and the cooker is done -> take the result
-        if (player.heldItem == null && cooker.IsDone)
-        {
-            TakeResult(player);
-            return;
-        }
+        // Note: a finished brew is NOT taken directly — you pour it into a teacup
+        // (see TeapotPour). Empty-handed interaction just picks up the teapot so you
+        // can carry it to a cup (or carry a cup to it).
 
         // Player holding an item -> try adding it as an ingredient
         if (player.heldItem != null)
