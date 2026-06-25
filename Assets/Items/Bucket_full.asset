@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Bucket_full
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: bucket full
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: ea262867bafba49408f33bdec65ffc3f, type: 3}
   prefab: {fileID: 1546068282179286838, guid: e8a0fcfc5b0eb64429a6962dec2b9cab, type: 3}
   potionColour: {r: 1, g: 1, b: 1, a: 1}
   isColourless: 0

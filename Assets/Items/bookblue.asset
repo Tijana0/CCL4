@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: bookblue
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: bookblue
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 815c8dd9ca2f145ddb35033a09806dd7, type: 3}
   prefab: {fileID: 3619312113309723841, guid: 2c6f48193e5a47743af866f9ba0e0e5a, type: 3}
   potionColour: {r: 1, g: 1, b: 1, a: 1}
   isColourless: 0

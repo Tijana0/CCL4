@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: herb 1
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: herb 1
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 8fb50873a032644a99a3f3f77f5f1ff5, type: 3}
   prefab: {fileID: 8714836366034855375, guid: 04cf6590090a91b4e83ebf6c78d98c6a, type: 3}
   potionColour: {r: 1, g: 1, b: 1, a: 1}
   isColourless: 0

@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: DragonScales
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: DragonScales
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: aeae8a55117e94486b11b65af6962191, type: 3}
   prefab: {fileID: 8773658584843026122, guid: 80ac905d1f7a1134fbeaf14400b6aeb4, type: 3}
+  potionColour: {r: 1, g: 1, b: 1, a: 1}
+  isColourless: 0
   processingRules:
   - stationType: 2
     outputItem: {fileID: 11400000, guid: 5a9dc796142a32d438b2f864166d3c46, type: 2}
