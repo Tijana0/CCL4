@@ -1288,11 +1288,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.02416731
+      value: -0.02
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.9864507
+      value: -4.48
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1390,7 +1390,7 @@ MonoBehaviour:
   itemOnStation: {fileID: 0}
   triggerMode: 0
   enableBoilOver: 1
-  boilOverDelay: 15
+  boilOverDelay: 25
   maxIngredients: 4
   defaultCookingTime: 10
   recipes:
@@ -1422,7 +1422,7 @@ MonoBehaviour:
     orderMatters: 0
     wrongOrderResult: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
   improvisedPotionItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
-  tintImprovisedResult: 1
+  tintImprovisedResult: 0
   requireSpecificIngredient: 1
   requiredStartIngredient: {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
   allowContainerSwap: 1
@@ -1468,6 +1468,18 @@ MonoBehaviour:
   - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
     brewedResultItem: {fileID: 11400000, guid: 0cb9f87831bd28843a84f8e3014d30ee, type: 2}
     filledContainerItem: {fileID: 11400000, guid: ca15d2cebe26bb145838da1d5d7c0264, type: 2}
+  - containerItem: {fileID: 11400000, guid: e30f46c97c2c16242b1fefd088f8c30f, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 48e8459e7c013a6478b6f666a10b0774, type: 2}
+  - containerItem: {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 0f7dd7d7795df9b4698136ca106ca98c, type: 2}
+  - containerItem: {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: a2a5375d1c27bbd4ea741be56b869360, type: 2}
+  - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 1d09b4f9f600a904da863999f29da4d5, type: 2}
   emptyVisual: {fileID: 0}
   activeVisual: {fileID: 0}
   doneVisual: {fileID: 0}
@@ -1739,6 +1751,73 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &157422784
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1795710315}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 20.53
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -7.52
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071067
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: cb8d0b165f67d42a0bdf2d1174e55c23, type: 2}
+    - target: {fileID: 919132149155446097, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_Name
+      value: cauldron 4
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1276605038}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1276605037}
+  m_SourcePrefab: {fileID: 100100000, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
 --- !u!4 &161957496 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5868399377125088473, guid: 2ee2066ab8432b146bec03c880bec92d, type: 3}
@@ -6557,11 +6636,101 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomConfig
   roomName: New Room
   availableItems:
-  - {fileID: 11400000, guid: 35deb88b8ff2b491e999f07b2b83f08f, type: 2}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 3de56b76625a1bd47a11b15e84ec5846, type: 2}
+  - {fileID: 11400000, guid: 969bca60fdf70454b965ab8b82ac9d3e, type: 2}
+  - {fileID: 11400000, guid: 223230be2e336574daebb5033bf479df, type: 2}
+  - {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
+  - {fileID: 11400000, guid: ecf3e67ba8600f247ad1e3c95dd26e8b, type: 2}
+  - {fileID: 11400000, guid: 2d5768648bbd36847a2ac626de2b9dcb, type: 2}
+  - {fileID: 11400000, guid: ea1f7837d4cb0bd479a85d7fd1ae2bff, type: 2}
+  - {fileID: 11400000, guid: e30f46c97c2c16242b1fefd088f8c30f, type: 2}
+  - {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+  - {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
+  - {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
+  - {fileID: 11400000, guid: 6034316ca6774dd4d965c2f640304d68, type: 2}
+  - {fileID: 11400000, guid: 20ac45d0edccdd84c9c0c7068811ddaf, type: 2}
+  - {fileID: 11400000, guid: 344ff13924d5da04e97359ad3a87018b, type: 2}
+  - {fileID: 11400000, guid: 7ceace1a6cb75284698451e010ec5979, type: 2}
+  - {fileID: 11400000, guid: 90e4ef4034c5aa146bc8d73919642b9c, type: 2}
+  - {fileID: 11400000, guid: d0d2d19d0dd72da41bbe6e39c60bd04e, type: 2}
+  - {fileID: 11400000, guid: b36362e496557764fa0834b9c1cf9143, type: 2}
+  - {fileID: 11400000, guid: 6ef4966bc16f459478b3a4f9429aaaf3, type: 2}
+  - {fileID: 11400000, guid: 9f2b2dd91d3c62d4296e4bef182c65a3, type: 2}
+  - {fileID: 11400000, guid: ca15d2cebe26bb145838da1d5d7c0264, type: 2}
+  - {fileID: 11400000, guid: 0cb9f87831bd28843a84f8e3014d30ee, type: 2}
+  - {fileID: 11400000, guid: 48e8459e7c013a6478b6f666a10b0774, type: 2}
+  - {fileID: 11400000, guid: 0f7dd7d7795df9b4698136ca106ca98c, type: 2}
+  - {fileID: 11400000, guid: a2a5375d1c27bbd4ea741be56b869360, type: 2}
+  - {fileID: 11400000, guid: 1d09b4f9f600a904da863999f29da4d5, type: 2}
+  - {fileID: 11400000, guid: b921926d916de33459a74131148df890, type: 2}
+  - {fileID: 11400000, guid: d89b3267bd6fc5849bf19bca1f1b1d3f, type: 2}
+  - {fileID: 11400000, guid: 15056ccf94525dc409b047be24cbfb3f, type: 2}
+  - {fileID: 11400000, guid: 378bcb38001e98a4e824c642224d5059, type: 2}
+  - {fileID: 11400000, guid: 7ff912c54f548fd429d214c572890870, type: 2}
+  - {fileID: 11400000, guid: ce743ad9f6d47374db1fa28e1292fa61, type: 2}
+  - {fileID: 11400000, guid: 74576e51a7dafc0469334425449c4850, type: 2}
+  - {fileID: 11400000, guid: 9157a6224a6431947b91eb180f485b29, type: 2}
+  - {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
   useProceduralGeneration: 1
-  recipes: []
-  stationConfigs: []
+  recipes:
+  - recipeName: immortality potion 1
+    requiredOutput: {fileID: 11400000, guid: 20ac45d0edccdd84c9c0c7068811ddaf, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  - recipeName: immortality potion 1
+    requiredOutput: {fileID: 11400000, guid: 344ff13924d5da04e97359ad3a87018b, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  - recipeName: immortality potion 2
+    requiredOutput: {fileID: 11400000, guid: 7ceace1a6cb75284698451e010ec5979, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  - recipeName: immortality potion 3
+    requiredOutput: {fileID: 11400000, guid: 90e4ef4034c5aa146bc8d73919642b9c, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  - recipeName: strength potion 1
+    requiredOutput: {fileID: 11400000, guid: b921926d916de33459a74131148df890, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  - recipeName: strength potion 2
+    requiredOutput: {fileID: 11400000, guid: d89b3267bd6fc5849bf19bca1f1b1d3f, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  - recipeName: strength potion 3
+    requiredOutput: {fileID: 11400000, guid: 15056ccf94525dc409b047be24cbfb3f, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  - recipeName: strength potion 4
+    requiredOutput: {fileID: 11400000, guid: 378bcb38001e98a4e824c642224d5059, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  - recipeName: leap potion 1
+    requiredOutput: {fileID: 11400000, guid: b36362e496557764fa0834b9c1cf9143, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  - recipeName: leap potion 2
+    requiredOutput: {fileID: 11400000, guid: 6ef4966bc16f459478b3a4f9429aaaf3, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  - recipeName: leap potion 3
+    requiredOutput: {fileID: 11400000, guid: 9f2b2dd91d3c62d4296e4bef182c65a3, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  - recipeName: leap potion 4
+    requiredOutput: {fileID: 11400000, guid: ca15d2cebe26bb145838da1d5d7c0264, type: 2}
+    scoreValue: 10
+    timeLimit: 60
+  stationConfigs:
+  - stationType: 1
+    allowedItems:
+    - {fileID: 11400000, guid: 969bca60fdf70454b965ab8b82ac9d3e, type: 2}
+    - {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
+    - {fileID: 11400000, guid: 74576e51a7dafc0469334425449c4850, type: 2}
+    - {fileID: 11400000, guid: ce743ad9f6d47374db1fa28e1292fa61, type: 2}
+    - {fileID: 11400000, guid: ecf3e67ba8600f247ad1e3c95dd26e8b, type: 2}
+    - {fileID: 11400000, guid: 2d5768648bbd36847a2ac626de2b9dcb, type: 2}
+    - {fileID: 11400000, guid: 6034316ca6774dd4d965c2f640304d68, type: 2}
 --- !u!4 &914804833
 Transform:
   m_ObjectHideFlags: 0
@@ -8526,6 +8695,152 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 5317031035859789120, guid: ca8e4452df27fe746a3afd0c12ef7ba5, type: 3}
+--- !u!1 &1276605035 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+  m_PrefabInstance: {fileID: 157422784}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1276605036 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+  m_PrefabInstance: {fileID: 157422784}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1276605037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1276605035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eb5a04341ec3a04385b04e62741dc83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MultiIngredientStation
+  stationType: 1
+  counterTopPoint: {fileID: 0}
+  itemOnStation: {fileID: 0}
+  triggerMode: 0
+  enableBoilOver: 1
+  boilOverDelay: 25
+  maxIngredients: 4
+  defaultCookingTime: 10
+  recipes:
+  - recipeName: immortality potion
+    requiredIngredients:
+    - {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
+    - {fileID: 11400000, guid: 969bca60fdf70454b965ab8b82ac9d3e, type: 2}
+    - {fileID: 11400000, guid: ce743ad9f6d47374db1fa28e1292fa61, type: 2}
+    outputItem: {fileID: 11400000, guid: d0d2d19d0dd72da41bbe6e39c60bd04e, type: 2}
+    cookingTime: 0
+    orderMatters: 0
+    wrongOrderResult: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+  - recipeName: strength potion
+    requiredIngredients:
+    - {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
+    - {fileID: 11400000, guid: 74576e51a7dafc0469334425449c4850, type: 2}
+    - {fileID: 11400000, guid: ecf3e67ba8600f247ad1e3c95dd26e8b, type: 2}
+    outputItem: {fileID: 11400000, guid: 7ff912c54f548fd429d214c572890870, type: 2}
+    cookingTime: 0
+    orderMatters: 0
+    wrongOrderResult: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+  - recipeName: leap potion
+    requiredIngredients:
+    - {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
+    - {fileID: 11400000, guid: 2d5768648bbd36847a2ac626de2b9dcb, type: 2}
+    - {fileID: 11400000, guid: 6034316ca6774dd4d965c2f640304d68, type: 2}
+    outputItem: {fileID: 11400000, guid: 0cb9f87831bd28843a84f8e3014d30ee, type: 2}
+    cookingTime: 0
+    orderMatters: 0
+    wrongOrderResult: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+  improvisedPotionItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+  tintImprovisedResult: 0
+  requireSpecificIngredient: 1
+  requiredStartIngredient: {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
+  allowContainerSwap: 1
+  containerItems:
+  - {fileID: 11400000, guid: e30f46c97c2c16242b1fefd088f8c30f, type: 2}
+  - {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+  - {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
+  - {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
+  containerSwapMappings:
+  - containerItem: {fileID: 11400000, guid: e30f46c97c2c16242b1fefd088f8c30f, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: d0d2d19d0dd72da41bbe6e39c60bd04e, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 20ac45d0edccdd84c9c0c7068811ddaf, type: 2}
+  - containerItem: {fileID: 11400000, guid: e30f46c97c2c16242b1fefd088f8c30f, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 7ff912c54f548fd429d214c572890870, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: b921926d916de33459a74131148df890, type: 2}
+  - containerItem: {fileID: 11400000, guid: e30f46c97c2c16242b1fefd088f8c30f, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 0cb9f87831bd28843a84f8e3014d30ee, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: b36362e496557764fa0834b9c1cf9143, type: 2}
+  - containerItem: {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: d0d2d19d0dd72da41bbe6e39c60bd04e, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 344ff13924d5da04e97359ad3a87018b, type: 2}
+  - containerItem: {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 7ff912c54f548fd429d214c572890870, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: d89b3267bd6fc5849bf19bca1f1b1d3f, type: 2}
+  - containerItem: {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 0cb9f87831bd28843a84f8e3014d30ee, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 6ef4966bc16f459478b3a4f9429aaaf3, type: 2}
+  - containerItem: {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: d0d2d19d0dd72da41bbe6e39c60bd04e, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 7ceace1a6cb75284698451e010ec5979, type: 2}
+  - containerItem: {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 7ff912c54f548fd429d214c572890870, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 15056ccf94525dc409b047be24cbfb3f, type: 2}
+  - containerItem: {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 0cb9f87831bd28843a84f8e3014d30ee, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 9f2b2dd91d3c62d4296e4bef182c65a3, type: 2}
+  - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: d0d2d19d0dd72da41bbe6e39c60bd04e, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 90e4ef4034c5aa146bc8d73919642b9c, type: 2}
+  - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 7ff912c54f548fd429d214c572890870, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 378bcb38001e98a4e824c642224d5059, type: 2}
+  - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 0cb9f87831bd28843a84f8e3014d30ee, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: ca15d2cebe26bb145838da1d5d7c0264, type: 2}
+  - containerItem: {fileID: 11400000, guid: e30f46c97c2c16242b1fefd088f8c30f, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 48e8459e7c013a6478b6f666a10b0774, type: 2}
+  - containerItem: {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 0f7dd7d7795df9b4698136ca106ca98c, type: 2}
+  - containerItem: {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: a2a5375d1c27bbd4ea741be56b869360, type: 2}
+  - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 1d09b4f9f600a904da863999f29da4d5, type: 2}
+  emptyVisual: {fileID: 0}
+  activeVisual: {fileID: 0}
+  doneVisual: {fileID: 0}
+  ruinedVisual: {fileID: 0}
+  progressBarFill: {fileID: 0}
+  progressBarContainer: {fileID: 0}
+  resultSpawnPoint: {fileID: 0}
+--- !u!64 &1276605038
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1276605035}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 405147689058365839, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
 --- !u!1001 &1282875171
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9215,6 +9530,152 @@ Transform:
   - {fileID: 846918924}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1439345469 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+  m_PrefabInstance: {fileID: 1810525003}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1439345470 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+  m_PrefabInstance: {fileID: 1810525003}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1439345471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439345469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eb5a04341ec3a04385b04e62741dc83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MultiIngredientStation
+  stationType: 1
+  counterTopPoint: {fileID: 0}
+  itemOnStation: {fileID: 0}
+  triggerMode: 0
+  enableBoilOver: 1
+  boilOverDelay: 25
+  maxIngredients: 4
+  defaultCookingTime: 10
+  recipes:
+  - recipeName: immortality potion
+    requiredIngredients:
+    - {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
+    - {fileID: 11400000, guid: 969bca60fdf70454b965ab8b82ac9d3e, type: 2}
+    - {fileID: 11400000, guid: ce743ad9f6d47374db1fa28e1292fa61, type: 2}
+    outputItem: {fileID: 11400000, guid: d0d2d19d0dd72da41bbe6e39c60bd04e, type: 2}
+    cookingTime: 0
+    orderMatters: 0
+    wrongOrderResult: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+  - recipeName: strength potion
+    requiredIngredients:
+    - {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
+    - {fileID: 11400000, guid: 74576e51a7dafc0469334425449c4850, type: 2}
+    - {fileID: 11400000, guid: ecf3e67ba8600f247ad1e3c95dd26e8b, type: 2}
+    outputItem: {fileID: 11400000, guid: 7ff912c54f548fd429d214c572890870, type: 2}
+    cookingTime: 0
+    orderMatters: 0
+    wrongOrderResult: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+  - recipeName: leap potion
+    requiredIngredients:
+    - {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
+    - {fileID: 11400000, guid: 2d5768648bbd36847a2ac626de2b9dcb, type: 2}
+    - {fileID: 11400000, guid: 6034316ca6774dd4d965c2f640304d68, type: 2}
+    outputItem: {fileID: 11400000, guid: 0cb9f87831bd28843a84f8e3014d30ee, type: 2}
+    cookingTime: 0
+    orderMatters: 0
+    wrongOrderResult: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+  improvisedPotionItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+  tintImprovisedResult: 0
+  requireSpecificIngredient: 1
+  requiredStartIngredient: {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
+  allowContainerSwap: 1
+  containerItems:
+  - {fileID: 11400000, guid: e30f46c97c2c16242b1fefd088f8c30f, type: 2}
+  - {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+  - {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
+  - {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
+  containerSwapMappings:
+  - containerItem: {fileID: 11400000, guid: e30f46c97c2c16242b1fefd088f8c30f, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: d0d2d19d0dd72da41bbe6e39c60bd04e, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 20ac45d0edccdd84c9c0c7068811ddaf, type: 2}
+  - containerItem: {fileID: 11400000, guid: e30f46c97c2c16242b1fefd088f8c30f, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 7ff912c54f548fd429d214c572890870, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: b921926d916de33459a74131148df890, type: 2}
+  - containerItem: {fileID: 11400000, guid: e30f46c97c2c16242b1fefd088f8c30f, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 0cb9f87831bd28843a84f8e3014d30ee, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: b36362e496557764fa0834b9c1cf9143, type: 2}
+  - containerItem: {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: d0d2d19d0dd72da41bbe6e39c60bd04e, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 344ff13924d5da04e97359ad3a87018b, type: 2}
+  - containerItem: {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 7ff912c54f548fd429d214c572890870, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: d89b3267bd6fc5849bf19bca1f1b1d3f, type: 2}
+  - containerItem: {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 0cb9f87831bd28843a84f8e3014d30ee, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 6ef4966bc16f459478b3a4f9429aaaf3, type: 2}
+  - containerItem: {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: d0d2d19d0dd72da41bbe6e39c60bd04e, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 7ceace1a6cb75284698451e010ec5979, type: 2}
+  - containerItem: {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 7ff912c54f548fd429d214c572890870, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 15056ccf94525dc409b047be24cbfb3f, type: 2}
+  - containerItem: {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 0cb9f87831bd28843a84f8e3014d30ee, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 9f2b2dd91d3c62d4296e4bef182c65a3, type: 2}
+  - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: d0d2d19d0dd72da41bbe6e39c60bd04e, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 90e4ef4034c5aa146bc8d73919642b9c, type: 2}
+  - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 7ff912c54f548fd429d214c572890870, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 378bcb38001e98a4e824c642224d5059, type: 2}
+  - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 0cb9f87831bd28843a84f8e3014d30ee, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: ca15d2cebe26bb145838da1d5d7c0264, type: 2}
+  - containerItem: {fileID: 11400000, guid: e30f46c97c2c16242b1fefd088f8c30f, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 48e8459e7c013a6478b6f666a10b0774, type: 2}
+  - containerItem: {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 0f7dd7d7795df9b4698136ca106ca98c, type: 2}
+  - containerItem: {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: a2a5375d1c27bbd4ea741be56b869360, type: 2}
+  - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 1d09b4f9f600a904da863999f29da4d5, type: 2}
+  emptyVisual: {fileID: 0}
+  activeVisual: {fileID: 0}
+  doneVisual: {fileID: 0}
+  ruinedVisual: {fileID: 0}
+  progressBarFill: {fileID: 0}
+  progressBarContainer: {fileID: 0}
+  resultSpawnPoint: {fileID: 0}
+--- !u!64 &1439345472
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439345469}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 405147689058365839, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
 --- !u!1001 &1440101635
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10931,6 +11392,9 @@ Transform:
   - {fileID: 399472996}
   - {fileID: 738612621}
   - {fileID: 152192689}
+  - {fileID: 1833050877}
+  - {fileID: 1439345470}
+  - {fileID: 1276605036}
   - {fileID: 1428991888}
   - {fileID: 772160911}
   - {fileID: 461209882}
@@ -11227,6 +11691,73 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1093053116055240575, guid: fe9e6145d26f7cf4b81b95da22413b15, type: 3}
   m_PrefabInstance: {fileID: 8723552569444933838}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1810525003
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1795710315}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 20.49
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -4.56
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071067
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: cb8d0b165f67d42a0bdf2d1174e55c23, type: 2}
+    - target: {fileID: 919132149155446097, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_Name
+      value: cauldron 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1439345472}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1439345471}
+  m_SourcePrefab: {fileID: 100100000, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
 --- !u!1 &1811912633
 GameObject:
   m_ObjectHideFlags: 0
@@ -11431,6 +11962,152 @@ Transform:
   m_Children: []
   m_Father: {fileID: 974483594}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1833050876 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+  m_PrefabInstance: {fileID: 1893755917}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1833050877 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+  m_PrefabInstance: {fileID: 1893755917}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1833050878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1833050876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eb5a04341ec3a04385b04e62741dc83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MultiIngredientStation
+  stationType: 1
+  counterTopPoint: {fileID: 0}
+  itemOnStation: {fileID: 0}
+  triggerMode: 0
+  enableBoilOver: 1
+  boilOverDelay: 25
+  maxIngredients: 4
+  defaultCookingTime: 10
+  recipes:
+  - recipeName: immortality potion
+    requiredIngredients:
+    - {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
+    - {fileID: 11400000, guid: 969bca60fdf70454b965ab8b82ac9d3e, type: 2}
+    - {fileID: 11400000, guid: ce743ad9f6d47374db1fa28e1292fa61, type: 2}
+    outputItem: {fileID: 11400000, guid: d0d2d19d0dd72da41bbe6e39c60bd04e, type: 2}
+    cookingTime: 0
+    orderMatters: 0
+    wrongOrderResult: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+  - recipeName: strength potion
+    requiredIngredients:
+    - {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
+    - {fileID: 11400000, guid: 74576e51a7dafc0469334425449c4850, type: 2}
+    - {fileID: 11400000, guid: ecf3e67ba8600f247ad1e3c95dd26e8b, type: 2}
+    outputItem: {fileID: 11400000, guid: 7ff912c54f548fd429d214c572890870, type: 2}
+    cookingTime: 0
+    orderMatters: 0
+    wrongOrderResult: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+  - recipeName: leap potion
+    requiredIngredients:
+    - {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
+    - {fileID: 11400000, guid: 2d5768648bbd36847a2ac626de2b9dcb, type: 2}
+    - {fileID: 11400000, guid: 6034316ca6774dd4d965c2f640304d68, type: 2}
+    outputItem: {fileID: 11400000, guid: 0cb9f87831bd28843a84f8e3014d30ee, type: 2}
+    cookingTime: 0
+    orderMatters: 0
+    wrongOrderResult: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+  improvisedPotionItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+  tintImprovisedResult: 0
+  requireSpecificIngredient: 1
+  requiredStartIngredient: {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
+  allowContainerSwap: 1
+  containerItems:
+  - {fileID: 11400000, guid: e30f46c97c2c16242b1fefd088f8c30f, type: 2}
+  - {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+  - {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
+  - {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
+  containerSwapMappings:
+  - containerItem: {fileID: 11400000, guid: e30f46c97c2c16242b1fefd088f8c30f, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: d0d2d19d0dd72da41bbe6e39c60bd04e, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 20ac45d0edccdd84c9c0c7068811ddaf, type: 2}
+  - containerItem: {fileID: 11400000, guid: e30f46c97c2c16242b1fefd088f8c30f, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 7ff912c54f548fd429d214c572890870, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: b921926d916de33459a74131148df890, type: 2}
+  - containerItem: {fileID: 11400000, guid: e30f46c97c2c16242b1fefd088f8c30f, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 0cb9f87831bd28843a84f8e3014d30ee, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: b36362e496557764fa0834b9c1cf9143, type: 2}
+  - containerItem: {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: d0d2d19d0dd72da41bbe6e39c60bd04e, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 344ff13924d5da04e97359ad3a87018b, type: 2}
+  - containerItem: {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 7ff912c54f548fd429d214c572890870, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: d89b3267bd6fc5849bf19bca1f1b1d3f, type: 2}
+  - containerItem: {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 0cb9f87831bd28843a84f8e3014d30ee, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 6ef4966bc16f459478b3a4f9429aaaf3, type: 2}
+  - containerItem: {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: d0d2d19d0dd72da41bbe6e39c60bd04e, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 7ceace1a6cb75284698451e010ec5979, type: 2}
+  - containerItem: {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 7ff912c54f548fd429d214c572890870, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 15056ccf94525dc409b047be24cbfb3f, type: 2}
+  - containerItem: {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 0cb9f87831bd28843a84f8e3014d30ee, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 9f2b2dd91d3c62d4296e4bef182c65a3, type: 2}
+  - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: d0d2d19d0dd72da41bbe6e39c60bd04e, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 90e4ef4034c5aa146bc8d73919642b9c, type: 2}
+  - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 7ff912c54f548fd429d214c572890870, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 378bcb38001e98a4e824c642224d5059, type: 2}
+  - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 0cb9f87831bd28843a84f8e3014d30ee, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: ca15d2cebe26bb145838da1d5d7c0264, type: 2}
+  - containerItem: {fileID: 11400000, guid: e30f46c97c2c16242b1fefd088f8c30f, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 48e8459e7c013a6478b6f666a10b0774, type: 2}
+  - containerItem: {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 0f7dd7d7795df9b4698136ca106ca98c, type: 2}
+  - containerItem: {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: a2a5375d1c27bbd4ea741be56b869360, type: 2}
+  - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
+    brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
+    filledContainerItem: {fileID: 11400000, guid: 1d09b4f9f600a904da863999f29da4d5, type: 2}
+  emptyVisual: {fileID: 0}
+  activeVisual: {fileID: 0}
+  doneVisual: {fileID: 0}
+  ruinedVisual: {fileID: 0}
+  progressBarFill: {fileID: 0}
+  progressBarContainer: {fileID: 0}
+  resultSpawnPoint: {fileID: 0}
+--- !u!64 &1833050879
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1833050876}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 405147689058365839, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
 --- !u!4 &1853135898 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8592687514830254423, guid: 93b58714ea7cd2e4b8740cae98821f55, type: 3}
@@ -11784,6 +12461,73 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -7989316131603879603, guid: 79977c9660b49c44cab108f53439d406, type: 3}
+--- !u!1001 &1893755917
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1795710315}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 28.382648
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -7.49
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071067
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: cb8d0b165f67d42a0bdf2d1174e55c23, type: 2}
+    - target: {fileID: 919132149155446097, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      propertyPath: m_Name
+      value: cauldron 2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1833050879}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1833050878}
+  m_SourcePrefab: {fileID: 100100000, guid: e5f6bc53eedec0f46a1dd1f689cae4d1, type: 3}
 --- !u!1 &1903281958
 GameObject:
   m_ObjectHideFlags: 0
@@ -12992,7 +13736,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1609302012628729823, guid: defec2455ca1eb947898303b07f92dcf, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 33.15
+      value: 35.96
       objectReference: {fileID: 0}
     - target: {fileID: 1609302012628729823, guid: defec2455ca1eb947898303b07f92dcf, type: 3}
       propertyPath: m_LocalPosition.y
