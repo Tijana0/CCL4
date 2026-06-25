@@ -4737,6 +4737,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3726220373116934397, guid: 66921c1264acb4cdba380ad732169c48, type: 3}
+      propertyPath: moveSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3726220373116934397, guid: 66921c1264acb4cdba380ad732169c48, type: 3}
       propertyPath: roomAnchor
       value: 
       objectReference: {fileID: 593755671}
@@ -4759,6 +4763,10 @@ PrefabInstance:
     - target: {fileID: 3726220373116934397, guid: 66921c1264acb4cdba380ad732169c48, type: 3}
       propertyPath: roomCenter.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3726220373116934397, guid: 66921c1264acb4cdba380ad732169c48, type: 3}
+      propertyPath: triggerRadius
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 3726220373116934397, guid: 66921c1264acb4cdba380ad732169c48, type: 3}
       propertyPath: useRoomBounds
@@ -5421,7 +5429,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2e38f52bcc554aa3a707381ed703442, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PixieAI
-  moveSpeed: 1.5
+  moveSpeed: 2
   heightMin: 0
   heightMax: 1.5
   freezeDuration: 3
@@ -5429,7 +5437,7 @@ MonoBehaviour:
   roomAnchor: {fileID: 593755671}
   roomCenter: {x: 0.21, y: 0, z: 0}
   roomSize: {x: 5.5, y: 9}
-  triggerRadius: 1.25
+  triggerRadius: 0.6
   applyRadiusToExistingSphere: 1
   noiseFrequency: 0.3
 --- !u!1001 &738612620
