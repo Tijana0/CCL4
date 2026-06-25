@@ -12,6 +12,8 @@ public class PickupObject : MonoBehaviour, IInteractable
 {
     public ItemType itemType = ItemType.Standard;
     public int value = 0;
+    [Tooltip("If true, the object will remain kinematic at startup even if it has no parent.")]
+    public bool startKinematic = false;
 
     [Header("Audio")]
     public AudioManager.DropType dropType = AudioManager.DropType.Heavy;
@@ -39,7 +41,7 @@ public class PickupObject : MonoBehaviour, IInteractable
     private void Start()
     {
         // If the item is on the floor at startup (no parent), enable physics
-        if (transform.parent == null && rb != null)
+        if (transform.parent == null && rb != null && !startKinematic)
         {
             rb.isKinematic = false;
             rb.linearDamping = 10f; // High drag so they stop quickly when pushed

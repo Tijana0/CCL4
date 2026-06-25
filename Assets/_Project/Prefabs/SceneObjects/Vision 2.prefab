@@ -282,6 +282,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickupObject
   itemType: 0
   value: 0
+  startKinematic: 1
   skipPivotCentering: 0
 --- !u!65 &931234372981372959
 BoxCollider:

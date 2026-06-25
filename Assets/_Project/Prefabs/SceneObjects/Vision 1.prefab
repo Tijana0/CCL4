@@ -154,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickupObject
   itemType: 0
   value: 0
+  startKinematic: 1
 --- !u!65 &857330944195910104
 BoxCollider:
   m_ObjectHideFlags: 0
