@@ -114,8 +114,8 @@ public class SettingsMenu : MonoBehaviour
 
         // ── CONTROLS (large reference images, below audio) ─────────────────────
         AddHeader(content.transform, "CONTROLS");
-        AddControlImage(content.transform, "Keyboard", "controls_keyboard", 300f);
-        AddControlImage(content.transform, "Controller", "controls_gamepad", 300f);
+        AddControlImage(content.transform, "controls_keyboard", 280f);
+        AddControlImage(content.transform, "controls_gamepad", 280f);
 
         // Back (fixed at bottom of card)
         var back = MakeButton(card.transform, "BackButton", "Back");
@@ -306,16 +306,18 @@ public class SettingsMenu : MonoBehaviour
 
     // A large control-scheme reference image (Resources/UI/<name>.png). It carries a
     // no-op Selectable so a controller can navigate to it and scroll it into view.
-    private void AddControlImage(Transform parent, string caption, string resourceName, float height)
+    private void AddControlImage(Transform parent, string resourceName, float height)
     {
-        var capRow = Row(parent, 24f);
-        var cap = NewText("Caption", capRow.transform, caption, 18, TextAlignmentOptions.Left);
-        cap.color = new Color(1f, 1f, 1f, 0.75f);
-        var crt = cap.rectTransform; crt.anchorMin = Vector2.zero; crt.anchorMax = Vector2.one;
-        crt.offsetMin = new Vector2(2f, 0f); crt.offsetMax = Vector2.zero;
+        var row = Row(parent, height);
 
-        var imgGO = NewRect(resourceName + "_Image", parent);
-        imgGO.AddComponent<LayoutElement>().preferredHeight = height;
+        var imgGO = NewRect(resourceName + "_Image", row.transform);
+        var rt = imgGO.GetComponent<RectTransform>();
+        rt.anchorMin = new Vector2(0.5f, 0.5f);
+        rt.anchorMax = new Vector2(0.5f, 0.5f);
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.anchoredPosition = Vector2.zero;
+        rt.sizeDelta = new Vector2(400f, height);
+
         var img = imgGO.AddComponent<Image>();
         var sprite = LoadControlSprite(resourceName);
         if (sprite != null) { img.sprite = sprite; img.preserveAspect = true; img.color = Color.white; }
