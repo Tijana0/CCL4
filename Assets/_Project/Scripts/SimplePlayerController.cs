@@ -741,6 +741,11 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         }
 
         pickup.Drop(dropPos);
+        if (snappedToCounter)
+        {
+            Rigidbody rb = pickup.GetComponent<Rigidbody>();
+            if (rb != null) rb.isKinematic = true;
+        }
         heldItem = null;
     }
 
