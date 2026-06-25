@@ -74,8 +74,8 @@ public class SettingsMenu : MonoBehaviour
         ul.AddComponent<Image>().color = Gold;
 
         // Two columns
-        var left  = Column(card.transform, new Vector2(0.05f, 0.16f), new Vector2(0.49f, 0.80f));
-        var right = Column(card.transform, new Vector2(0.51f, 0.16f), new Vector2(0.95f, 0.80f));
+        var left  = Column(card.transform, new Vector2(0.05f, 0.16f), new Vector2(0.46f, 0.80f));
+        var right = Column(card.transform, new Vector2(0.50f, 0.16f), new Vector2(0.95f, 0.80f));
 
         // ── LEFT: AUDIO ────────────────────────────────────────────────────────
         AddHeader(left, "AUDIO");
@@ -90,14 +90,10 @@ public class SettingsMenu : MonoBehaviour
         SetMusicVolumeEnabled(s.musicEnabled);
         AddSlider(left, "SFX", s.sfxVolume, v => SettingsManager.Instance.SetSfxVolume(v), out _, out _);
 
-        // ── RIGHT: DISPLAY ─────────────────────────────────────────────────────
-        AddHeader(right, "DISPLAY");
-        AddDropdown(right, "Resolution",
-            new List<string>(SettingsManager.ResolutionLabels()), s.resolutionIndex,
-            idx => SettingsManager.Instance.SetResolutionIndex(idx));
-        AddDropdown(right, "Window Mode",
-            new List<string> { "Fullscreen", "Windowed" }, s.fullscreen ? 0 : 1,
-            idx => SettingsManager.Instance.SetFullscreen(idx == 0));
+        // ── RIGHT: CONTROLS (reference images) ─────────────────────────────────
+        AddHeader(right, "CONTROLS");
+        AddControlImage(right, "Keyboard", "controls_keyboard");
+        AddControlImage(right, "Controller", "controls_gamepad");
 
         // ── Back button ────────────────────────────────────────────────────────
         var back = MakeButton(card.transform, "BackButton", "Back");
@@ -252,26 +248,41 @@ public class SettingsMenu : MonoBehaviour
         navItems.Add(toggle);
     }
 
-    private void AddDropdown(Transform parent, string label, List<string> options, int value, UnityEngine.Events.UnityAction<int> cb)
+    // Displays a control-scheme reference image (loaded from Resources/UI/<name>.png).
+    // Not interactive, so it isn't part of the controller navigation chain.
+    private void AddControlImage(Transform parent, string caption, string resourceName)
     {
-        var row = Row(parent, 56f);
-        var lab = NewText("Label", row.transform, label, 20, TextAlignmentOptions.Left);
-        var lrt = lab.rectTransform; lrt.anchorMin = new Vector2(0f, 1f); lrt.anchorMax = new Vector2(1f, 1f);
-        lrt.pivot = new Vector2(0f, 1f); lrt.offsetMin = new Vector2(2f, -22f); lrt.offsetMax = new Vector2(0f, 0f);
+        var capRow = Row(parent, 22f);
+        var cap = NewText("Caption", capRow.transform, caption, 16, TextAlignmentOptions.Left);
+        cap.color = new Color(1f, 1f, 1f, 0.7f);
+        var crt = cap.rectTransform; crt.anchorMin = Vector2.zero; crt.anchorMax = Vector2.one;
+        crt.offsetMin = new Vector2(2f, 0f); crt.offsetMax = Vector2.zero;
 
-        var ddGO = DefaultControls.CreateDropdown(uiRes);
-        ddGO.name = "Dropdown";
-        ddGO.transform.SetParent(row.transform, false);
-        var drt = ddGO.GetComponent<RectTransform>();
-        drt.anchorMin = new Vector2(0f, 0f); drt.anchorMax = new Vector2(1f, 0f); drt.pivot = new Vector2(0.5f, 0f);
-        drt.offsetMin = new Vector2(2f, 2f); drt.offsetMax = new Vector2(-2f, 30f);
+        var imgGO = NewRect(resourceName + "_Image", parent);
+        var le = imgGO.AddComponent<LayoutElement>(); le.flexibleHeight = 1f; le.minHeight = 70f;
+        var img = imgGO.AddComponent<Image>();
+        var sprite = LoadControlSprite(resourceName);
+        if (sprite != null)
+        {
+            img.sprite = sprite; img.preserveAspect = true; img.color = Color.white;
+        }
+        else
+        {
+            img.color = new Color(1f, 1f, 1f, 0.06f);
+            var ph = NewText("Placeholder", imgGO.transform,
+                "Add  Resources/UI/" + resourceName + ".png", 14, TextAlignmentOptions.Center);
+            ph.color = new Color(1f, 1f, 1f, 0.45f); Stretch(ph.rectTransform);
+        }
+    }
 
-        var dd = ddGO.GetComponent<Dropdown>();
-        dd.ClearOptions(); dd.AddOptions(options);
-        dd.value = Mathf.Clamp(value, 0, options.Count - 1);
-        dd.RefreshShownValue();
-        dd.onValueChanged.AddListener(cb);
-        navItems.Add(dd);
+    private Sprite LoadControlSprite(string name)
+    {
+        var sp = Resources.Load<Sprite>("UI/" + name);
+        if (sp != null) return sp;
+        // Fallback: the PNG was imported as a plain texture rather than a Sprite.
+        var tex = Resources.Load<Texture2D>("UI/" + name);
+        if (tex != null) return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+        return null;
     }
 
     // ── Low-level helpers ────────────────────────────────────────────────────────
