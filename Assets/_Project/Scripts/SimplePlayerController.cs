@@ -475,6 +475,18 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
     private void TryInteract()
     {
+        // If holding an item with PourSource, and there is a PourTarget in range,
+        // prioritize pouring over normal interaction/dropping!
+        if (heldItem != null)
+        {
+            PourSource pourSource = heldItem.GetComponent<PourSource>();
+            if (pourSource != null && pourSource.CanPour())
+            {
+                pourSource.ExecutePour(this);
+                return;
+            }
+        }
+
         // Instead of strict grid snapping, use a hitbox directly in front of the player
         Vector3 interactionCenter = transform.position + transform.forward * 0.6f;
         interactionCenter.y = 0.5f; // Keep it low to hit floor items

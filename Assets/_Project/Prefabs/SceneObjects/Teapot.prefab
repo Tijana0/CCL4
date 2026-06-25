@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 2511254390838019616}
   - component: {fileID: 5509989420355652656}
   - component: {fileID: 900138813936884260}
+  - component: {fileID: -7902964885932546511}
   m_Layer: 0
   m_Name: Teapot
   m_TagString: Untagged
@@ -200,6 +201,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TeapotPour
   pourRange: 1.6
+--- !u!114 &-7902964885932546511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 137518175886192598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9aad361f0dc58ba49853cce92ae9a576, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PourSource
+  resetToItem: {fileID: 0}
+  pourRange: 1.5
 --- !u!1001 &1917737079608319852
 PrefabInstance:
   m_ObjectHideFlags: 0

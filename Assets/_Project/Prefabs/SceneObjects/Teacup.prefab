@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2687464575893148113}
   - component: {fileID: -1698082353274933880}
   - component: {fileID: 1936513598489406848}
+  - component: {fileID: 848769657163080975}
   m_Layer: 0
   m_Name: Teacup
   m_TagString: Untagged
@@ -129,8 +130,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TeacupFillTarget
   isFilled: 0
   mappings:
-  - teaItem: {fileID: 0}
-    resultTeacupItem: {fileID: 0}
+  - teaItem: {fileID: 11400000, guid: 98374cb1f414b004f89f92bd25ebc646, type: 2}
+    resultTeacupItem: {fileID: 11400000, guid: 98374cb1f414b004f89f92bd25ebc646, type: 2}
+  - teaItem: {fileID: 11400000, guid: 6a338b691806fc649aa00e6a7ac90a99, type: 2}
+    resultTeacupItem: {fileID: 11400000, guid: 6a338b691806fc649aa00e6a7ac90a99, type: 2}
+  - teaItem: {fileID: 11400000, guid: 1aef00a9bb5786747bf5022a9bdb823e, type: 2}
+    resultTeacupItem: {fileID: 11400000, guid: 1aef00a9bb5786747bf5022a9bdb823e, type: 2}
 --- !u!114 &1936513598489406848
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,6 +149,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TeapotPour
   pourRange: 1.6
+--- !u!114 &848769657163080975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3934103876839999394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 049ea28606d019840a5144552e43be27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PourTarget
+  filledItem: {fileID: 0}
 --- !u!1001 &7233214332446782164
 PrefabInstance:
   m_ObjectHideFlags: 0
