@@ -125,7 +125,11 @@ public class MultiIngredientStation : StationBase
             {
                 GameObject visualParent = new GameObject("CrystalBall_ActiveVisual");
                 visualParent.transform.SetParent(this.transform, false);
-                visualParent.transform.localPosition = new Vector3(0f, 0.8f, 0f);
+                // Position the glow at the actual crystal-ball visual (the collider centre),
+                // not at the station's transform origin (which is offset, e.g. onto the stairs).
+                BoxCollider ballCol = GetComponent<BoxCollider>();
+                if (ballCol != null) visualParent.transform.position = transform.TransformPoint(ballCol.center) + Vector3.up * 0.3f;
+                else visualParent.transform.localPosition = new Vector3(0f, 0.8f, 0f);
 
                 GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 sphere.name = "ShiningSphere";
@@ -468,6 +472,7 @@ public class MultiIngredientStation : StationBase
         boilOverTimer = 0f; // Reset burn timer too
         if (player != null) cookingPlayer = player;
         stationState = StationState.Cooking;
+        UpdateVisuals(); // turn on the active visual (e.g. crystal ball glow) now that we're cooking
 
         if (progressBarContainer != null) progressBarContainer.SetActive(true);
         if (progressBarFill != null) progressBarFill.fillAmount = 0f;
@@ -781,7 +786,11 @@ public class MultiIngredientStation : StationBase
     private void UpdateVisuals()
     {
         if (emptyVisual != null) emptyVisual.SetActive(stationState == StationState.Empty);
-        if (activeVisual != null) activeVisual.SetActive(stationState == StationState.Cooking || stationState == StationState.HasIngredients);
+        // Crystal ball glow only appears while actually cooking (not on the first ingredient);
+        // other stations (e.g. cauldron) may show their active visual once ingredients are added.
+        bool showActive = stationState == StationState.Cooking
+                          || (stationState == StationState.HasIngredients && stationType != StationType.CrystalBall);
+        if (activeVisual != null) activeVisual.SetActive(showActive);
         if (doneVisual != null) doneVisual.SetActive(stationState == StationState.Done);
         if (ruinedVisual != null) ruinedVisual.SetActive(stationState == StationState.Ruined);
     }
