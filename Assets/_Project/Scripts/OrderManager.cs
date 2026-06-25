@@ -448,6 +448,21 @@ public class ActiveOrderTracker : MonoBehaviour
     private bool isInitialized = false;
     
     private Image timerBar;
+    private Image cardImage;
+    private Color originalColor;
+
+    private void Start()
+    {
+        cardImage = GetComponent<Image>();
+        if (cardImage == null)
+        {
+            cardImage = transform.Find("Background")?.GetComponent<Image>();
+        }
+        if (cardImage != null)
+        {
+            originalColor = cardImage.color;
+        }
+    }
 
     public void SetupTimer(float duration, System.Action expirationCallback)
     {
@@ -475,6 +490,24 @@ public class ActiveOrderTracker : MonoBehaviour
             // Visual feedback: turn red when low
             if (timeRemaining < totalTime * 0.25f)
                 timerBar.color = Color.red;
+        }
+
+        // Flash background color between original and red in the last 10 seconds or last 25% of time
+        if (timeRemaining <= 10f || timeRemaining <= totalTime * 0.25f)
+        {
+            if (cardImage != null)
+            {
+                float flashSpeed = 10f; // Rapid flash rate
+                float t = Mathf.PingPong(Time.time * flashSpeed, 1f);
+                cardImage.color = Color.Lerp(originalColor, new Color(1f, 0.2f, 0.2f, originalColor.a), t);
+            }
+        }
+        else
+        {
+            if (cardImage != null && cardImage.color != originalColor)
+            {
+                cardImage.color = originalColor;
+            }
         }
 
         if (timeRemaining <= 0)
