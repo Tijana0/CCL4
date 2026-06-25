@@ -48,6 +48,8 @@ public class PortableCooker : MonoBehaviour
     public Vector3 homeLocalPosition;
     [Tooltip("Resting local rotation (euler) relative to homeAnchor.")]
     public Vector3 homeLocalEuler;
+    [Tooltip("Resting local scale relative to homeAnchor. Automatically captured at startup if not customized.")]
+    public Vector3 homeLocalScale = Vector3.one;
     [Tooltip("How close (when not held) the pot must be to its home before it snaps back onto the stand.")]
     public float homeSnapRange = 2.5f;
 
@@ -95,6 +97,15 @@ public class PortableCooker : MonoBehaviour
             BuildProgressBar();
         if (progressBarContainer != null)
             progressBarContainer.SetActive(false);
+    }
+
+    private void Start()
+    {
+        // Capture the authored local scale if we start parented to our home anchor
+        if (homeAnchor != null && transform.parent == homeAnchor)
+        {
+            homeLocalScale = transform.localScale;
+        }
     }
 
     public bool IsEmpty => ingredients.Count == 0 && !isDone;
@@ -357,6 +368,7 @@ public class PortableCooker : MonoBehaviour
         transform.SetParent(homeAnchor);
         transform.localPosition = homeLocalPosition;
         transform.localRotation = Quaternion.Euler(homeLocalEuler);
+        transform.localScale = homeLocalScale;
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb == null) rb = GetComponentInChildren<Rigidbody>();
         if (rb != null)
