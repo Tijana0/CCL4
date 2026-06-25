@@ -156,7 +156,7 @@ public class MultiIngredientStation : StationBase
                     BoxCollider col = GetComponent<BoxCollider>();
                     if (col != null) localOffset = col.center;
                     Vector3 visualCenter = counterTopPoint.position + counterTopPoint.rotation * localOffset;
-                    canvasGO.transform.position = visualCenter + new Vector3(0f, 0.8f, 0f);
+                    canvasGO.transform.position = visualCenter + new Vector3(0f, 1.3f, 0f);
                 }
                 else
                 {
@@ -453,7 +453,7 @@ public class MultiIngredientStation : StationBase
                 BoxCollider col = GetComponent<BoxCollider>();
                 if (col != null) localOffset = col.center;
                 Vector3 visualCenter = anchor.position + anchor.rotation * localOffset;
-                result.transform.position = visualCenter + new Vector3(0f, 0.5f, 0f);
+                result.transform.position = visualCenter + new Vector3(0f, 0.9f, 0f);
             }
             else
             {
