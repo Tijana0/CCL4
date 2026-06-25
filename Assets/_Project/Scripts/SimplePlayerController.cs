@@ -44,6 +44,10 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
     private Rigidbody rb;
     private Vector2 currentMoveInput;
 
+    /// <summary>Current movement input this frame (read-only). Used by PlayerAnimatorDriver.</summary>
+    public Vector2 MoveInput => currentMoveInput;
+    public bool IsDashing => isDashing;
+
     private static System.Collections.Generic.List<InputDevice> cachedControllers = new System.Collections.Generic.List<InputDevice>();
     private static bool controllersDirty = true;
     private static bool isSubscribedToEvents = false;

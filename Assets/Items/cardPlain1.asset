@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 97340c5b42f311744bbcde4a2c5d3980, type: 3}
-  m_Name: book 2
+  m_Name: cardPlain1
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: book 2
+  itemName: cardPlain1
   icon: {fileID: 0}
-  prefab: {fileID: 3619312113309723841, guid: 2c6f48193e5a47743af866f9ba0e0e5a, type: 3}
-  potionColour: {r: 1, g: 1, b: 1, a: 1}
+  prefab: {fileID: 7864220261642982711, guid: 8b6ce0c59c452804aa68710429f7000a, type: 3}
+  potionColour: {r: 0.8254717, g: 0.08176842, b: 0.08176842, a: 1}
   isColourless: 0
   processingRules: []
   combineRules: []
-  allowedStationTypes: 00000000050000000a0000000b000000
+  allowedStationTypes: 
   requiresProcessingBeforeCauldron: 0
   isDisposable: 1

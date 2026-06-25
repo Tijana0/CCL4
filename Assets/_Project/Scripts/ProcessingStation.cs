@@ -43,6 +43,8 @@ public class ProcessingStation : StationBase
     public bool autoProcess = false;
     [Tooltip("If true, an item with no transform rule for this station is dropped to the floor instead of staying in the player's hands. Used by the Brazier.")]
     public bool dropRejectedItems = false;
+    [Tooltip("If true, an item sitting on this station is hidden (renderers off) so it looks like it's INSIDE the station — e.g. herbs burning inside the brazier. Only the progress bar indicates status. Shown again when picked up.")]
+    public bool hideItemWhileOnStation = false;
 
     private bool isProcessing = false;
     private float processingProgress = 0f;
@@ -209,6 +211,7 @@ public class ProcessingStation : StationBase
             if (rb != null) rb.isKinematic = true;
             foreach (Collider col in charred.GetComponentsInChildren<Collider>())
                 col.enabled = false;
+            if (hideItemWhileOnStation) SetItemRenderers(itemOnStation, false);
         }
 
         overcooked = true;      // don't overcook again
@@ -258,8 +261,17 @@ public class ProcessingStation : StationBase
         }
         else if (!playerHasItem && stationHasItem && !isProcessing)
         {
+            if (hideItemWhileOnStation) SetItemRenderers(itemOnStation, true); // reveal it as it goes into the hand
             TakeItem(player);
         }
+    }
+
+    /// <summary>Shows/hides an item's renderers (used to keep items hidden "inside" the brazier).</summary>
+    private void SetItemRenderers(GameObject item, bool visible)
+    {
+        if (item == null) return;
+        foreach (var r in item.GetComponentsInChildren<Renderer>(true))
+            r.enabled = visible;
     }
 
     protected override void TryPlaceItem(SimplePlayerController player)
@@ -282,6 +294,7 @@ public class ProcessingStation : StationBase
 
         processingDuration = time;
         PlaceItemOnStation(player.heldItem, player);
+        if (hideItemWhileOnStation) SetItemRenderers(itemOnStation, false); // tuck it inside the brazier
     }
 
     private void BeginProcessing(SimplePlayerController player, float duration)
@@ -327,6 +340,7 @@ public class ProcessingStation : StationBase
             if (rb != null) rb.isKinematic = true;
             foreach (Collider col in result.GetComponentsInChildren<Collider>())
                 col.enabled = false;
+            if (hideItemWhileOnStation) SetItemRenderers(itemOnStation, false); // keep the result hidden inside until picked up
         }
 
         processingPlayer = null;
