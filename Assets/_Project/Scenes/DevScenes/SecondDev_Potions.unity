@@ -4716,6 +4716,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1102235439998126260, guid: 66921c1264acb4cdba380ad732169c48, type: 3}
+      propertyPath: m_AABB.m_Extent.x
+      value: 0.001393388
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102235439998126260, guid: 66921c1264acb4cdba380ad732169c48, type: 3}
+      propertyPath: m_AABB.m_Extent.y
+      value: 0.001839412
+      objectReference: {fileID: 0}
     - target: {fileID: 3702668900793905889, guid: 66921c1264acb4cdba380ad732169c48, type: 3}
       propertyPath: m_Name
       value: Pixie
@@ -5339,6 +5347,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pixie_2
       objectReference: {fileID: 0}
+    - target: {fileID: 3524067964684240644, guid: ae51099e2ea2448f38f512e3bbfb75d0, type: 3}
+      propertyPath: m_AABB.m_Extent.x
+      value: 0.000593388
+      objectReference: {fileID: 0}
+    - target: {fileID: 3524067964684240644, guid: ae51099e2ea2448f38f512e3bbfb75d0, type: 3}
+      propertyPath: m_AABB.m_Extent.y
+      value: 0.001800941
+      objectReference: {fileID: 0}
     - target: {fileID: 3556333867352430867, guid: ae51099e2ea2448f38f512e3bbfb75d0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.03
@@ -5413,6 +5429,8 @@ MonoBehaviour:
   roomAnchor: {fileID: 593755671}
   roomCenter: {x: 0.21, y: 0, z: 0}
   roomSize: {x: 5.5, y: 9}
+  triggerRadius: 1.25
+  applyRadiusToExistingSphere: 1
   noiseFrequency: 0.3
 --- !u!1001 &738612620
 PrefabInstance:
