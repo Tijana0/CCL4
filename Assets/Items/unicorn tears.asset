@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97340c5b42f311744bbcde4a2c5d3980, type: 3}
+  m_Name: unicorn tears
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: unicorn tears
+  icon: {fileID: 0}
+  prefab: {fileID: 920585850318946664, guid: 715571e2f4762aa42b610592cf5c1ee3, type: 3}
+  potionColour: {r: 0.9245283, g: 0.054076135, b: 0.91143924, a: 1}
+  isColourless: 0
+  processingRules: []
+  combineRules: []
+  allowedStationTypes: 
+  requiresProcessingBeforeCauldron: 0
+  isDisposable: 1
