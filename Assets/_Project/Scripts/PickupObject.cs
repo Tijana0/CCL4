@@ -12,6 +12,9 @@ public class PickupObject : MonoBehaviour, IInteractable
 {
     public ItemType itemType = ItemType.Standard;
     public int value = 0;
+
+    [Header("Audio")]
+    public AudioManager.DropType dropType = AudioManager.DropType.Heavy;
     // Set true on scene-placed items to keep their authored pivot position.
     [SerializeField] private bool skipPivotCentering = false;
 
@@ -163,6 +166,9 @@ public class PickupObject : MonoBehaviour, IInteractable
         }
         // reenable colliders to allow pickup again
         SetCollidersEnabled(true);
+        Debug.Log("Drop called, dropType = " + dropType); 
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayDrop(this.gameObject, dropType);
     }
 
     private void SetCollidersEnabled(bool on)

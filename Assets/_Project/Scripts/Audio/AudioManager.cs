@@ -18,6 +18,7 @@ public class AudioManager : MonoBehaviour
     public AK.Wwise.Event dropLiquid;
     public AK.Wwise.Event dropHeavy;
     public AK.Wwise.Event deliver;
+    public AK.Wwise.Event beeping;
     public AK.Wwise.Event failAction;
     public AK.Wwise.Event wandCast;
     public AK.Wwise.Event cards;
@@ -61,6 +62,7 @@ public class AudioManager : MonoBehaviour
     public void PlayPutDown(GameObject o)            => Play(putDown, o);
     public void PlayChop(GameObject o, bool isHerb)  => Play(isHerb ? chopHerb : chopNormal, o);
     public void PlayDeliver(GameObject o)            => Play(deliver, o);
+    public void PlayBeeping(GameObject o)            => Play(beeping, o);
     public void PlayFailAction(GameObject o)         => Play(failAction, o);
     public void PlayWand(GameObject o)               => Play(wandCast, o);
     public void PlayClickUI()                        => Play(clickUI, gameObject);
@@ -82,6 +84,28 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    // ── Background music management ──────────────────────────────
+    private AK.Wwise.Event currentMusicStop;
+
+    /// Plays a music track, stopping whatever music was playing before.
+    public void PlayMusic(AK.Wwise.Event startEvent, AK.Wwise.Event stopEvent)
+    {
+        // Stop the previous track first — this is what prevents overlap
+        if (currentMusicStop != null && currentMusicStop.IsValid())
+            currentMusicStop.Post(gameObject);
+
+        if (startEvent != null && startEvent.IsValid())
+            startEvent.Post(gameObject);
+
+        currentMusicStop = stopEvent;   // remember how to stop THIS track later
+    }
+
+    public void StopCurrentMusic()
+    {
+        if (currentMusicStop != null && currentMusicStop.IsValid())
+            currentMusicStop.Post(gameObject);
+        currentMusicStop = null;
+    }
     public void StartMusic() => Play(musicStart, gameObject);
     public void StopMusic()  => Play(musicStop, gameObject);
     public void PlayLevelStart() => Play(levelStart, gameObject);

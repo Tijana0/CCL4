@@ -67,6 +67,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickupObject
   itemType: 0
   value: 0
+  dropType: 0
   skipPivotCentering: 1
 --- !u!65 &2226632816997675238
 BoxCollider:
