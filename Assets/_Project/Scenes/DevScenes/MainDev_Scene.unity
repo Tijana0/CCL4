@@ -5605,6 +5605,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 6eb102a6960e14b04ae8017d25c0be71, type: 2}
     - target: {fileID: 6042025419985971473, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
+      propertyPath: hideItemWhileOnStation
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6042025419985971473, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
       propertyPath: transformRules.Array.data[0].processingTime
       value: 8
       objectReference: {fileID: 0}
@@ -5660,6 +5664,10 @@ PrefabInstance:
       propertyPath: overcookResultItem
       value: 
       objectReference: {fileID: 11400000, guid: 6eb102a6960e14b04ae8017d25c0be71, type: 2}
+    - target: {fileID: 8395232367999895244, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
+      propertyPath: hideItemWhileOnStation
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8395232367999895244, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
       propertyPath: transformRules.Array.data[0].processingTime
       value: 8
