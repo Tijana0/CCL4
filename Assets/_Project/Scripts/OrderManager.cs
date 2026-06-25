@@ -22,6 +22,14 @@ public class OrderManager : MonoBehaviour
     public Sprite circleSprite;
     public GameObject ingredientIconPrefab; // New prefab for dynamic icons
 
+    [Header("Process Icons (shown under each card)")]
+    [Tooltip("Icon for tea orders (made in the teapot/cooker).")]
+    public Sprite teapotProcessIcon;
+    [Tooltip("Icon for vision orders (made at the crystal ball).")]
+    public Sprite crystalBallProcessIcon;
+    [Tooltip("Icon for prophecy orders (made at the prophecy table).")]
+    public Sprite prophecyProcessIcon;
+
     [Header("Configuration")]
     public List<Recipe> availableRecipes;
     public float spawnInterval = 9f;
@@ -255,11 +263,49 @@ public class OrderManager : MonoBehaviour
                     : new GameObject("IngredientIcon", typeof(RectTransform), typeof(Image));
                 
                 iconObj.transform.SetParent(ingredientsParent);
-                Image img = iconObj.GetComponent<Image>();
+                // The icon prefab has a light "Chip" backing as its root and the actual
+                // item sprite on a child called "Icon" (so dark icons like the green herb
+                // stay visible). Fall back to the root Image if there's no child.
+                Transform iconChild = iconObj.transform.Find("Icon");
+                Image img = iconChild != null ? iconChild.GetComponent<Image>() : iconObj.GetComponent<Image>();
                 img.sprite = ing.icon;
                 img.raycastTarget = false;
             }
         }
+
+        // Process icon (badge under the card): which station makes this order?
+        Transform processT = newCard.transform.Find("ProcessIcon");
+        if (processT != null)
+        {
+            Sprite ps = GetProcessIconFor(recipe.requiredOutput);
+            Transform pIcon = processT.Find("Icon");
+            Image pimg = pIcon != null ? pIcon.GetComponent<Image>() : processT.GetComponent<Image>();
+            if (ps != null) { pimg.sprite = ps; processT.gameObject.SetActive(true); }
+            else processT.gameObject.SetActive(false);
+        }
+    }
+
+    /// <summary>Returns the process/station icon for a deliverable (teapot / crystal ball / prophecy).</summary>
+    private Sprite GetProcessIconFor(ItemData target)
+    {
+        if (target == null) return null;
+        foreach (var pc in FindObjectsByType<PortableCooker>(FindObjectsSortMode.None))
+        {
+            if (pc.recipes == null) continue;
+            foreach (var r in pc.recipes)
+                if (r != null && r.outputItem == target) return teapotProcessIcon;
+        }
+        foreach (var st in FindObjectsByType<MultiIngredientStation>(FindObjectsSortMode.None))
+        {
+            if (st.recipes == null) continue;
+            foreach (var r in st.recipes)
+                if (r != null && r.outputItem == target)
+                {
+                    if (st.stationType == StationType.CrystalBall) return crystalBallProcessIcon;
+                    if (st.stationType == StationType.ProphecyTable) return prophecyProcessIcon;
+                }
+        }
+        return null;
     }
 
     private List<ItemData> GetIngredientsFor(ItemData target)
