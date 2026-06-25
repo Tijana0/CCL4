@@ -1399,7 +1399,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
   - {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
   - {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
-  - {fileID: 11400000, guid: 223230be2e336574daebb5033bf479df, type: 2}
   recipes:
   - recipeName: immortality potion
     requiredIngredients:
@@ -1487,9 +1486,7 @@ MonoBehaviour:
   - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
     brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
     filledContainerItem: {fileID: 11400000, guid: 1d09b4f9f600a904da863999f29da4d5, type: 2}
-  ingredientReturnMappings:
-  - ingredientItem: {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
-    returnItem: {fileID: 11400000, guid: 223230be2e336574daebb5033bf479df, type: 2}
+  ingredientReturnMappings: []
   emptyVisual: {fileID: 0}
   activeVisual: {fileID: 0}
   doneVisual: {fileID: 0}
@@ -4758,7 +4755,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3726220373116934397, guid: 66921c1264acb4cdba380ad732169c48, type: 3}
       propertyPath: freezeDuration
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3726220373116934397, guid: 66921c1264acb4cdba380ad732169c48, type: 3}
       propertyPath: noiseFrequency
@@ -5408,7 +5405,7 @@ MonoBehaviour:
   moveSpeed: 1.5
   heightMin: 0
   heightMax: 1.5
-  freezeDuration: 3
+  freezeDuration: 4
   useRoomBounds: 1
   roomAnchor: {fileID: 593755671}
   roomCenter: {x: 0.21, y: 0, z: 0}
@@ -9016,7 +9013,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
   - {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
   - {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
-  - {fileID: 11400000, guid: 223230be2e336574daebb5033bf479df, type: 2}
   recipes:
   - recipeName: immortality potion
     requiredIngredients:
@@ -9104,9 +9100,7 @@ MonoBehaviour:
   - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
     brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
     filledContainerItem: {fileID: 11400000, guid: 1d09b4f9f600a904da863999f29da4d5, type: 2}
-  ingredientReturnMappings:
-  - ingredientItem: {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
-    returnItem: {fileID: 11400000, guid: 223230be2e336574daebb5033bf479df, type: 2}
+  ingredientReturnMappings: []
   emptyVisual: {fileID: 0}
   activeVisual: {fileID: 0}
   doneVisual: {fileID: 0}
@@ -9864,7 +9858,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
   - {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
   - {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
-  - {fileID: 11400000, guid: 223230be2e336574daebb5033bf479df, type: 2}
   recipes:
   - recipeName: immortality potion
     requiredIngredients:
@@ -9952,9 +9945,7 @@ MonoBehaviour:
   - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
     brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
     filledContainerItem: {fileID: 11400000, guid: 1d09b4f9f600a904da863999f29da4d5, type: 2}
-  ingredientReturnMappings:
-  - ingredientItem: {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
-    returnItem: {fileID: 11400000, guid: 223230be2e336574daebb5033bf479df, type: 2}
+  ingredientReturnMappings: []
   emptyVisual: {fileID: 0}
   activeVisual: {fileID: 0}
   doneVisual: {fileID: 0}
@@ -12332,7 +12323,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
   - {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
   - {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
-  - {fileID: 11400000, guid: 223230be2e336574daebb5033bf479df, type: 2}
   recipes:
   - recipeName: immortality potion
     requiredIngredients:
@@ -12420,9 +12410,7 @@ MonoBehaviour:
   - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
     brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
     filledContainerItem: {fileID: 11400000, guid: 1d09b4f9f600a904da863999f29da4d5, type: 2}
-  ingredientReturnMappings:
-  - ingredientItem: {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
-    returnItem: {fileID: 11400000, guid: 223230be2e336574daebb5033bf479df, type: 2}
+  ingredientReturnMappings: []
   emptyVisual: {fileID: 0}
   activeVisual: {fileID: 0}
   doneVisual: {fileID: 0}
