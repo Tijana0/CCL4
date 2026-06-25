@@ -75,6 +75,12 @@ public class SettingsMenu : MonoBehaviour
         scrollRT.anchorMin = new Vector2(0.05f, 0f); scrollRT.anchorMax = new Vector2(0.95f, 1f);
         scrollRT.offsetMin = new Vector2(0f, 70f);    // room for Back
         scrollRT.offsetMax = new Vector2(0f, -72f);   // room for title
+        
+        // Add a transparent Image to serve as the Raycast Target so mouse scrolling/dragging works
+        var scrollImg = scrollGO.AddComponent<Image>();
+        scrollImg.color = Color.clear;
+        scrollImg.raycastTarget = true;
+
         scrollRect = scrollGO.AddComponent<ScrollRect>();
         scrollRect.horizontal = false; scrollRect.vertical = true; scrollRect.scrollSensitivity = 28f;
         scrollRect.movementType = ScrollRect.MovementType.Clamped;
@@ -158,14 +164,36 @@ public class SettingsMenu : MonoBehaviour
     {
         RectTransform vp = scrollRect.viewport, ct = scrollRect.content;
         if (vp == null || ct == null) return;
-        var v = new Vector3[4]; vp.GetWorldCorners(v);
-        var t = new Vector3[4]; target.GetWorldCorners(t);
-        float vTop = v[1].y, vBot = v[0].y, tTop = t[1].y, tBot = t[0].y;
+
+        // Convert target's world corners to viewport's local space to do math in pixel space
+        Vector3[] corners = new Vector3[4];
+        target.GetWorldCorners(corners);
+        for (int i = 0; i < 4; i++)
+        {
+            corners[i] = vp.InverseTransformPoint(corners[i]);
+        }
+
+        float vTop = vp.rect.yMax;
+        float vBot = vp.rect.yMin;
+        float tTop = corners[1].y;
+        float tBot = corners[0].y;
+
         const float pad = 8f;
         Vector2 ap = ct.anchoredPosition;
-        if (tTop > vTop - pad) ap.y -= (tTop - vTop) + pad;
-        else if (tBot < vBot + pad) ap.y += (vBot - tBot) + pad;
-        else return;
+
+        if (tTop > vTop - pad)
+        {
+            ap.y -= (tTop - (vTop - pad));
+        }
+        else if (tBot < vBot + pad)
+        {
+            ap.y += ((vBot + pad) - tBot);
+        }
+        else
+        {
+            return;
+        }
+
         float maxY = Mathf.Max(0f, ct.rect.height - vp.rect.height);
         ap.y = Mathf.Clamp(ap.y, 0f, maxY);
         ct.anchoredPosition = ap;

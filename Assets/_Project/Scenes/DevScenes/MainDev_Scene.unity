@@ -1594,6 +1594,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickupObject
   itemType: 0
   value: 0
+  startKinematic: 0
   dropType: 2
   skipPivotCentering: 0
 --- !u!4 &595059979 stripped
@@ -2021,6 +2022,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickupObject
   itemType: 0
   value: 0
+  startKinematic: 0
   dropType: 2
   skipPivotCentering: 0
 --- !u!4 &884562797 stripped
@@ -3251,6 +3253,7 @@ MonoBehaviour:
   boilOverDelay: 15
   maxIngredients: 2
   defaultCookingTime: 5
+  blockedIngredients: []
   recipes:
   - recipeName: Vision 1
     requiredIngredients:
@@ -3273,7 +3276,7 @@ MonoBehaviour:
   requireSpecificIngredient: 0
   requiredStartIngredient: {fileID: 0}
   allowContainerSwap: 0
-  containerItem: {fileID: 0}
+  containerItems: []
   containerSwapMappings: []
   emptyVisual: {fileID: 0}
   activeVisual: {fileID: 0}
@@ -3488,6 +3491,7 @@ MonoBehaviour:
   boilOverDelay: 15
   maxIngredients: 2
   defaultCookingTime: 5
+  blockedIngredients: []
   recipes:
   - recipeName: Vision 1
     requiredIngredients:
@@ -3510,7 +3514,7 @@ MonoBehaviour:
   requireSpecificIngredient: 0
   requiredStartIngredient: {fileID: 0}
   allowContainerSwap: 0
-  containerItem: {fileID: 0}
+  containerItems: []
   containerSwapMappings: []
   emptyVisual: {fileID: 0}
   activeVisual: {fileID: 0}
@@ -4508,6 +4512,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickupObject
   itemType: 0
   value: 0
+  startKinematic: 0
   dropType: 2
   skipPivotCentering: 0
 --- !u!4 &1618559735 stripped
@@ -7976,6 +7981,7 @@ MonoBehaviour:
   boilOverDelay: 15
   maxIngredients: 2
   defaultCookingTime: 2
+  blockedIngredients: []
   recipes:
   - recipeName: Prophecy card 1
     requiredIngredients:
@@ -8030,7 +8036,7 @@ MonoBehaviour:
   requireSpecificIngredient: 0
   requiredStartIngredient: {fileID: 0}
   allowContainerSwap: 0
-  containerItem: {fileID: 0}
+  containerItems: []
   containerSwapMappings: []
   emptyVisual: {fileID: 0}
   activeVisual: {fileID: 0}
@@ -8061,6 +8067,7 @@ MonoBehaviour:
   boilOverDelay: 15
   maxIngredients: 2
   defaultCookingTime: 2
+  blockedIngredients: []
   recipes:
   - recipeName: Prophecy card 1
     requiredIngredients:
@@ -8115,7 +8122,7 @@ MonoBehaviour:
   requireSpecificIngredient: 0
   requiredStartIngredient: {fileID: 0}
   allowContainerSwap: 0
-  containerItem: {fileID: 0}
+  containerItems: []
   containerSwapMappings: []
   emptyVisual: {fileID: 0}
   activeVisual: {fileID: 0}
