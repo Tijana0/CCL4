@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: potion2 wrong
   icon: {fileID: 0}
-  prefab: {fileID: 1313065965325751902, guid: ddf2702e3069e254186425cd8fa45dcc, type: 3}
+  prefab: {fileID: 6406048461766515699, guid: 0115e5a202759e94aa079a233e5f9085, type: 3}
   potionColour: {r: 1, g: 1, b: 1, a: 1}
   isColourless: 0
   processingRules: []

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: strength potion 2
   icon: {fileID: 0}
-  prefab: {fileID: 7869461086298031475, guid: 7cd8784f987a89049b3325cd214d88cf, type: 3}
+  prefab: {fileID: 1978278029540188833, guid: 8171356fc019cb744bf727521b6e6e99, type: 3}
   potionColour: {r: 1, g: 1, b: 1, a: 1}
   isColourless: 0
   processingRules: []

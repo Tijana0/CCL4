@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: glass 3
   icon: {fileID: 0}
-  prefab: {fileID: 3102647540437865516, guid: d8c110c7d2e7c254cb7147ba60d403ac, type: 3}
+  prefab: {fileID: 456956749020760670, guid: 93b58714ea7cd2e4b8740cae98821f55, type: 3}
   potionColour: {r: 1, g: 1, b: 1, a: 1}
   isColourless: 0
   processingRules: []

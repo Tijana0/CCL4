@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: immortality potion 3
   icon: {fileID: 0}
-  prefab: {fileID: 4968550604622021234, guid: 29da09c0e5cbc1b459a0866102119648, type: 3}
+  prefab: {fileID: 2089947470564016268, guid: 93cd6853feb44ce44bee0b4c1eae1e55, type: 3}
   potionColour: {r: 1, g: 1, b: 1, a: 1}
   isColourless: 0
   processingRules: []

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: frog
   icon: {fileID: 0}
-  prefab: {fileID: 2251777232651331363, guid: ba9a16216a8281c4ba2e49f21aed1ca2, type: 3}
+  prefab: {fileID: 6882122345812233893, guid: 912548a95f9e2854fafc860229993008, type: 3}
   potionColour: {r: 1, g: 1, b: 1, a: 1}
   isColourless: 0
   processingRules: []

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: beetle paste
   icon: {fileID: 0}
-  prefab: {fileID: 5005644215027018312, guid: d25bafa1ff96aa44db55bd5494607a29, type: 3}
+  prefab: {fileID: 2942116488645450847, guid: 56fe97817882f424cbeccb7cc823a386, type: 3}
   potionColour: {r: 0.07835529, g: 0.37797585, b: 0.5849056, a: 1}
   isColourless: 0
   processingRules: []

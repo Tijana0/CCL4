@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: warewolf fang
   icon: {fileID: 0}
-  prefab: {fileID: 6883887365160778905, guid: 18368e7de86f3e149b0bbe3354afd69e, type: 3}
+  prefab: {fileID: 6875166079715756515, guid: ed84f86cd613fb94d8beeda9f09f106e, type: 3}
   potionColour: {r: 1, g: 1, b: 1, a: 1}
   isColourless: 0
   processingRules: []

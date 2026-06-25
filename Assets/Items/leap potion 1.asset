@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: leap potion 1
   icon: {fileID: 0}
-  prefab: {fileID: 6209159411172383106, guid: 6b4d750043bb56242a19cecacfc89fa6, type: 3}
+  prefab: {fileID: 6988737901025880173, guid: eedcd5376056b9a40a58ce71fd7bd0e4, type: 3}
   potionColour: {r: 1, g: 1, b: 1, a: 1}
   isColourless: 0
   processingRules: []
