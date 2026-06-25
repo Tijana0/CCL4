@@ -121,45 +121,7 @@ public class MultiIngredientStation : StationBase
     {
         if (stationType == StationType.CrystalBall)
         {
-            if (activeVisual == null)
-            {
-                GameObject visualParent = new GameObject("CrystalBall_ActiveVisual");
-                visualParent.transform.SetParent(this.transform, false);
-                // Position the glow at the actual crystal-ball visual (the collider centre),
-                // not at the station's transform origin (which is offset, e.g. onto the stairs).
-                BoxCollider ballCol = GetComponent<BoxCollider>();
-                if (ballCol != null) visualParent.transform.position = transform.TransformPoint(ballCol.center) + Vector3.up * 0.3f;
-                else visualParent.transform.localPosition = new Vector3(0f, 0.8f, 0f);
 
-                GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                sphere.name = "ShiningSphere";
-                sphere.transform.SetParent(visualParent.transform, false);
-                sphere.transform.localPosition = Vector3.zero;
-                sphere.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
-                Renderer sphereRenderer = sphere.GetComponent<Renderer>();
-                if (sphereRenderer != null)
-                {
-                    Shader unlitShader = Shader.Find("Universal Render Pipeline/Unlit")
-                                     ?? Shader.Find("Unlit/Color");
-                    Material glowMat = new Material(unlitShader);
-                    glowMat.SetColor("_BaseColor", new Color(1f, 0.95f, 0.6f, 1f));
-                    sphereRenderer.material = glowMat;
-                }
-                Collider sphereCollider = sphere.GetComponent<Collider>();
-                if (sphereCollider != null) sphereCollider.enabled = false;
-
-                GameObject lightObj = new GameObject("ShiningLight");
-                lightObj.transform.SetParent(visualParent.transform, false);
-                lightObj.transform.localPosition = Vector3.zero;
-                Light lightComponent = lightObj.AddComponent<Light>();
-                lightComponent.type = LightType.Point;
-                lightComponent.color = new Color(0.95f, 0.9f, 0.6f);
-                lightComponent.intensity = 8f;
-                lightComponent.range = 5f;
-                lightComponent.shadows = LightShadows.None;
-
-                activeVisual = visualParent;
-            }
 
             // Build a world-space progress bar — no parenting, use world position directly
             if (progressBarContainer == null && counterTopPoint != null)
