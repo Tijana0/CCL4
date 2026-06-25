@@ -18,6 +18,7 @@ public class AudioManager : MonoBehaviour
     public AK.Wwise.Event dropLiquid;
     public AK.Wwise.Event dropHeavy;
     public AK.Wwise.Event deliver;
+    public AK.Wwise.Event beeping;
     public AK.Wwise.Event failAction;
     public AK.Wwise.Event wandCast;
     public AK.Wwise.Event cards;
@@ -61,6 +62,7 @@ public class AudioManager : MonoBehaviour
     public void PlayPutDown(GameObject o)            => Play(putDown, o);
     public void PlayChop(GameObject o, bool isHerb)  => Play(isHerb ? chopHerb : chopNormal, o);
     public void PlayDeliver(GameObject o)            => Play(deliver, o);
+    public void PlayBeeping(GameObject o)            => Play(beeping, o);
     public void PlayFailAction(GameObject o)         => Play(failAction, o);
     public void PlayWand(GameObject o)               => Play(wandCast, o);
     public void PlayClickUI()                        => Play(clickUI, gameObject);

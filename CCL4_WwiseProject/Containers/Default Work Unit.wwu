@@ -4,6 +4,13 @@
 		<WorkUnit Name="Default Work Unit" ID="{F1F96160-159C-4A4B-AA6B-65E54F932751}" PersistMode="Standalone">
 			<ChildrenList>
 				<SwitchContainer Name="Footsteps" ID="{7552852F-FCD0-4137-BD72-888ACCD547B0}" ShortID="303066650">
+					<PropertyList>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value>-15</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
 					<ReferenceList>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
@@ -12,7 +19,7 @@
 							<ObjectRef Name="Stone" ID="{94C006FF-FD29-46EA-BCF5-47FB8A9A9005}" WorkUnitID="{50C0E260-9957-42AC-B1ED-A1EF1F62B3A1}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 						<Reference Name="SwitchGroupOrStateGroup">
 							<ObjectRef Name="SurfaceType" ID="{D90FF8D2-4E2B-4658-8672-693667FFA757}" WorkUnitID="{50C0E260-9957-42AC-B1ED-A1EF1F62B3A1}"/>
@@ -824,7 +831,7 @@
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -907,7 +914,7 @@
 						<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
 						<Property Name="Volume" Type="Real64">
 							<ValueList>
-								<Value>-15</Value>
+								<Value>-20</Value>
 							</ValueList>
 						</Property>
 					</PropertyList>
@@ -1017,7 +1024,7 @@
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -1057,7 +1064,7 @@
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Music_Bus" ID="{F6523D58-8ED3-43CE-AFBD-6324E220F49C}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -1102,7 +1109,7 @@
 					<PropertyList>
 						<Property Name="Volume" Type="Real64">
 							<ValueList>
-								<Value>-10</Value>
+								<Value>-15</Value>
 							</ValueList>
 						</Property>
 					</PropertyList>
@@ -1111,7 +1118,7 @@
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -1249,7 +1256,7 @@
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -1375,181 +1382,11 @@
 						</Sound>
 					</ChildrenList>
 				</RandomSequenceContainer>
-				<BlendContainer Name="Put_Down" ID="{510073DC-8142-466D-88B5-22AD8B3B869F}" ShortID="508379496">
-					<PropertyList>
-						<Property Name="Volume" Type="Real64">
-							<ValueList>
-								<Value>-10</Value>
-							</ValueList>
-						</Property>
-					</PropertyList>
-					<ReferenceList>
-						<Reference Name="Conversion">
-							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
-						</Reference>
-						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
-						</Reference>
-					</ReferenceList>
-					<ChildrenList>
-						<Sound Name="Air_whoosh" ID="{9EDBD6F4-64BE-4811-AC8A-F32755D6DCBE}" ShortID="705885516">
-							<PropertyList>
-								<Property Name="OverrideConversion" Type="bool" Value="True"/>
-								<Property Name="Pitch" Type="int32">
-									<ValueList>
-										<Value>1560</Value>
-									</ValueList>
-								</Property>
-								<Property Name="Volume" Type="Real64">
-									<ValueList>
-										<Value>-15</Value>
-									</ValueList>
-								</Property>
-							</PropertyList>
-							<ReferenceList>
-								<Reference Name="Conversion">
-									<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
-								</Reference>
-								<Reference Name="OutputBus">
-									<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
-								</Reference>
-							</ReferenceList>
-							<ChildrenList>
-								<AudioFileSource Name="Down_10" ID="{EABF0A7A-862B-4E82-ACA1-30FF279019EC}">
-									<Language>SFX</Language>
-									<AudioFile>Down_10.wav</AudioFile>
-									<MediaIDList>
-										<MediaID ID="788006525"/>
-									</MediaIDList>
-								</AudioFileSource>
-								<AudioFileSource Name="Down_3" ID="{29222C18-8B26-4CDC-AD33-C1B844C89371}">
-									<Language>SFX</Language>
-									<AudioFile>Down_3.wav</AudioFile>
-									<MediaIDList>
-										<MediaID ID="1020977512"/>
-									</MediaIDList>
-								</AudioFileSource>
-								<AudioFileSource Name="Down_2" ID="{57CD28C0-4446-4BA1-8962-C5B5DFBD9AD4}">
-									<Language>SFX</Language>
-									<AudioFile>Down_2.wav</AudioFile>
-									<MediaIDList>
-										<MediaID ID="1071272838"/>
-									</MediaIDList>
-								</AudioFileSource>
-								<AudioFileSource Name="Down_9" ID="{E736DD66-D9AA-4D59-AFB5-ED84D18838F6}">
-									<Language>SFX</Language>
-									<AudioFile>Down_9.wav</AudioFile>
-									<MediaIDList>
-										<MediaID ID="63900438"/>
-									</MediaIDList>
-								</AudioFileSource>
-								<AudioFileSource Name="Down_8" ID="{DFE18A65-D26A-42DA-849C-64547E56CD13}">
-									<PropertyList>
-										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-										<Property Name="TrimBegin" Type="Real64" Value="0.86878"/>
-										<Property Name="TrimEnd" Type="Real64" Value="2.59043"/>
-									</PropertyList>
-									<Language>SFX</Language>
-									<AudioFile>Down_8.wav</AudioFile>
-									<MediaIDList>
-										<MediaID ID="72926243"/>
-									</MediaIDList>
-								</AudioFileSource>
-								<AudioFileSource Name="Down_6" ID="{FAAE7C7F-FF6D-4C6A-863D-A4DBC6FB0D17}">
-									<PropertyList>
-										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-										<Property Name="TrimBegin" Type="Real64" Value="0.21023"/>
-										<Property Name="TrimEnd" Type="Real64" Value="0.8973"/>
-									</PropertyList>
-									<Language>SFX</Language>
-									<AudioFile>Down_6.wav</AudioFile>
-									<MediaIDList>
-										<MediaID ID="809096198"/>
-									</MediaIDList>
-								</AudioFileSource>
-							</ChildrenList>
-							<ActiveSourceList>
-								<ActiveSource Name="Down_6" ID="{FAAE7C7F-FF6D-4C6A-863D-A4DBC6FB0D17}" Platform="Linked"/>
-							</ActiveSourceList>
-						</Sound>
-						<Sound Name="Put" ID="{40F8CC97-EE5C-46D3-BDE8-9AC20F362A4F}" ShortID="558583066">
-							<PropertyList>
-								<Property Name="OverrideConversion" Type="bool" Value="True"/>
-								<Property Name="Pitch" Type="int32">
-									<ValueList>
-										<Value>700</Value>
-									</ValueList>
-								</Property>
-								<Property Name="Volume" Type="Real64">
-									<ValueList>
-										<Value>5</Value>
-									</ValueList>
-								</Property>
-							</PropertyList>
-							<ReferenceList>
-								<Reference Name="Conversion">
-									<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
-								</Reference>
-								<Reference Name="OutputBus">
-									<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
-								</Reference>
-							</ReferenceList>
-							<ChildrenList>
-								<AudioFileSource Name="Down_7" ID="{3EF140F8-06F4-4438-8070-5A1DFEC03F12}">
-									<PropertyList>
-										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-										<Property Name="TrimBegin" Type="Real64" Value="0.10341"/>
-										<Property Name="TrimEnd" Type="Real64" Value="0.45819"/>
-									</PropertyList>
-									<Language>SFX</Language>
-									<AudioFile>Down_7.wav</AudioFile>
-									<MediaIDList>
-										<MediaID ID="54435540"/>
-									</MediaIDList>
-								</AudioFileSource>
-								<AudioFileSource Name="Down_6" ID="{4EB54EF4-1DD2-4C45-9862-D92608F2F9BE}">
-									<Language>SFX</Language>
-									<AudioFile>Down_6.wav</AudioFile>
-									<MediaIDList>
-										<MediaID ID="818692931"/>
-									</MediaIDList>
-								</AudioFileSource>
-								<AudioFileSource Name="Down_5" ID="{6E00703A-C8A0-42D7-A436-CD3020355FBE}">
-									<PropertyList>
-										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-										<Property Name="TrimBegin" Type="Real64" Value="0.02175"/>
-										<Property Name="TrimEnd" Type="Real64" Value="0.39938"/>
-									</PropertyList>
-									<Language>SFX</Language>
-									<AudioFile>Down_5.wav</AudioFile>
-									<MediaIDList>
-										<MediaID ID="1038155104"/>
-									</MediaIDList>
-								</AudioFileSource>
-								<AudioFileSource Name="Down_3" ID="{513634EC-2A0A-44B3-A094-02A7702FD34E}">
-									<PropertyList>
-										<Property Name="LoopBegin" Type="Real64" Value="3.21869"/>
-										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-										<Property Name="TrimBegin" Type="Real64" Value="3.05928"/>
-									</PropertyList>
-									<Language>SFX</Language>
-									<AudioFile>Down_3.wav</AudioFile>
-									<MediaIDList>
-										<MediaID ID="350629654"/>
-									</MediaIDList>
-								</AudioFileSource>
-							</ChildrenList>
-							<ActiveSourceList>
-								<ActiveSource Name="Down_3" ID="{513634EC-2A0A-44B3-A094-02A7702FD34E}" Platform="Linked"/>
-							</ActiveSourceList>
-						</Sound>
-					</ChildrenList>
-				</BlendContainer>
 				<Sound Name="Level_Start" ID="{BF0356D4-FBE0-40DB-9BE4-1557314B8B92}" ShortID="855417102">
 					<PropertyList>
 						<Property Name="Volume" Type="Real64">
 							<ValueList>
-								<Value>-15</Value>
+								<Value>-25</Value>
 							</ValueList>
 						</Property>
 					</PropertyList>
@@ -1558,7 +1395,7 @@
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -1618,7 +1455,7 @@
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -1726,7 +1563,7 @@
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -1836,7 +1673,7 @@
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -2051,7 +1888,7 @@
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -2078,7 +1915,7 @@
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -2155,45 +1992,11 @@
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
-						<Sound Name="Glass_Breaking" ID="{1C687988-BA26-4FA2-92D2-5BA9E525C237}" ShortID="240124344">
-							<PropertyList>
-								<Property Name="Pitch" Type="int32">
-									<ValueList>
-										<Value>140</Value>
-									</ValueList>
-								</Property>
-							</PropertyList>
-							<ReferenceList>
-								<Reference Name="Conversion">
-									<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
-								</Reference>
-								<Reference Name="OutputBus">
-									<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
-								</Reference>
-							</ReferenceList>
-							<ChildrenList>
-								<AudioFileSource Name="Glass_Breaking" ID="{6E24BEA3-1960-433C-BD09-C4AC7F80C426}">
-									<PropertyList>
-										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-										<Property Name="TrimBegin" Type="Real64" Value="0.06875"/>
-										<Property Name="TrimEnd" Type="Real64" Value="1.09991"/>
-									</PropertyList>
-									<Language>SFX</Language>
-									<AudioFile>Glass_Breaking.wav</AudioFile>
-									<MediaIDList>
-										<MediaID ID="276773915"/>
-									</MediaIDList>
-								</AudioFileSource>
-							</ChildrenList>
-							<ActiveSourceList>
-								<ActiveSource Name="Glass_Breaking" ID="{6E24BEA3-1960-433C-BD09-C4AC7F80C426}" Platform="Linked"/>
-							</ActiveSourceList>
-						</Sound>
-						<Sound Name="Liquid_dropping" ID="{2C693D81-5EEF-427D-AB32-F7B3C1EE9C6D}" ShortID="552278626">
+						<Sound Name="Liquid_drop" ID="{2C693D81-5EEF-427D-AB32-F7B3C1EE9C6D}" ShortID="552278626">
 							<ReferenceList>
 								<Reference Name="Conversion">
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
@@ -2220,7 +2023,7 @@
 								<ActiveSource Name="spilling_liquid" ID="{691FB00A-E92A-4953-B94A-EB4CED435B8E}" Platform="Linked"/>
 							</ActiveSourceList>
 						</Sound>
-						<Sound Name="Heavy_dropping" ID="{9F85D17E-8C37-4BF5-89B1-3004B2D1D676}" ShortID="572560119">
+						<Sound Name="Heavy_drop" ID="{9F85D17E-8C37-4BF5-89B1-3004B2D1D676}" ShortID="572560119">
 							<ReferenceList>
 								<Reference Name="Conversion">
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
@@ -2247,17 +2050,51 @@
 								<ActiveSource Name="Object_dropping" ID="{041D62F7-BAAC-45AE-A24D-36DF5EA24DCF}" Platform="Linked"/>
 							</ActiveSourceList>
 						</Sound>
+						<Sound Name="Glass_drop" ID="{1C687988-BA26-4FA2-92D2-5BA9E525C237}" ShortID="240124344">
+							<PropertyList>
+								<Property Name="Pitch" Type="int32">
+									<ValueList>
+										<Value>140</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="Glass_Breaking" ID="{6E24BEA3-1960-433C-BD09-C4AC7F80C426}">
+									<PropertyList>
+										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+										<Property Name="TrimBegin" Type="Real64" Value="0.06875"/>
+										<Property Name="TrimEnd" Type="Real64" Value="1.09991"/>
+									</PropertyList>
+									<Language>SFX</Language>
+									<AudioFile>Glass_Breaking.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="276773915"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="Glass_Breaking" ID="{6E24BEA3-1960-433C-BD09-C4AC7F80C426}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
 					</ChildrenList>
 					<GroupingInfo>
 						<GroupingBehaviorList>
 							<GroupingBehavior>
-								<ItemRef Name="Heavy_dropping" ID="{9F85D17E-8C37-4BF5-89B1-3004B2D1D676}"/>
+								<ItemRef Name="Heavy_drop" ID="{9F85D17E-8C37-4BF5-89B1-3004B2D1D676}"/>
 							</GroupingBehavior>
 							<GroupingBehavior>
-								<ItemRef Name="Liquid_dropping" ID="{2C693D81-5EEF-427D-AB32-F7B3C1EE9C6D}"/>
+								<ItemRef Name="Liquid_drop" ID="{2C693D81-5EEF-427D-AB32-F7B3C1EE9C6D}"/>
 							</GroupingBehavior>
 							<GroupingBehavior>
-								<ItemRef Name="Glass_Breaking" ID="{1C687988-BA26-4FA2-92D2-5BA9E525C237}"/>
+								<ItemRef Name="Glass_drop" ID="{1C687988-BA26-4FA2-92D2-5BA9E525C237}"/>
 							</GroupingBehavior>
 						</GroupingBehaviorList>
 					</GroupingInfo>
@@ -2268,7 +2105,7 @@
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -2350,7 +2187,7 @@
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -2449,7 +2286,7 @@
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -2483,7 +2320,7 @@
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -2517,7 +2354,7 @@
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -2646,7 +2483,7 @@
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -2677,7 +2514,7 @@
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -2706,7 +2543,7 @@
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -2733,7 +2570,7 @@
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -2760,7 +2597,7 @@
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -2896,7 +2733,7 @@
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -2970,12 +2807,19 @@
 					</ChildrenList>
 				</BlendContainer>
 				<Sound Name="Potion_Background" ID="{EF217B59-8806-412C-A7ED-FD4B207E8D85}" ShortID="79007258">
+					<PropertyList>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value>-25</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
 					<ReferenceList>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Music_Bus" ID="{F6523D58-8ED3-43CE-AFBD-6324E220F49C}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -2992,12 +2836,19 @@
 					</ActiveSourceList>
 				</Sound>
 				<Sound Name="Start_Background" ID="{F5ED9609-BBB2-4545-AEDA-F7201A41765B}" ShortID="85566131">
+					<PropertyList>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value>-20</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
 					<ReferenceList>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Music_Bus" ID="{F6523D58-8ED3-43CE-AFBD-6324E220F49C}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -3020,13 +2871,18 @@
 								<Value>-710</Value>
 							</ValueList>
 						</Property>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value>-10</Value>
+							</ValueList>
+						</Property>
 					</PropertyList>
 					<ReferenceList>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
 						</Reference>
 						<Reference Name="OutputBus">
-							<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
 						</Reference>
 					</ReferenceList>
 					<ChildrenList>
@@ -3042,6 +2898,220 @@
 						<ActiveSource Name="Beeping_Sound" ID="{B578A46B-538E-48B8-B059-46ADB125AF99}" Platform="Linked"/>
 					</ActiveSourceList>
 				</Sound>
+				<BlendContainer Name="Put_down" ID="{510073DC-8142-466D-88B5-22AD8B3B869F}" ShortID="508379496">
+					<PropertyList>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value>-10</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Sfx_Bus" ID="{A739B3D8-4BD6-4C67-8CA5-D9A3509F8764}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="Air_whoosh" ID="{9EDBD6F4-64BE-4811-AC8A-F32755D6DCBE}" ShortID="705885516">
+							<PropertyList>
+								<Property Name="OverrideConversion" Type="bool" Value="True"/>
+								<Property Name="Pitch" Type="int32">
+									<ValueList>
+										<Value>1560</Value>
+									</ValueList>
+								</Property>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-15</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="Down_10" ID="{EABF0A7A-862B-4E82-ACA1-30FF279019EC}">
+									<Language>SFX</Language>
+									<AudioFile>Down_10.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="788006525"/>
+									</MediaIDList>
+								</AudioFileSource>
+								<AudioFileSource Name="Down_3" ID="{29222C18-8B26-4CDC-AD33-C1B844C89371}">
+									<Language>SFX</Language>
+									<AudioFile>Down_3.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="1020977512"/>
+									</MediaIDList>
+								</AudioFileSource>
+								<AudioFileSource Name="Down_2" ID="{57CD28C0-4446-4BA1-8962-C5B5DFBD9AD4}">
+									<Language>SFX</Language>
+									<AudioFile>Down_2.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="1071272838"/>
+									</MediaIDList>
+								</AudioFileSource>
+								<AudioFileSource Name="Down_9" ID="{E736DD66-D9AA-4D59-AFB5-ED84D18838F6}">
+									<Language>SFX</Language>
+									<AudioFile>Down_9.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="63900438"/>
+									</MediaIDList>
+								</AudioFileSource>
+								<AudioFileSource Name="Down_8" ID="{DFE18A65-D26A-42DA-849C-64547E56CD13}">
+									<PropertyList>
+										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+										<Property Name="TrimBegin" Type="Real64" Value="0.86878"/>
+										<Property Name="TrimEnd" Type="Real64" Value="2.59043"/>
+									</PropertyList>
+									<Language>SFX</Language>
+									<AudioFile>Down_8.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="72926243"/>
+									</MediaIDList>
+								</AudioFileSource>
+								<AudioFileSource Name="Down_6" ID="{FAAE7C7F-FF6D-4C6A-863D-A4DBC6FB0D17}">
+									<PropertyList>
+										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+										<Property Name="TrimBegin" Type="Real64" Value="0.21023"/>
+										<Property Name="TrimEnd" Type="Real64" Value="0.8973"/>
+									</PropertyList>
+									<Language>SFX</Language>
+									<AudioFile>Down_6.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="809096198"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="Down_6" ID="{FAAE7C7F-FF6D-4C6A-863D-A4DBC6FB0D17}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="Put" ID="{40F8CC97-EE5C-46D3-BDE8-9AC20F362A4F}" ShortID="558583066">
+							<PropertyList>
+								<Property Name="Inclusion" Type="bool">
+									<ValueList>
+										<Value>False</Value>
+									</ValueList>
+								</Property>
+								<Property Name="OverrideConversion" Type="bool" Value="True"/>
+								<Property Name="Pitch" Type="int32">
+									<ValueList>
+										<Value>700</Value>
+									</ValueList>
+								</Property>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>5</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="Down_7" ID="{3EF140F8-06F4-4438-8070-5A1DFEC03F12}">
+									<PropertyList>
+										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+										<Property Name="TrimBegin" Type="Real64" Value="0.10341"/>
+										<Property Name="TrimEnd" Type="Real64" Value="0.45819"/>
+									</PropertyList>
+									<Language>SFX</Language>
+									<AudioFile>Down_7.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="54435540"/>
+									</MediaIDList>
+								</AudioFileSource>
+								<AudioFileSource Name="Down_6" ID="{4EB54EF4-1DD2-4C45-9862-D92608F2F9BE}">
+									<Language>SFX</Language>
+									<AudioFile>Down_6.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="818692931"/>
+									</MediaIDList>
+								</AudioFileSource>
+								<AudioFileSource Name="Down_5" ID="{6E00703A-C8A0-42D7-A436-CD3020355FBE}">
+									<PropertyList>
+										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+										<Property Name="TrimBegin" Type="Real64" Value="0.02175"/>
+										<Property Name="TrimEnd" Type="Real64" Value="0.39938"/>
+									</PropertyList>
+									<Language>SFX</Language>
+									<AudioFile>Down_5.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="1038155104"/>
+									</MediaIDList>
+								</AudioFileSource>
+								<AudioFileSource Name="Down_3" ID="{513634EC-2A0A-44B3-A094-02A7702FD34E}">
+									<PropertyList>
+										<Property Name="LoopBegin" Type="Real64" Value="3.21869"/>
+										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+										<Property Name="TrimBegin" Type="Real64" Value="3.05928"/>
+									</PropertyList>
+									<Language>SFX</Language>
+									<AudioFile>Down_3.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="350629654"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="Down_3" ID="{513634EC-2A0A-44B3-A094-02A7702FD34E}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="Heavy_drop" ID="{75FAFE79-EA98-45A4-8FAC-DD13769495E6}" ShortID="984372735">
+							<PropertyList>
+								<Property Name="Pitch" Type="int32">
+									<ValueList>
+										<Value>-680</Value>
+									</ValueList>
+								</Property>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-15</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{3C73735A-5E70-4B41-BCDA-645A423E1F53}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Main Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{D1059135-0745-496C-8C65-F8315BA9C01F}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="Object_dropping" ID="{D77A4E05-7833-4D95-A8F5-11C42875EF98}">
+									<PropertyList>
+										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+										<Property Name="TrimBegin" Type="Real64" Value="0.04594"/>
+										<Property Name="TrimEnd" Type="Real64" Value="0.55948"/>
+									</PropertyList>
+									<Language>SFX</Language>
+									<AudioFile>Object_dropping.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="107166775"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="Object_dropping" ID="{D77A4E05-7833-4D95-A8F5-11C42875EF98}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+				</BlendContainer>
 			</ChildrenList>
 		</WorkUnit>
 	</Containers>

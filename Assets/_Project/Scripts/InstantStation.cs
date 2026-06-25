@@ -50,7 +50,8 @@ public class InstantStation : StationBase
 
             if (score > 0 && GameManager.Instance != null)
                 GameManager.Instance.AddScore(score);
-
+            if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayDeliver(this.gameObject);
             Destroy(item);
             itemOnStation = null;
         }
@@ -67,6 +68,8 @@ public class InstantStation : StationBase
             Debug.Log("[Bin] Cleared contents — item kept in hand, now empty.");
             return;
         }
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayThrowOut(this.gameObject);
 
         WorldItem wi = player.heldItem.GetComponent<WorldItem>();
 
@@ -85,6 +88,8 @@ public class InstantStation : StationBase
     {
         WorldItem wi = player.heldItem.GetComponent<WorldItem>();
         Debug.Log($"[Sink] Cleared: {(wi != null ? wi.itemData.itemName : player.heldItem.name)}");
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayWaterPour(this.gameObject);
         Destroy(player.heldItem);
         player.heldItem = null;
     }

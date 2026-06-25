@@ -262,7 +262,7 @@ public class MultiIngredientStation : StationBase
             RestartCooking(player);
             if (stationState == StationState.Cooking && stationType == StationType.CrystalBall)
             {
-                AkUnitySoundEngine.PostEvent("Play_CrystalBall", gameObject);
+                AkUnitySoundEngine.PostEvent("Play_Crystal", gameObject);
             }
         }
         else
