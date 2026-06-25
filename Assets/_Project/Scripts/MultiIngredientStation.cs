@@ -512,7 +512,9 @@ public class MultiIngredientStation : StationBase
                          : counterTopPoint != null ? counterTopPoint
                          : transform;
 
-        WorldItem result = WorldItem.CreateCombined(data, anchor.position + Vector3.up * 0.3f, anchor);
+        // Spawn without parenting for Crystal Ball and Prophecy Table to prevent non-uniform scale distortion on child lights/glow
+        Transform spawnParent = (stationType == StationType.CrystalBall || stationType == StationType.ProphecyTable) ? null : anchor;
+        WorldItem result = WorldItem.CreateCombined(data, anchor.position + Vector3.up * 0.3f, spawnParent);
         if (result != null)
         {
             resultItem = result.gameObject;
