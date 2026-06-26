@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Tea 2
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: tea 2
-  icon: {fileID: 21300000, guid: 2ddb300fcfa9f4a79bd376c16fc6f8dc, type: 3}
+  icon: {fileID: 21300000, guid: 3dd8208e0743a4be08f1dc49be3e2062, type: 3}
   prefab: {fileID: 977038500247953648, guid: 00516c6bb986fac4ab3228745b213f42, type: 3}
   potionColour: {r: 1, g: 1, b: 1, a: 1}
   isColourless: 0

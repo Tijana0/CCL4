@@ -2,108 +2,130 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 
 /// <summary>
-/// Code-built Settings screen: a scrollable panel with three labelled sections
-/// (Audio, Controls, Display). Opened from the pause menu. Reads/writes through
-/// SettingsManager. Built at runtime (no prefab), matching how PauseManager builds
-/// its UI.
+/// Code-built Settings screen: a framed card filling the screen with a single
+/// scrollable column — Audio settings on top, then large Keyboard / Controller
+/// reference images below. Opened from the pause menu.
+///
+/// Full controller support: every audio control plus each control-image panel is
+/// reachable with up/down (so a controller can scroll the big images into view),
+/// left/right adjusts the selected slider. The scroll is clamped (no dragging
+/// past the content) and follows the selected item.
 /// </summary>
 public class SettingsMenu : MonoBehaviour
 {
     private GameObject panel;
     private Action onBack;
 
-    private CanvasGroup musicVolumeGroup;   // greyed out when music is disabled
+    private CanvasGroup musicVolumeGroup;
     private Slider musicVolumeSlider;
 
     private DefaultControls.Resources uiRes;
+    private readonly List<Selectable> navItems = new List<Selectable>();
+    private ScrollRect scrollRect;
+    private GameObject lastSelected;
+
+    private static readonly Color Dim     = new Color(0.02f, 0.02f, 0.04f, 0.9f);
+    private static readonly Color CardBg  = new Color(0.11f, 0.10f, 0.16f, 1f);
+    private static readonly Color CardEdge= new Color(0.85f, 0.62f, 0.25f, 1f);
+    private static readonly Color Gold    = new Color(0.88f, 0.66f, 0.28f);
+    private static readonly Color TextCol = new Color(0.93f, 0.93f, 0.96f);
 
     public bool IsOpen => panel != null && panel.activeSelf;
 
     public void Build(Canvas canvas, Action backCallback)
     {
         onBack = backCallback;
-        // Leave sprites null — DefaultControls builds fully-functional controls without
-        // them (they just render as plain solid shapes). Loading built-in editor sprites
-        // via Resources.GetBuiltinResource fails at runtime and logs errors, which can
-        // trip "Error Pause" and freeze play mode.
         uiRes = new DefaultControls.Resources();
-
         var s = SettingsManager.Instance;
 
-        // Full-screen opaque panel (sits on top of the pause panel)
         panel = NewRect("SettingsPanel", canvas.transform);
         Stretch(panel.GetComponent<RectTransform>());
-        var bg = panel.AddComponent<Image>();
-        bg.color = new Color(0.05f, 0.05f, 0.08f, 1f);
+        panel.AddComponent<Image>().color = Dim;
 
-        // Title
-        var title = NewText("SettingsTitle", panel.transform, "SETTINGS", 48, TextAlignmentOptions.Center);
+        var edge = NewRect("CardEdge", panel.transform);
+        var edgeRT = edge.GetComponent<RectTransform>();
+        edgeRT.anchorMin = new Vector2(0.085f, 0.055f); edgeRT.anchorMax = new Vector2(0.915f, 0.945f);
+        edgeRT.offsetMin = Vector2.zero; edgeRT.offsetMax = Vector2.zero;
+        edge.AddComponent<Image>().color = CardEdge;
+
+        var card = NewRect("Card", panel.transform);
+        var cardRT = card.GetComponent<RectTransform>();
+        cardRT.anchorMin = new Vector2(0.09f, 0.06f); cardRT.anchorMax = new Vector2(0.91f, 0.94f);
+        cardRT.offsetMin = Vector2.zero; cardRT.offsetMax = Vector2.zero;
+        card.AddComponent<Image>().color = CardBg;
+
+        // Title + underline (fixed at top)
+        var title = NewText("SettingsTitle", card.transform, "SETTINGS", 38, TextAlignmentOptions.Center);
+        title.fontStyle = FontStyles.Bold;
         var tr = title.rectTransform;
         tr.anchorMin = new Vector2(0f, 1f); tr.anchorMax = new Vector2(1f, 1f); tr.pivot = new Vector2(0.5f, 1f);
-        tr.anchoredPosition = new Vector2(0f, -20f); tr.sizeDelta = new Vector2(0f, 70f);
+        tr.anchoredPosition = new Vector2(0f, -12f); tr.sizeDelta = new Vector2(0f, 48f);
+        var ul = NewRect("TitleAccent", card.transform);
+        var ulRT = ul.GetComponent<RectTransform>();
+        ulRT.anchorMin = new Vector2(0.5f, 1f); ulRT.anchorMax = new Vector2(0.5f, 1f); ulRT.pivot = new Vector2(0.5f, 1f);
+        ulRT.anchoredPosition = new Vector2(0f, -58f); ulRT.sizeDelta = new Vector2(110f, 3f);
+        ul.AddComponent<Image>().color = Gold;
 
-        // ── Scroll view ─────────────────────────────────────────────────────────
-        var scrollGO = NewRect("Scroll", panel.transform);
+        // Scroll view (between title and Back)
+        var scrollGO = NewRect("Scroll", card.transform);
         var scrollRT = scrollGO.GetComponent<RectTransform>();
-        scrollRT.anchorMin = new Vector2(0.08f, 0f); scrollRT.anchorMax = new Vector2(0.92f, 1f);
-        scrollRT.offsetMin = new Vector2(0f, 80f);    // leave room for Back button
-        scrollRT.offsetMax = new Vector2(0f, -82f);   // leave room for title
-        var scroll = scrollGO.AddComponent<ScrollRect>();
-        scroll.horizontal = false; scroll.vertical = true; scroll.scrollSensitivity = 20f;
-        scrollGO.AddComponent<Image>().color = new Color(1f, 1f, 1f, 0.04f);
-        scrollGO.AddComponent<Mask>().showMaskGraphic = false;
+        scrollRT.anchorMin = new Vector2(0.05f, 0f); scrollRT.anchorMax = new Vector2(0.95f, 1f);
+        scrollRT.offsetMin = new Vector2(0f, 70f);    // room for Back
+        scrollRT.offsetMax = new Vector2(0f, -72f);   // room for title
+        
+        // Add a transparent Image to serve as the Raycast Target so mouse scrolling/dragging works
+        var scrollImg = scrollGO.AddComponent<Image>();
+        scrollImg.color = Color.clear;
+        scrollImg.raycastTarget = true;
+
+        scrollRect = scrollGO.AddComponent<ScrollRect>();
+        scrollRect.horizontal = false; scrollRect.vertical = true; scrollRect.scrollSensitivity = 28f;
+        scrollRect.movementType = ScrollRect.MovementType.Clamped;
+        scrollGO.AddComponent<RectMask2D>();
+        scrollRect.viewport = scrollRT;
 
         var content = NewRect("Content", scrollGO.transform);
         var contentRT = content.GetComponent<RectTransform>();
         contentRT.anchorMin = new Vector2(0f, 1f); contentRT.anchorMax = new Vector2(1f, 1f); contentRT.pivot = new Vector2(0.5f, 1f);
-        contentRT.sizeDelta = Vector2.zero; // width follows the viewport (default sizeDelta is 100, which overflows)
+        contentRT.sizeDelta = Vector2.zero;
         var vlg = content.AddComponent<VerticalLayoutGroup>();
         vlg.childControlWidth = true; vlg.childForceExpandWidth = true;
         vlg.childControlHeight = true; vlg.childForceExpandHeight = false;
-        vlg.spacing = 8f; vlg.padding = new RectOffset(16, 16, 12, 12);
-        var fitter = content.AddComponent<ContentSizeFitter>();
-        fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-        scroll.content = contentRT;
+        vlg.spacing = 12f; vlg.padding = new RectOffset(8, 8, 4, 10);
+        content.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+        scrollRect.content = contentRT;
 
-        // ── AUDIO ────────────────────────────────────────────────────────────────
+        // ── AUDIO ──────────────────────────────────────────────────────────────
         AddHeader(content.transform, "AUDIO");
-        AddSlider(content.transform, "Master Volume", s.masterVolume, v => SettingsManager.Instance.SetMasterVolume(v), out _, out _);
-
+        AddSlider(content.transform, "Master", s.masterVolume, v => SettingsManager.Instance.SetMasterVolume(v), out _, out _);
         AddToggle(content.transform, "Background Music", s.musicEnabled, on =>
         {
             SettingsManager.Instance.SetMusicEnabled(on);
             SetMusicVolumeEnabled(on);
         });
-
-        AddSlider(content.transform, "Music Volume", s.musicVolume, v => SettingsManager.Instance.SetMusicVolume(v),
+        AddSlider(content.transform, "Music", s.musicVolume, v => SettingsManager.Instance.SetMusicVolume(v),
                   out musicVolumeSlider, out musicVolumeGroup);
         SetMusicVolumeEnabled(s.musicEnabled);
+        AddSlider(content.transform, "SFX", s.sfxVolume, v => SettingsManager.Instance.SetSfxVolume(v), out _, out _);
 
-        AddSlider(content.transform, "SFX Volume", s.sfxVolume, v => SettingsManager.Instance.SetSfxVolume(v), out _, out _);
-
-        // ── CONTROLS ──────────────────────────────────────────────────────────────
+        // ── CONTROLS (large reference images, below audio) ─────────────────────
         AddHeader(content.transform, "CONTROLS");
-        AddControlsPlaceholder(content.transform);
+        AddControlImage(content.transform, "controls_keyboard", 280f);
+        AddControlImage(content.transform, "controls_gamepad", 280f);
 
-        // ── DISPLAY ────────────────────────────────────────────────────────────────
-        AddHeader(content.transform, "DISPLAY");
-        AddDropdown(content.transform, "Resolution",
-            new List<string>(SettingsManager.ResolutionLabels()), s.resolutionIndex,
-            idx => SettingsManager.Instance.SetResolutionIndex(idx));
-        AddDropdown(content.transform, "Window Mode",
-            new List<string> { "Fullscreen", "Windowed" }, s.fullscreen ? 0 : 1,
-            idx => SettingsManager.Instance.SetFullscreen(idx == 0));
-
-        // ── Back button ──────────────────────────────────────────────────────────
-        var back = MakeButton(panel.transform, "BackButton", "Back");
+        // Back (fixed at bottom of card)
+        var back = MakeButton(card.transform, "BackButton", "Back");
         var backRT = back.GetComponent<RectTransform>();
         backRT.anchorMin = new Vector2(0.5f, 0f); backRT.anchorMax = new Vector2(0.5f, 0f); backRT.pivot = new Vector2(0.5f, 0f);
-        backRT.anchoredPosition = new Vector2(0f, 20f); backRT.sizeDelta = new Vector2(240f, 56f);
+        backRT.anchoredPosition = new Vector2(0f, 16f); backRT.sizeDelta = new Vector2(220f, 46f);
         back.onClick.AddListener(Close);
+        navItems.Add(back);
 
+        SetupNavigation();
         panel.SetActive(false);
     }
 
@@ -112,12 +134,90 @@ public class SettingsMenu : MonoBehaviour
         if (panel == null) return;
         panel.transform.SetAsLastSibling();
         panel.SetActive(true);
+        if (scrollRect != null) scrollRect.verticalNormalizedPosition = 1f;
+        lastSelected = null;
+        FocusFirst();
     }
 
     public void Close()
     {
         if (panel != null) panel.SetActive(false);
+        lastSelected = null;
         onBack?.Invoke();
+    }
+
+    private void FocusFirst()
+    {
+        if (navItems.Count == 0 || EventSystem.current == null) return;
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(navItems[0].gameObject);
+    }
+
+    private void Update()
+    {
+        if (!IsOpen || EventSystem.current == null) return;
+        var sel = EventSystem.current.currentSelectedGameObject;
+        if (sel == null || !sel.activeInHierarchy || !sel.transform.IsChildOf(panel.transform)) { FocusFirst(); return; }
+        
+        if (sel != lastSelected)
+        {
+            lastSelected = sel;
+            var selRT = sel.GetComponent<RectTransform>();
+            if (scrollRect != null && scrollRect.content != null && selRT != null && selRT.IsChildOf(scrollRect.content))
+                EnsureVisible(selRT);
+        }
+    }
+
+    private void EnsureVisible(RectTransform target)
+    {
+        RectTransform vp = scrollRect.viewport, ct = scrollRect.content;
+        if (vp == null || ct == null) return;
+
+        // Convert target's world corners to viewport's local space to do math in pixel space
+        Vector3[] corners = new Vector3[4];
+        target.GetWorldCorners(corners);
+        for (int i = 0; i < 4; i++)
+        {
+            corners[i] = vp.InverseTransformPoint(corners[i]);
+        }
+
+        float vTop = vp.rect.yMax;
+        float vBot = vp.rect.yMin;
+        float tTop = corners[1].y;
+        float tBot = corners[0].y;
+
+        const float pad = 8f;
+        Vector2 ap = ct.anchoredPosition;
+
+        if (tTop > vTop - pad)
+        {
+            ap.y -= (tTop - (vTop - pad));
+        }
+        else if (tBot < vBot + pad)
+        {
+            ap.y += ((vBot + pad) - tBot);
+        }
+        else
+        {
+            return;
+        }
+
+        float maxY = Mathf.Max(0f, ct.rect.height - vp.rect.height);
+        ap.y = Mathf.Clamp(ap.y, 0f, maxY);
+        ct.anchoredPosition = ap;
+    }
+
+    private void SetupNavigation()
+    {
+        for (int i = 0; i < navItems.Count; i++)
+        {
+            var nav = navItems[i].navigation;
+            nav.mode = Navigation.Mode.Explicit;
+            nav.selectOnUp   = navItems[(i - 1 + navItems.Count) % navItems.Count];
+            nav.selectOnDown = navItems[(i + 1) % navItems.Count];
+            nav.selectOnLeft = null; nav.selectOnRight = null;
+            navItems[i].navigation = nav;
+        }
     }
 
     private void SetMusicVolumeEnabled(bool enabled)
@@ -141,10 +241,16 @@ public class SettingsMenu : MonoBehaviour
 
     private void AddHeader(Transform parent, string text)
     {
-        var row = Row(parent, 44f);
-        var t = NewText("Header", row.transform, text, 28, TextAlignmentOptions.Left);
-        t.color = new Color(0.85f, 0.55f, 0.2f);
-        Stretch(t.rectTransform);
+        var row = Row(parent, 38f);
+        var t = NewText("Header", row.transform, text, 24, TextAlignmentOptions.BottomLeft);
+        t.fontStyle = FontStyles.Bold; t.color = Gold;
+        var rt = t.rectTransform; rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one;
+        rt.offsetMin = new Vector2(2f, 6f); rt.offsetMax = Vector2.zero;
+        var rule = NewRect("Rule", row.transform);
+        var rr = rule.GetComponent<RectTransform>();
+        rr.anchorMin = new Vector2(0f, 0f); rr.anchorMax = new Vector2(1f, 0f); rr.pivot = new Vector2(0.5f, 0f);
+        rr.anchoredPosition = new Vector2(0f, 1f); rr.sizeDelta = new Vector2(0f, 2f);
+        rule.AddComponent<Image>().color = new Color(Gold.r, Gold.g, Gold.b, 0.35f);
     }
 
     private void AddSlider(Transform parent, string label, float value, UnityEngine.Events.UnityAction<float> cb,
@@ -152,85 +258,94 @@ public class SettingsMenu : MonoBehaviour
     {
         var row = Row(parent, 46f);
         group = row.AddComponent<CanvasGroup>();
-        LabelLeft(row.transform, label);
+        var lab = NewText("Label", row.transform, label, 20, TextAlignmentOptions.Left);
+        var lrt = lab.rectTransform; lrt.anchorMin = new Vector2(0f, 0.5f); lrt.anchorMax = new Vector2(0.35f, 1f);
+        lrt.offsetMin = new Vector2(2f, 0f); lrt.offsetMax = Vector2.zero;
+
+        var valText = NewText("Value", row.transform, Mathf.RoundToInt(value) + "%", 20, TextAlignmentOptions.Right);
+        valText.color = new Color(1f, 1f, 1f, 0.75f);
+        var vt = valText.rectTransform; vt.anchorMin = new Vector2(0.88f, 0.5f); vt.anchorMax = new Vector2(1f, 1f);
+        vt.offsetMin = Vector2.zero; vt.offsetMax = Vector2.zero;
 
         var sliderGO = DefaultControls.CreateSlider(uiRes);
         sliderGO.name = "Slider";
         sliderGO.transform.SetParent(row.transform, false);
-        PlaceRight(sliderGO.GetComponent<RectTransform>(), 8f);
+        var srt = sliderGO.GetComponent<RectTransform>();
+        srt.anchorMin = new Vector2(0.37f, 0.5f); srt.anchorMax = new Vector2(0.86f, 0.5f); srt.pivot = new Vector2(0.5f, 0.5f);
+        srt.offsetMin = new Vector2(0f, -10f); srt.offsetMax = new Vector2(0f, 10f);
 
         slider = sliderGO.GetComponent<Slider>();
         slider.minValue = 0f; slider.maxValue = 100f; slider.wholeNumbers = false;
         slider.value = value;
-        slider.onValueChanged.AddListener(cb);
+        var valRef = valText;
+        slider.onValueChanged.AddListener(v => { valRef.text = Mathf.RoundToInt(v) + "%"; cb(v); });
+        navItems.Add(slider);
     }
 
     private void AddToggle(Transform parent, string label, bool value, UnityEngine.Events.UnityAction<bool> cb)
     {
         var row = Row(parent, 40f);
-        LabelLeft(row.transform, label);
+        var lab = NewText("Label", row.transform, label, 20, TextAlignmentOptions.Left);
+        var lrt = lab.rectTransform; lrt.anchorMin = new Vector2(0f, 0f); lrt.anchorMax = new Vector2(0.6f, 1f);
+        lrt.offsetMin = new Vector2(2f, 0f); lrt.offsetMax = Vector2.zero;
 
         var toggleGO = DefaultControls.CreateToggle(uiRes);
         toggleGO.name = "Toggle";
         toggleGO.transform.SetParent(row.transform, false);
         var rt = toggleGO.GetComponent<RectTransform>();
-        rt.anchorMin = new Vector2(0.5f, 0.5f); rt.anchorMax = new Vector2(0.5f, 0.5f);
-        rt.pivot = new Vector2(0f, 0.5f); rt.anchoredPosition = Vector2.zero; rt.sizeDelta = new Vector2(30f, 30f);
-        // hide the default "Toggle" text label that ships inside the control
+        rt.anchorMin = new Vector2(0.37f, 0.5f); rt.anchorMax = new Vector2(0.37f, 0.5f);
+        rt.pivot = new Vector2(0f, 0.5f); rt.anchoredPosition = Vector2.zero; rt.sizeDelta = new Vector2(28f, 28f);
         var lbl = toggleGO.GetComponentInChildren<Text>();
         if (lbl != null) lbl.gameObject.SetActive(false);
 
         var toggle = toggleGO.GetComponent<Toggle>();
         toggle.isOn = value;
         toggle.onValueChanged.AddListener(cb);
+        navItems.Add(toggle);
     }
 
-    private void AddDropdown(Transform parent, string label, List<string> options, int value, UnityEngine.Events.UnityAction<int> cb)
+    // A large control-scheme reference image (Resources/UI/<name>.png). It carries a
+    // no-op Selectable so a controller can navigate to it and scroll it into view.
+    private void AddControlImage(Transform parent, string resourceName, float height)
     {
-        var row = Row(parent, 46f);
-        LabelLeft(row.transform, label);
+        var row = Row(parent, height);
 
-        var ddGO = DefaultControls.CreateDropdown(uiRes);
-        ddGO.name = "Dropdown";
-        ddGO.transform.SetParent(row.transform, false);
-        PlaceRight(ddGO.GetComponent<RectTransform>(), 0f);
+        var imgGO = NewRect(resourceName + "_Image", row.transform);
+        var rt = imgGO.GetComponent<RectTransform>();
+        rt.anchorMin = new Vector2(0.5f, 0.5f);
+        rt.anchorMax = new Vector2(0.5f, 0.5f);
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.anchoredPosition = Vector2.zero;
+        rt.sizeDelta = new Vector2(400f, height);
 
-        var dd = ddGO.GetComponent<Dropdown>();
-        dd.ClearOptions();
-        dd.AddOptions(options);
-        dd.value = Mathf.Clamp(value, 0, options.Count - 1);
-        dd.RefreshShownValue();
-        dd.onValueChanged.AddListener(cb);
+        var img = imgGO.AddComponent<Image>();
+        var sprite = LoadControlSprite(resourceName);
+        if (sprite != null) { img.sprite = sprite; img.preserveAspect = true; img.color = Color.white; }
+        else
+        {
+            img.color = new Color(1f, 1f, 1f, 0.06f);
+            var ph = NewText("Placeholder", imgGO.transform,
+                "Add  Resources/UI/" + resourceName + ".png", 16, TextAlignmentOptions.Center);
+            ph.color = new Color(1f, 1f, 1f, 0.45f); Stretch(ph.rectTransform);
+        }
+
+        // navigable (no visual change) so controller users can scroll to the image
+        var sel = imgGO.AddComponent<Button>();
+        sel.transition = Selectable.Transition.None;
+        sel.targetGraphic = img;
+        navItems.Add(sel);
     }
 
-    private void AddControlsPlaceholder(Transform parent)
+    private Sprite LoadControlSprite(string name)
     {
-        var row = Row(parent, 110f);
-        var img = NewRect("ControlsPlaceholder", row.transform);
-        Stretch(img.GetComponent<RectTransform>());
-        img.AddComponent<Image>().color = new Color(1f, 1f, 1f, 0.08f);
-        var t = NewText("PlaceholderLabel", img.transform,
-            "Keyboard & Controller layout\n(image coming soon)", 20, TextAlignmentOptions.Center);
-        t.color = new Color(1f, 1f, 1f, 0.5f);
-        Stretch(t.rectTransform);
+        var sp = Resources.Load<Sprite>("UI/" + name);
+        if (sp != null) return sp;
+        var tex = Resources.Load<Texture2D>("UI/" + name);
+        if (tex != null) return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+        return null;
     }
 
     // ── Low-level helpers ────────────────────────────────────────────────────────
-    private void LabelLeft(Transform row, string text)
-    {
-        var t = NewText("Label", row, text, 22, TextAlignmentOptions.Left);
-        var rt = t.rectTransform;
-        rt.anchorMin = new Vector2(0f, 0f); rt.anchorMax = new Vector2(0.5f, 1f);
-        rt.offsetMin = Vector2.zero; rt.offsetMax = Vector2.zero;
-    }
-
-    private void PlaceRight(RectTransform rt, float inset)
-    {
-        rt.anchorMin = new Vector2(0.5f, 0.5f); rt.anchorMax = new Vector2(1f, 0.5f);
-        rt.pivot = new Vector2(0.5f, 0.5f);
-        rt.offsetMin = new Vector2(inset, -12f); rt.offsetMax = new Vector2(-inset, 12f);
-    }
-
     private GameObject NewRect(string name, Transform parent)
     {
         var go = new GameObject(name, typeof(RectTransform));
@@ -243,8 +358,8 @@ public class SettingsMenu : MonoBehaviour
         var go = new GameObject(name, typeof(RectTransform));
         go.transform.SetParent(parent, false);
         var t = go.AddComponent<TextMeshProUGUI>();
-        t.text = text; t.fontSize = size; t.alignment = align; t.color = Color.white;
-        t.enableWordWrapping = true;
+        t.text = text; t.fontSize = size; t.alignment = align; t.color = TextCol;
+        t.enableWordWrapping = false;
         return t;
     }
 
@@ -262,13 +377,13 @@ public class SettingsMenu : MonoBehaviour
         var btn = go.AddComponent<Button>();
         btn.transition = Selectable.Transition.ColorTint;
         var cb = btn.colors;
-        cb.normalColor = new Color(0.2f, 0.2f, 0.2f, 1f);
-        cb.highlightedColor = new Color(0.8f, 0.4f, 0.1f, 1f);
-        cb.pressedColor = new Color(0.5f, 0.2f, 0.05f, 1f);
-        cb.selectedColor = new Color(0.8f, 0.4f, 0.1f, 1f);
+        cb.normalColor = new Color(0.24f, 0.22f, 0.3f, 1f);
+        cb.highlightedColor = Gold;
+        cb.pressedColor = new Color(0.6f, 0.42f, 0.14f, 1f);
+        cb.selectedColor = Gold;
         cb.fadeDuration = 0.1f;
         btn.colors = cb;
-        var t = NewText("Text", go.transform, text, 26, TextAlignmentOptions.Center);
+        var t = NewText("Text", go.transform, text, 22, TextAlignmentOptions.Center);
         Stretch(t.rectTransform);
         return btn;
     }

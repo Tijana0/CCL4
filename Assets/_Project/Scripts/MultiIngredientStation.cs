@@ -100,8 +100,17 @@ public class MultiIngredientStation : StationBase
     [Header("Result Spawn Point (optional)")]
     public Transform resultSpawnPoint;
 
+    [Header("Ingredient Display (optional)")]
+    [Tooltip("If set, each accepted ingredient is shown resting here (e.g. on the card deck) until processing finishes. Leave empty to keep the old invisible behaviour.")]
+    public Transform ingredientDisplayAnchor;
+    [Tooltip("Vertical gap between stacked accepted ingredients on the display anchor.")]
+    public float ingredientStackHeight = 0.05f;
+
+    public override bool HasReadyResult => resultItem != null;
+
     // ── Runtime state ────────────────────────────────────────────────────────
     private List<ItemData> ingredients = new List<ItemData>();
+    private readonly List<GameObject> ingredientVisuals = new List<GameObject>();
     private StationState stationState = StationState.Empty;
     private float cookingProgress = 0f;
     private float currentCookingTime = 5f;
@@ -116,41 +125,7 @@ public class MultiIngredientStation : StationBase
     {
         if (stationType == StationType.CrystalBall)
         {
-            if (activeVisual == null)
-            {
-                GameObject visualParent = new GameObject("CrystalBall_ActiveVisual");
-                visualParent.transform.SetParent(this.transform, false);
-                visualParent.transform.localPosition = new Vector3(0f, 0.8f, 0f);
 
-                GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                sphere.name = "ShiningSphere";
-                sphere.transform.SetParent(visualParent.transform, false);
-                sphere.transform.localPosition = Vector3.zero;
-                sphere.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
-                Renderer sphereRenderer = sphere.GetComponent<Renderer>();
-                if (sphereRenderer != null)
-                {
-                    Shader unlitShader = Shader.Find("Universal Render Pipeline/Unlit")
-                                     ?? Shader.Find("Unlit/Color");
-                    Material glowMat = new Material(unlitShader);
-                    glowMat.SetColor("_BaseColor", new Color(1f, 0.95f, 0.6f, 1f));
-                    sphereRenderer.material = glowMat;
-                }
-                Collider sphereCollider = sphere.GetComponent<Collider>();
-                if (sphereCollider != null) sphereCollider.enabled = false;
-
-                GameObject lightObj = new GameObject("ShiningLight");
-                lightObj.transform.SetParent(visualParent.transform, false);
-                lightObj.transform.localPosition = Vector3.zero;
-                Light lightComponent = lightObj.AddComponent<Light>();
-                lightComponent.type = LightType.Point;
-                lightComponent.color = new Color(0.95f, 0.9f, 0.6f);
-                lightComponent.intensity = 8f;
-                lightComponent.range = 5f;
-                lightComponent.shadows = LightShadows.None;
-
-                activeVisual = visualParent;
-            }
 
             // Build a world-space progress bar — no parenting, use world position directly
             if (progressBarContainer == null && counterTopPoint != null)
@@ -203,6 +178,41 @@ public class MultiIngredientStation : StationBase
                 progressBarFill = fillImg;
                 canvasGO.SetActive(false);
             }
+        }
+
+        // Prophecy table: build a world-space progress bar hovering above the table,
+        // same style as the crystal ball's, shown while processing.
+        if (stationType == StationType.ProphecyTable && progressBarContainer == null && counterTopPoint != null)
+        {
+            GameObject canvasGO = new GameObject("Prophecy_ProgressCanvas");
+            canvasGO.transform.position = counterTopPoint.position + new Vector3(0f, 1.2f, 0f);
+            canvasGO.transform.localScale = Vector3.one * 0.01f;
+
+            Canvas canvas = canvasGO.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.WorldSpace;
+            canvasGO.GetComponent<RectTransform>().sizeDelta = new Vector2(120f, 18f);
+
+            GameObject bg = new GameObject("Background");
+            bg.transform.SetParent(canvasGO.transform, false);
+            UnityEngine.UI.Image bgImg = bg.AddComponent<UnityEngine.UI.Image>();
+            bgImg.color = new Color(0.12f, 0.08f, 0.18f, 0.9f);
+            RectTransform bgRect = bg.GetComponent<RectTransform>();
+            bgRect.anchorMin = Vector2.zero; bgRect.anchorMax = Vector2.one;
+            bgRect.offsetMin = Vector2.zero; bgRect.offsetMax = Vector2.zero;
+
+            GameObject fill = new GameObject("Fill");
+            fill.transform.SetParent(canvasGO.transform, false);
+            UnityEngine.UI.Image fillImg = fill.AddComponent<UnityEngine.UI.Image>();
+            fillImg.color = new Color(0.86f, 0.68f, 0.33f, 1f); // gold, matches the card theme
+            RectTransform fillRect = fill.GetComponent<RectTransform>();
+            fillRect.anchorMin = Vector2.zero; fillRect.anchorMax = Vector2.one;
+            fillRect.offsetMin = new Vector2(2f, 2f); fillRect.offsetMax = new Vector2(-2f, -2f);
+            fillRect.pivot = new Vector2(0f, 0.5f);
+            fill.transform.localScale = new Vector3(0f, 1f, 1f);
+
+            progressBarContainer = canvasGO;
+            progressBarFill = fillImg;
+            canvasGO.SetActive(false);
         }
 
         UpdateVisuals();
@@ -285,6 +295,51 @@ public class MultiIngredientStation : StationBase
         }
     }
 
+    // ── Ingredient display (rests accepted items on the deck/anchor) ──────────
+
+    /// <summary>Spawns a non-interactive copy of an accepted ingredient resting on
+    /// the display anchor (e.g. the card deck), stacked by index.</summary>
+    private void ShowIngredientOnAnchor(ItemData data, int index)
+    {
+        if (ingredientDisplayAnchor == null || data == null || data.prefab == null) return;
+
+        GameObject vis = Instantiate(data.prefab);
+        vis.name = "StationIngredient_" + data.itemName;
+        // strip interactivity / physics so it just sits there
+        foreach (var pu in vis.GetComponentsInChildren<PickupObject>()) Destroy(pu);
+        foreach (var col in vis.GetComponentsInChildren<Collider>()) col.enabled = false;
+        foreach (var rb in vis.GetComponentsInChildren<Rigidbody>()) rb.isKinematic = true;
+
+        vis.transform.SetParent(ingredientDisplayAnchor, false);
+        vis.transform.localPosition = Vector3.zero;
+        vis.transform.rotation = ingredientDisplayAnchor.rotation;
+
+        // Rest the item's base on the anchor, fanned/stacked so multiple are visible.
+        var rends = vis.GetComponentsInChildren<Renderer>();
+        if (rends.Length > 0)
+        {
+            // Lay "tall" items (e.g. a book standing on its edge) flat on the deck.
+            Bounds pre = rends[0].bounds;
+            for (int i = 1; i < rends.Length; i++) pre.Encapsulate(rends[i].bounds);
+            if (pre.size.y > 0.5f * Mathf.Max(pre.size.x, pre.size.z))
+                vis.transform.RotateAround(pre.center, Vector3.right, 90f);
+
+            Bounds b = rends[0].bounds;
+            for (int i = 1; i < rends.Length; i++) b.Encapsulate(rends[i].bounds);
+            Vector3 fan = ingredientDisplayAnchor.rotation * new Vector3((index % 2 == 0 ? -0.07f : 0.07f), 0f, index * 0.05f);
+            Vector3 targetCenterXZ = ingredientDisplayAnchor.position + fan;
+            float targetBaseY = ingredientDisplayAnchor.position.y + index * ingredientStackHeight;
+            vis.transform.position += new Vector3(targetCenterXZ.x - b.center.x, targetBaseY - b.min.y, targetCenterXZ.z - b.center.z);
+        }
+        ingredientVisuals.Add(vis);
+    }
+
+    private void ClearIngredientVisuals()
+    {
+        foreach (var v in ingredientVisuals) if (v != null) Destroy(v);
+        ingredientVisuals.Clear();
+    }
+
     // ── Ingredient handling ──────────────────────────────────────────────────
 
     private void TryAddIngredient(SimplePlayerController player)
@@ -315,6 +370,7 @@ public class MultiIngredientStation : StationBase
 
         // Add ingredient and consume held item
         ingredients.Add(wi.itemData);
+        ShowIngredientOnAnchor(wi.itemData, ingredients.Count - 1);
         Destroy(player.heldItem);
         player.heldItem = null;
 
@@ -399,9 +455,14 @@ public class MultiIngredientStation : StationBase
         boilOverTimer = 0f;
         if (player != null) cookingPlayer = player;
         stationState = StationState.Cooking;
+        UpdateVisuals(); // turn on the active visual (e.g. crystal ball glow) now that we're cooking
 
         if (progressBarContainer != null) progressBarContainer.SetActive(true);
-        if (progressBarFill != null) progressBarFill.fillAmount = 0f;
+        if (progressBarFill != null)
+        {
+            progressBarFill.fillAmount = 0f;
+            progressBarFill.transform.localScale = new Vector3(0f, 1f, 1f);
+        }
 
         Debug.Log($"[MultiIngredientStation] Cooking restarted with {ingredients.Count} ingredient(s) — {currentCookingTime}s");
     }
@@ -422,7 +483,10 @@ public class MultiIngredientStation : StationBase
 
         cookingProgress += Time.deltaTime / currentCookingTime;
         if (progressBarFill != null)
+        {
             progressBarFill.fillAmount = cookingProgress;
+            progressBarFill.transform.localScale = new Vector3(cookingProgress, 1f, 1f);
+        }
 
         if (cookingProgress >= 1f)
             CompleteCooking();
@@ -453,12 +517,14 @@ public class MultiIngredientStation : StationBase
             }
 
             ingredients.Clear();
+            ClearIngredientVisuals();
             UpdateVisuals();
             return;
         }
 
         SpawnResult(resultData, null);
         ingredients.Clear();
+        ClearIngredientVisuals();
         UpdateVisuals();
         Debug.Log($"[MultiIngredientStation] Done! Result: {resultData.itemName}");
     }
@@ -469,7 +535,9 @@ public class MultiIngredientStation : StationBase
                          : counterTopPoint != null ? counterTopPoint
                          : transform;
 
-        WorldItem result = WorldItem.CreateCombined(data, anchor.position + Vector3.up * 0.3f, anchor);
+        // Spawn without parenting for Crystal Ball and Prophecy Table to prevent non-uniform scale distortion on child lights/glow
+        Transform spawnParent = (stationType == StationType.CrystalBall || stationType == StationType.ProphecyTable) ? null : anchor;
+        WorldItem result = WorldItem.CreateCombined(data, anchor.position + Vector3.up * 0.3f, spawnParent);
         if (result != null)
         {
             resultItem = result.gameObject;
@@ -480,6 +548,13 @@ public class MultiIngredientStation : StationBase
                 if (col != null) localOffset = col.center;
                 Vector3 visualCenter = anchor.position + anchor.rotation * localOffset;
                 result.transform.position = visualCenter + new Vector3(0f, 0.9f, 0f);
+            }
+            else if (stationType == StationType.ProphecyTable)
+            {
+                // Float the finished prophecy card above the table, like a vision
+                // hovers over the crystal ball.
+                result.transform.position = anchor.position + new Vector3(0f, 0.8f, 0f);
+                result.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
             }
             else
             {
@@ -673,7 +748,11 @@ public class MultiIngredientStation : StationBase
     private void UpdateVisuals()
     {
         if (emptyVisual != null) emptyVisual.SetActive(stationState == StationState.Empty);
-        if (activeVisual != null) activeVisual.SetActive(stationState == StationState.Cooking || stationState == StationState.HasIngredients);
+        // Crystal ball glow only appears while actually cooking (not on the first ingredient);
+        // other stations (e.g. cauldron) may show their active visual once ingredients are added.
+        bool showActive = stationState == StationState.Cooking
+                          || (stationState == StationState.HasIngredients && stationType != StationType.CrystalBall);
+        if (activeVisual != null) activeVisual.SetActive(showActive);
         if (doneVisual != null) doneVisual.SetActive(stationState == StationState.Done);
         if (ruinedVisual != null) ruinedVisual.SetActive(stationState == StationState.Ruined);
     }
@@ -685,6 +764,7 @@ public class MultiIngredientStation : StationBase
         if (resultItem != null) Destroy(resultItem);
         resultItem = null;
         ingredients.Clear();
+        ClearIngredientVisuals();
         stationState = StationState.Empty;
         cookingProgress = 0f;
         boilOverTimer = 0f;

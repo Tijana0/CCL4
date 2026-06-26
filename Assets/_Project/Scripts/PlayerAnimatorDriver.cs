@@ -1,18 +1,6 @@
 using UnityEngine;
+using System.Collections;
 
-/// <summary>
-/// Drives a character model's Animator from the player's gameplay state.
-/// Put this on the player root (the object with SimplePlayerController); it finds
-/// the Animator on the character model child automatically.
-///
-/// It maps gameplay state onto the animator parameters that exist on the assigned
-/// controller (the Hermione and Luna controllers use slightly different names):
-///   - walk bool : "Movement" (Hermione) and/or "Walking" (Luna) -> true while moving
-///   - "PickUp"  : true while the player is carrying an item (Walking_Holding pose)
-///   - "Casting" : true while the player holds the process/use button (Cast_Spell)
-/// Only parameters that actually exist on the controller are set, so neither
-/// controller logs "parameter does not exist" warnings.
-/// </summary>
 [RequireComponent(typeof(SimplePlayerController))]
 public class PlayerAnimatorDriver : MonoBehaviour
 {
@@ -22,13 +10,25 @@ public class PlayerAnimatorDriver : MonoBehaviour
     [Tooltip("Move-input magnitude above which the walk animation plays.")]
     public float moveThreshold = 0.1f;
 
+    [Header("Casting visuals")]
+    public GameObject wandModel;
+    public GameObject glowEffect;
+    [Tooltip("Seconds to wait after casting starts before the glow appears.")]
+    public float glowDelay = 0.5f;
+
     private SimplePlayerController controller;
     private bool hasMovement, hasWalking, hasPickUp, hasCasting;
+    private bool wasCasting = false;
+    private Coroutine glowRoutine;
 
     private void Awake()
     {
         controller = GetComponent<SimplePlayerController>();
         if (animator == null) animator = GetComponentInChildren<Animator>();
+
+        if (wandModel != null) wandModel.SetActive(false);
+        if (glowEffect != null) glowEffect.SetActive(false);
+
         if (animator == null) return;
 
         foreach (var p in animator.parameters)
@@ -52,5 +52,32 @@ public class PlayerAnimatorDriver : MonoBehaviour
         if (hasWalking) animator.SetBool("Walking", moving);
         if (hasPickUp) animator.SetBool("PickUp", holding);
         if (hasCasting) animator.SetBool("Casting", casting);
+
+        if (casting != wasCasting)
+        {
+            if (casting)
+            {
+                // wand appears immediately
+                if (wandModel != null) wandModel.SetActive(true);
+                // glow appears after a delay
+                if (glowEffect != null)
+                    glowRoutine = StartCoroutine(ShowGlowAfterDelay());
+            }
+            else
+            {
+                // casting stopped — cancel pending glow and hide everything
+                if (glowRoutine != null) { StopCoroutine(glowRoutine); glowRoutine = null; }
+                if (wandModel != null) wandModel.SetActive(false);
+                if (glowEffect != null) glowEffect.SetActive(false);
+            }
+            wasCasting = casting;
+        }
+    }
+
+    private IEnumerator ShowGlowAfterDelay()
+    {
+        yield return new WaitForSeconds(glowDelay);
+        if (glowEffect != null) glowEffect.SetActive(true);
+        glowRoutine = null;
     }
 }
