@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: beetle
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: beetle
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 568feb3e95f9b4327a596fc74e3c8b80, type: 3}
   prefab: {fileID: 2522718328146705618, guid: 7f3b6d2758b5b204db74b42ca375a0db, type: 3}
   potionColour: {r: 1, g: 1, b: 1, a: 1}
   isColourless: 0

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: griffon sweat
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: griffon sweat
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: fe1b4aecd096e430282ede58a6159f49, type: 3}
   prefab: {fileID: 4010859373440185101, guid: 9d06c34cd09dc5c40b4f194f9e231fc6, type: 3}
   potionColour: {r: 0.10207895, g: 0.9169811, b: 0.8037181, a: 1}
   isColourless: 0

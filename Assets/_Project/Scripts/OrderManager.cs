@@ -29,6 +29,12 @@ public class OrderManager : MonoBehaviour
     public Sprite crystalBallProcessIcon;
     [Tooltip("Icon for prophecy orders (made at the prophecy table).")]
     public Sprite prophecyProcessIcon;
+    [Tooltip("Icon for mortar & pestle grinding.")]
+    public Sprite mortarProcessIcon;
+    [Tooltip("Icon for chopping/cutting board.")]
+    public Sprite choppingProcessIcon;
+    [Tooltip("Icon for cauldron brewing.")]
+    public Sprite cauldronProcessIcon;
 
     [Header("Configuration")]
     public List<Recipe> availableRecipes;
@@ -273,15 +279,54 @@ public class OrderManager : MonoBehaviour
             }
         }
 
-        // Process icon (badge under the card): which station makes this order?
+        // Process icon (badge under the card): which station(s) make this order?
         Transform processT = newCard.transform.Find("ProcessIcon");
         if (processT != null)
         {
-            Sprite ps = GetProcessIconFor(recipe.requiredOutput);
-            Transform pIcon = processT.Find("Icon");
-            Image pimg = pIcon != null ? pIcon.GetComponent<Image>() : processT.GetComponent<Image>();
-            if (ps != null) { pimg.sprite = ps; processT.gameObject.SetActive(true); }
-            else processT.gameObject.SetActive(false);
+            List<Sprite> sprites = GetProcessIconsFor(recipe.requiredOutput);
+            if (sprites != null && sprites.Count > 0)
+            {
+                if (sprites.Count == 1)
+                {
+                    Transform pIcon = processT.Find("Icon");
+                    Image pimg = pIcon != null ? pIcon.GetComponent<Image>() : processT.GetComponent<Image>();
+                    if (pimg != null) pimg.sprite = sprites[0];
+                    processT.gameObject.SetActive(true);
+                }
+                else
+                {
+                    // Deactivate original template
+                    processT.gameObject.SetActive(false);
+
+                    // Spawn multiple badges side-by-side
+                    float spacing = 60f; // 54 width + 6 gap
+                    float totalWidth = (sprites.Count - 1) * spacing;
+                    float startX = -(totalWidth / 2f);
+
+                    for (int i = 0; i < sprites.Count; i++)
+                    {
+                        GameObject clone = Instantiate(processT.gameObject, newCard.transform);
+                        clone.name = "ProcessIcon_Clone_" + i;
+                        
+                        RectTransform rt = clone.GetComponent<RectTransform>();
+                        if (rt != null)
+                        {
+                            rt.anchoredPosition = new Vector2(startX + (i * spacing), -8f);
+                            rt.pivot = new Vector2(0.5f, 1f);
+                        }
+                        
+                        Transform cIcon = clone.transform.Find("Icon");
+                        Image cimg = cIcon != null ? cIcon.GetComponent<Image>() : clone.GetComponent<Image>();
+                        if (cimg != null) cimg.sprite = sprites[i];
+                        
+                        clone.SetActive(true);
+                    }
+                }
+            }
+            else
+            {
+                processT.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -308,10 +353,137 @@ public class OrderManager : MonoBehaviour
         return null;
     }
 
+    /// <summary>Returns a list of all process/station icons required to prepare and brew/make this item.</summary>
+    private List<Sprite> GetProcessIconsFor(ItemData target)
+    {
+        List<Sprite> icons = new List<Sprite>();
+        if (target == null) return icons;
+
+        // 1. Check if the target or its brewed precursor is made at a MultiIngredientStation or PortableCooker
+        Sprite mainStationIcon = null;
+        
+        ItemData brewedPrecursor = target;
+        foreach (var st in FindObjectsByType<MultiIngredientStation>(FindObjectsSortMode.None))
+        {
+            if (st.containerSwapMappings == null) continue;
+            foreach (var m in st.containerSwapMappings)
+            {
+                if (m != null && m.filledContainerItem == target && m.brewedResultItem != null)
+                {
+                    brewedPrecursor = m.brewedResultItem;
+                    break;
+                }
+            }
+        }
+
+        foreach (var st in FindObjectsByType<MultiIngredientStation>(FindObjectsSortMode.None))
+        {
+            if (st.recipes == null) continue;
+            bool foundRecipe = false;
+            foreach (var r in st.recipes)
+            {
+                if (r != null && r.outputItem == brewedPrecursor)
+                {
+                    foundRecipe = true;
+                    break;
+                }
+            }
+            if (foundRecipe)
+            {
+                if (st.stationType == StationType.CrystalBall) mainStationIcon = crystalBallProcessIcon;
+                else if (st.stationType == StationType.ProphecyTable) mainStationIcon = prophecyProcessIcon;
+                else if (st.stationType == StationType.Cauldron) mainStationIcon = cauldronProcessIcon;
+                break;
+            }
+        }
+
+        if (mainStationIcon == null)
+        {
+            foreach (var pc in FindObjectsByType<PortableCooker>(FindObjectsSortMode.None))
+            {
+                if (pc.recipes == null) continue;
+                bool foundRecipe = false;
+                foreach (var r in pc.recipes)
+                {
+                    if (r != null && r.outputItem == target)
+                    {
+                        foundRecipe = true;
+                        break;
+                    }
+                }
+                if (foundRecipe)
+                {
+                    mainStationIcon = teapotProcessIcon;
+                    break;
+                }
+            }
+        }
+
+        // 2. Check if any of its ingredients require processing (Mortar & Pestle, Cutting Board, etc.)
+        List<ItemData> ingredients = GetIngredientsFor(target);
+        HashSet<StationType> prepStationsNeeded = new HashSet<StationType>();
+
+        foreach (var ing in ingredients)
+        {
+            if (ing == null) continue;
+            foreach (var ps in FindObjectsByType<ProcessingStation>(FindObjectsSortMode.None))
+            {
+                if (ps.transformRules == null) continue;
+                foreach (var rule in ps.transformRules)
+                {
+                    if (rule != null && rule.outputItem == ing)
+                    {
+                        prepStationsNeeded.Add(ps.stationType);
+                    }
+                }
+            }
+        }
+
+        // Add prep station icons first (e.g. Mortar -> Cauldron)
+        foreach (var stationType in prepStationsNeeded)
+        {
+            if (stationType == StationType.MortarAndPestle && mortarProcessIcon != null)
+                icons.Add(mortarProcessIcon);
+            else if (stationType == StationType.CuttingBoard && choppingProcessIcon != null)
+                icons.Add(choppingProcessIcon);
+        }
+
+        // Add main station icon
+        if (mainStationIcon != null)
+        {
+            icons.Add(mainStationIcon);
+        }
+
+        // Fallback
+        if (icons.Count == 0)
+        {
+            Sprite legacy = GetProcessIconFor(target);
+            if (legacy != null) icons.Add(legacy);
+        }
+
+        return icons;
+    }
+
     private List<ItemData> GetIngredientsFor(ItemData target)
     {
         List<ItemData> ings = new List<ItemData>();
         if (target == null) return ings;
+
+        // ── Container-swap results (e.g. a final potion = glass + brewed raw) ──
+        // The cauldron brews a "_raw" potion, then a glass swaps into the final
+        // potion. Resolve the final potion to the brewed item's ingredients so the
+        // card shows what the potion is actually made of (the cauldron ingredients).
+        foreach (var st in FindObjectsByType<MultiIngredientStation>(FindObjectsSortMode.None))
+        {
+            if (st.containerSwapMappings == null) continue;
+            foreach (var m in st.containerSwapMappings)
+            {
+                if (m == null || m.filledContainerItem != target || m.brewedResultItem == null
+                    || m.brewedResultItem == target) continue;
+                var inner = GetIngredientsFor(m.brewedResultItem);
+                if (inner.Count > 0) return inner;
+            }
+        }
 
         // ── Station recipes are the real source of truth ──────────────────────
         // Visions (crystal ball), prophecy cards (prophecy table) and teas (teapot)

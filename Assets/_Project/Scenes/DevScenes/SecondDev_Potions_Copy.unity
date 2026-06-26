@@ -2012,7 +2012,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProcessingStation
   stationType: 2
-  counterTopPoint: {fileID: 0}
+  counterTopPoint: {fileID: 204288681}
   itemOnStation: {fileID: 0}
   transformRules:
   - inputItem: {fileID: 11400000, guid: 9157a6224a6431947b91eb180f485b29, type: 2}
@@ -5726,7 +5726,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProcessingStation
   stationType: 3
-  counterTopPoint: {fileID: 0}
+  counterTopPoint: {fileID: 772160911}
   itemOnStation: {fileID: 0}
   transformRules:
   - inputItem: {fileID: 11400000, guid: ea1f7837d4cb0bd479a85d7fd1ae2bff, type: 2}
@@ -6986,21 +6986,21 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 74576e51a7dafc0469334425449c4850, type: 2}
   - {fileID: 11400000, guid: 9157a6224a6431947b91eb180f485b29, type: 2}
   - {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
-  useProceduralGeneration: 1
+  useProceduralGeneration: 0
   recipes:
   - recipeName: immortality potion 1
     requiredOutput: {fileID: 11400000, guid: 20ac45d0edccdd84c9c0c7068811ddaf, type: 2}
     scoreValue: 10
     timeLimit: 60
-  - recipeName: immortality potion 1
+  - recipeName: immortality potion 2
     requiredOutput: {fileID: 11400000, guid: 344ff13924d5da04e97359ad3a87018b, type: 2}
     scoreValue: 10
     timeLimit: 60
-  - recipeName: immortality potion 2
+  - recipeName: immortality potion 3
     requiredOutput: {fileID: 11400000, guid: 7ceace1a6cb75284698451e010ec5979, type: 2}
     scoreValue: 10
     timeLimit: 60
-  - recipeName: immortality potion 3
+  - recipeName: immortality potion 4
     requiredOutput: {fileID: 11400000, guid: 90e4ef4034c5aa146bc8d73919642b9c, type: 2}
     scoreValue: 10
     timeLimit: 60
@@ -9788,7 +9788,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProcessingStation
   stationType: 3
-  counterTopPoint: {fileID: 0}
+  counterTopPoint: {fileID: 1428991888}
   itemOnStation: {fileID: 0}
   transformRules:
   - inputItem: {fileID: 11400000, guid: ea1f7837d4cb0bd479a85d7fd1ae2bff, type: 2}
@@ -10854,7 +10854,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProcessingStation
   stationType: 2
-  counterTopPoint: {fileID: 0}
+  counterTopPoint: {fileID: 1571539806}
   itemOnStation: {fileID: 0}
   transformRules:
   - inputItem: {fileID: 11400000, guid: 9157a6224a6431947b91eb180f485b29, type: 2}
