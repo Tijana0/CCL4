@@ -6986,7 +6986,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 74576e51a7dafc0469334425449c4850, type: 2}
   - {fileID: 11400000, guid: 9157a6224a6431947b91eb180f485b29, type: 2}
   - {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
-  useProceduralGeneration: 1
+  useProceduralGeneration: 0
   recipes:
   - recipeName: immortality potion 1
     requiredOutput: {fileID: 11400000, guid: 20ac45d0edccdd84c9c0c7068811ddaf, type: 2}

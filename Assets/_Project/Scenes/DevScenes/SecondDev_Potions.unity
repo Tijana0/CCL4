@@ -5969,7 +5969,6 @@ GameObject:
   - component: {fileID: 914804833}
   - component: {fileID: 914804832}
   - component: {fileID: 914804831}
-  - component: {fileID: 914804834}
   m_Layer: 0
   m_Name: RoomManager
   m_TagString: Untagged
@@ -6039,21 +6038,21 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 74576e51a7dafc0469334425449c4850, type: 2}
   - {fileID: 11400000, guid: 9157a6224a6431947b91eb180f485b29, type: 2}
   - {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
-  useProceduralGeneration: 1
+  useProceduralGeneration: 0
   recipes:
   - recipeName: immortality potion 1
     requiredOutput: {fileID: 11400000, guid: 20ac45d0edccdd84c9c0c7068811ddaf, type: 2}
     scoreValue: 10
     timeLimit: 60
-  - recipeName: immortality potion 1
+  - recipeName: immortality potion 2
     requiredOutput: {fileID: 11400000, guid: 344ff13924d5da04e97359ad3a87018b, type: 2}
     scoreValue: 10
     timeLimit: 60
-  - recipeName: immortality potion 2
+  - recipeName: immortality potion 3
     requiredOutput: {fileID: 11400000, guid: 7ceace1a6cb75284698451e010ec5979, type: 2}
     scoreValue: 10
     timeLimit: 60
-  - recipeName: immortality potion 3
+  - recipeName: immortality potion 4
     requiredOutput: {fileID: 11400000, guid: 90e4ef4034c5aa146bc8d73919642b9c, type: 2}
     scoreValue: 10
     timeLimit: 60
@@ -6114,28 +6113,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &914804834
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 914804830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cbde7aff9ab8e4e56bb6d5de1b694b01, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OrderManager
-  orderCardPrefab: {fileID: 0}
-  orderContainer: {fileID: 0}
-  circleSprite: {fileID: 0}
-  ingredientIconPrefab: {fileID: 0}
-  teapotProcessIcon: {fileID: 0}
-  crystalBallProcessIcon: {fileID: 0}
-  prophecyProcessIcon: {fileID: 0}
-  availableRecipes: []
-  spawnInterval: 9
-  maxOrders: 3
 --- !u!1 &916724489
 GameObject:
   m_ObjectHideFlags: 0
@@ -10442,7 +10419,7 @@ MonoBehaviour:
   stationType: 6
   counterTopPoint: {fileID: 0}
   itemOnStation: {fileID: 0}
-  orderManager: {fileID: 914804834}
+  orderManager: {fileID: 0}
 --- !u!1 &1831975558
 GameObject:
   m_ObjectHideFlags: 0
