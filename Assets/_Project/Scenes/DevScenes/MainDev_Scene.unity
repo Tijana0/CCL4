@@ -371,7 +371,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8075033797780429380, guid: c5527680f9d3cd24c8ae559cba536a2a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.14885747
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 8075033797780429380, guid: c5527680f9d3cd24c8ae559cba536a2a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -511,7 +511,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6be8f327815d3e74b90dd8c3960f48c8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.00000029057264
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6be8f327815d3e74b90dd8c3960f48c8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -545,6 +545,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 6be8f327815d3e74b90dd8c3960f48c8, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 5c1cd2b813f514c489c9e102f1f1f276, type: 2}
     - target: {fileID: 919132149155446097, guid: 6be8f327815d3e74b90dd8c3960f48c8, type: 3}
       propertyPath: m_Name
       value: jar_with_herbs (1)
@@ -1517,7 +1521,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1017496129193721749, guid: 18b1a63f64bb5584cb7adb5b28e5280c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.14885747
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 1017496129193721749, guid: 18b1a63f64bb5584cb7adb5b28e5280c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2699,7 +2703,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.5, y: 1.8, z: 1.2}
+  m_Size: {x: 0.9, y: 1.8, z: 0.9}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &991302971
 Transform:
@@ -3817,7 +3821,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8036059989268532280, guid: 8b6ce0c59c452804aa68710429f7000a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.14885747
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 8036059989268532280, guid: 8b6ce0c59c452804aa68710429f7000a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5245,7 +5249,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0658a0661de9dcf4aa3db9b45b0dd966, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.40831375
+      value: -0.09248161
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0658a0661de9dcf4aa3db9b45b0dd966, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5283,6 +5287,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 0658a0661de9dcf4aa3db9b45b0dd966, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: -8167775999569887543, guid: aa689f655235eb3498992f124b00f7f5, type: 3}
+    - target: {fileID: -7511558181221131132, guid: 0658a0661de9dcf4aa3db9b45b0dd966, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 4ab9507a9ac434f45a70c5248bfe0507, type: 2}
+    - target: {fileID: -5754084199372789682, guid: 0658a0661de9dcf4aa3db9b45b0dd966, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 7020864884634366756, guid: aa689f655235eb3498992f124b00f7f5, type: 3}
     - target: {fileID: 919132149155446097, guid: 0658a0661de9dcf4aa3db9b45b0dd966, type: 3}
       propertyPath: m_Name
       value: jar_with_herbs (2)
@@ -5356,7 +5372,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.1, y: 2, z: 1.1}
+  m_Size: {x: 0.7, y: 2, z: 0.7}
   m_Center: {x: 0.009403229, y: 1, z: -0.00015068054}
 --- !u!4 &1950017025
 Transform:
@@ -6106,7 +6122,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: aa689f655235eb3498992f124b00f7f5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.0000019073486
+      value: -0.50079346
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: aa689f655235eb3498992f124b00f7f5, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6145,9 +6161,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: aa689f655235eb3498992f124b00f7f5, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: -8167775999569887543, guid: 0658a0661de9dcf4aa3db9b45b0dd966, type: 3}
+    - target: {fileID: -7511558181221131132, guid: aa689f655235eb3498992f124b00f7f5, type: 3}
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
-      objectReference: {fileID: 2100000, guid: 4ab9507a9ac434f45a70c5248bfe0507, type: 2}
+      objectReference: {fileID: -6823863442371160332, guid: 0658a0661de9dcf4aa3db9b45b0dd966, type: 3}
+    - target: {fileID: -5754084199372789682, guid: aa689f655235eb3498992f124b00f7f5, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -6941265577188230768, guid: 0658a0661de9dcf4aa3db9b45b0dd966, type: 3}
     - target: {fileID: 919132149155446097, guid: aa689f655235eb3498992f124b00f7f5, type: 3}
       propertyPath: m_Name
       value: jar_with_herbs (3)

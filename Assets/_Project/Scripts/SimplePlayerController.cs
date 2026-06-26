@@ -536,12 +536,21 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             }
         }
 
-        // Sort targets: highest priority first, then closest distance first
+        // Sort targets: if there is a significant distance difference, the closer one
+        // always wins. Otherwise, if they are at similar distances (within 0.4m), 
+        // the higher priority one wins. This prevents distant high-priority stations
+        // (like the sink) from stealing interactions from extremely close lower-priority
+        // items (like the stove teapot or counter slots).
         targets.Sort((a, b) =>
         {
+            float distDiff = Mathf.Abs(a.distance - b.distance);
+            if (distDiff > 0.4f)
+            {
+                return a.distance.CompareTo(b.distance); // Ascending distance
+            }
             if (a.priority != b.priority)
                 return b.priority.CompareTo(a.priority); // Descending priority
-            return a.distance.CompareTo(b.distance); // Ascending distance
+            return a.distance.CompareTo(b.distance); // Tie-breaker: ascending distance
         });
 
         bool interacted = false;
