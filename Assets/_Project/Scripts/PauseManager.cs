@@ -16,6 +16,9 @@ public class PauseManager : MonoBehaviour
     // Constant button-alias set, hoisted out of the per-frame check to avoid array allocations.
     private static readonly string[] PauseButtonAliases = { "start", "button9", "options", "menu" };
 
+    // Shared gold accent colour (matches SettingsMenu / order cards).
+    private static readonly Color Gold = new Color(0.88f, 0.66f, 0.28f);
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -48,7 +51,24 @@ public class PauseManager : MonoBehaviour
         panelRect.offsetMax = Vector2.zero;
 
         Image panelImage = pausePanel.AddComponent<Image>();
-        panelImage.color = new Color(0, 0, 0, 0.8f); // Dark semi-transparent background
+        panelImage.color = new Color(0.04f, 0.03f, 0.07f, 0.88f); // deep purple-black dim, matches game theme
+
+        // Gold-edged card framing the menu (decorative, behind title + buttons)
+        GameObject edge = new GameObject("MenuEdge");
+        edge.transform.SetParent(pausePanel.transform, false);
+        Image edgeImg = edge.AddComponent<Image>();
+        edgeImg.color = Gold;
+        RectTransform edgeRect = edge.GetComponent<RectTransform>();
+        edgeRect.anchorMin = new Vector2(0.5f, 0.5f); edgeRect.anchorMax = new Vector2(0.5f, 0.5f);
+        edgeRect.sizeDelta = new Vector2(388, 410); edgeRect.anchoredPosition = new Vector2(0, 36);
+
+        GameObject card = new GameObject("MenuCard");
+        card.transform.SetParent(pausePanel.transform, false);
+        Image cardImg = card.AddComponent<Image>();
+        cardImg.color = new Color(0.11f, 0.10f, 0.16f, 1f); // card fill, matches settings
+        RectTransform cardRect = card.GetComponent<RectTransform>();
+        cardRect.anchorMin = new Vector2(0.5f, 0.5f); cardRect.anchorMax = new Vector2(0.5f, 0.5f);
+        cardRect.sizeDelta = new Vector2(380, 402); cardRect.anchoredPosition = new Vector2(0, 36);
 
         // Title Text
         GameObject titleObj = new GameObject("PauseTitle");
@@ -56,12 +76,21 @@ public class PauseManager : MonoBehaviour
         TextMeshProUGUI titleText = titleObj.AddComponent<TextMeshProUGUI>();
         titleText.text = "PAUSED";
         titleText.fontSize = 72;
+        titleText.fontStyle = FontStyles.Bold;
         titleText.alignment = TextAlignmentOptions.Center;
-        titleText.color = Color.white;
+        titleText.color = Gold;
         RectTransform titleRect = titleObj.GetComponent<RectTransform>();
         titleRect.anchorMin = new Vector2(0.5f, 0.7f);
         titleRect.anchorMax = new Vector2(0.5f, 0.7f);
         titleRect.sizeDelta = new Vector2(400, 100);
+
+        // Gold accent under the title
+        GameObject accent = new GameObject("TitleAccent");
+        accent.transform.SetParent(pausePanel.transform, false);
+        accent.AddComponent<Image>().color = Gold;
+        RectTransform accentRect = accent.GetComponent<RectTransform>();
+        accentRect.anchorMin = new Vector2(0.5f, 0.7f); accentRect.anchorMax = new Vector2(0.5f, 0.7f);
+        accentRect.sizeDelta = new Vector2(130, 3); accentRect.anchoredPosition = new Vector2(0, -46);
 
         // Resume Button
         Button resumeBtn = CreateButton(pausePanel.transform, "ResumeButton", "Resume", new Vector2(0.5f, 0.55f));
@@ -104,12 +133,12 @@ public class PauseManager : MonoBehaviour
         Button button = btnObj.AddComponent<Button>();
         button.transition = Selectable.Transition.ColorTint;
 
-        // Configure vivid highlight colors for gamepad navigation
+        // Theme colors (deep purple base, gold highlight) to match the game UI
         ColorBlock colors = button.colors;
-        colors.normalColor = new Color(0.2f, 0.2f, 0.2f, 1f); // Dark Gray
-        colors.highlightedColor = new Color(0.8f, 0.4f, 0.1f, 1f); // Orange highlight
-        colors.pressedColor = new Color(0.5f, 0.2f, 0.05f, 1f); // Darker orange
-        colors.selectedColor = new Color(0.8f, 0.4f, 0.1f, 1f); // Orange highlight stays when selected
+        colors.normalColor = new Color(0.24f, 0.22f, 0.30f, 1f); // muted purple-grey
+        colors.highlightedColor = Gold;
+        colors.pressedColor = new Color(0.60f, 0.42f, 0.14f, 1f); // darker gold
+        colors.selectedColor = Gold;
         colors.disabledColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
         colors.colorMultiplier = 1f;
         colors.fadeDuration = 0.1f;
