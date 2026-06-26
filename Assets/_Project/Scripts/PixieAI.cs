@@ -23,6 +23,12 @@ public class PixieAI : MonoBehaviour
     [Tooltip("X = width, Y = depth (z)")]
     public Vector2 roomSize = new Vector2(15f, 10f);
 
+    [Header("Collision")]
+    [Tooltip("Radius of the trigger sphere used to detect players (local space). Affects newly added SphereCollider or existing SphereCollider.")]
+    public float triggerRadius = 1.25f;
+    [Tooltip("If true and an existing SphereCollider is present, its radius will be set to the value above.")]
+    public bool applyRadiusToExistingSphere = true;
+
     [Header("Noise Settings")]
     public float noiseFrequency = 0.3f;
     
@@ -38,11 +44,18 @@ public class PixieAI : MonoBehaviour
         {
             SphereCollider sc = gameObject.AddComponent<SphereCollider>();
             sc.isTrigger = true;
-            sc.radius = 1.25f; // Slightly larger for easier "touching"
+            sc.radius = triggerRadius; // configurable now
         }
         else
         {
             col.isTrigger = true;
+
+            // If there is already a SphereCollider, optionally set its radius so it's not "too collidy"
+            SphereCollider existingSphere = col as SphereCollider;
+            if (existingSphere != null && applyRadiusToExistingSphere)
+            {
+                existingSphere.radius = triggerRadius;
+            }
         }
 
         // Random seeds for unique patterns per pixie
