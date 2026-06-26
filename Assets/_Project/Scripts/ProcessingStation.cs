@@ -111,6 +111,7 @@ public class ProcessingStation : StationBase
                     progressBarFill.fillAmount = 1f;
                     float a = 0.3f + 0.7f * Mathf.Abs(Mathf.Sin(Time.time * 6f)); // flash
                     progressBarFill.color = new Color(0.9f, 0.1f, 0.1f, a);
+                    AudioManager.Instance.PlayBeeping(this.gameObject);
                 }
             }
 
@@ -184,6 +185,9 @@ public class ProcessingStation : StationBase
         {
             Destroy(itemOnStation);
             itemOnStation = null;
+            if (AudioManager.Instance != null)
+                    AudioManager.Instance.PlayBurnedItem(this.gameObject);
+
         }
         resultReady = false;
         overcookTimer = 0f;
@@ -303,6 +307,9 @@ public class ProcessingStation : StationBase
         processingProgress = 0f;
         processingPlayer = player;
         processingDuration = duration > 0 ? duration : 2f;
+
+        if (AudioManager.Instance != null)
+        AudioManager.Instance.PlayBurnedItem(gameObject);
 
         if (progressBarContainer != null) progressBarContainer.SetActive(true);
         if (progressBarFill != null)

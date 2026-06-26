@@ -80,6 +80,10 @@ MonoBehaviour:
     idInternal: 0
     valueGuidInternal: 
     WwiseObjectReference: {fileID: 11400000, guid: 0b4e30820ea104cb888363f58d16d246, type: 2}
+  beeping:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: b813039f63a084e90b33c3c616948b99, type: 2}
   failAction:
     idInternal: 0
     valueGuidInternal: 
@@ -124,14 +128,18 @@ MonoBehaviour:
     idInternal: 0
     valueGuidInternal: 
     WwiseObjectReference: {fileID: 11400000, guid: 68ffdaa0566ca4ed4bcdf67224c7283c, type: 2}
+  failLevel:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: 73f623123482f464ebf90b28603a814f, type: 2}
   musicStart:
     idInternal: 0
     valueGuidInternal: 
-    WwiseObjectReference: {fileID: 11400000, guid: 2dd69677114c649089d53e3d63cd86d4, type: 2}
+    WwiseObjectReference: {fileID: 0}
   musicStop:
     idInternal: 0
     valueGuidInternal: 
-    WwiseObjectReference: {fileID: 11400000, guid: af3235ab8b1584606934c27cc7132ef2, type: 2}
+    WwiseObjectReference: {fileID: 0}
   levelStart:
     idInternal: 0
     valueGuidInternal: 

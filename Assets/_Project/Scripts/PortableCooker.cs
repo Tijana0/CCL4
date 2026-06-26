@@ -334,6 +334,8 @@ public class PortableCooker : MonoBehaviour
         lastBrewedResult = match != null ? match.outputItem : improvisedResultItem;
 
         ingredients.Clear();
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayTeapotReady(gameObject);
 
         Debug.Log($"[PortableCooker] Done! Result: {(lastBrewedResult != null ? lastBrewedResult.itemName : "none")}");
     }

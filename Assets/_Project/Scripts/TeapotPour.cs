@@ -58,6 +58,8 @@ public class TeapotPour : MonoBehaviour
             Debug.LogWarning("[TeapotPour] Teapot had no brewed result to pour.");
             return;
         }
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayWaterPour(gameObject);
 
         if (cupHeld)
         {
@@ -125,6 +127,7 @@ public class TeapotPour : MonoBehaviour
         foreach (var p in FindObjectsByType<SimplePlayerController>(FindObjectsSortMode.None))
             if (p.heldItem == gameObject) return p;
         return null;
+        
     }
 
     private bool PourPressed(SimplePlayerController player)

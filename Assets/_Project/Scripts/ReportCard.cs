@@ -58,7 +58,12 @@ public class ReportCard : MonoBehaviour
             verdictText.text = won ? "PASSED" : "FAILED";
             verdictText.color = won ? passColor : failColor;
         }
-
+        // AUDIO DECISION
+        //if (starsEarned <= 0)
+        //{
+           // if (AudioManager.Instance != null)
+            //    AudioManager.Instance.PlayFailLevel(gameObject);
+       // }
         BuildClassList(playedClassName, starsEarned, won);
     }
 

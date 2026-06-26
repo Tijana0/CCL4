@@ -18,8 +18,8 @@ EditorBuildSettings:
     path: Assets/_Project/Scenes/DevScenes/MainDev_Scene.unity
     guid: 228ccf400be0843acb5e823ea7bf2393
   - enabled: 1
-    path: Assets/_Project/Scenes/DevScenes/MainDev_Scene_2.unity
-    guid: 460fdc4ef9a2248f58a3ffd54ea4550c
+    path: Assets/_Project/Scenes/DevScenes/SecondDev_Potions.unity
+    guid: 2a4e0fd4faa589447b290a3fc33c4c44
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

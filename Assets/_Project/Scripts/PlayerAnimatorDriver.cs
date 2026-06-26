@@ -62,6 +62,8 @@ public class PlayerAnimatorDriver : MonoBehaviour
                 // glow appears after a delay
                 if (glowEffect != null)
                     glowRoutine = StartCoroutine(ShowGlowAfterDelay());
+                if (AudioManager.Instance != null)
+                    AudioManager.Instance.PlayWand(this.gameObject);
             }
             else
             {
