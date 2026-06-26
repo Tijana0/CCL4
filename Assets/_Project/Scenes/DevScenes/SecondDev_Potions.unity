@@ -3347,6 +3347,9 @@ MonoBehaviour:
   teapotProcessIcon: {fileID: 0}
   crystalBallProcessIcon: {fileID: 0}
   prophecyProcessIcon: {fileID: 0}
+  mortarProcessIcon: {fileID: 21300000, guid: 7ec5296a230c4480db260ce15abe8294, type: 3}
+  choppingProcessIcon: {fileID: 21300000, guid: c6ee6dbf158a440fdbddf93a08568283, type: 3}
+  cauldronProcessIcon: {fileID: 21300000, guid: 48c656896e4404e4294646cea68ab041, type: 3}
   availableRecipes:
   - recipeName: RedBlue
     mainDishSprite: {fileID: 21300000, guid: 551fdd6064cf1406ab46354e05be8330, type: 3}
