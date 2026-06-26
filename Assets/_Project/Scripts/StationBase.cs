@@ -93,18 +93,13 @@ public abstract class StationBase : MonoBehaviour, IInteractable
             anchorScale.z != 0 ? worldScaleBeforeParent.z / anchorScale.z : worldScaleBeforeParent.z
         );
 
-        // DYNAMIC OFFSET: Calculate height to prevent sinking
+        // DYNAMIC OFFSET: Calculate height using local properties to avoid stale physics bounds.
         float yOffset = 0.2f; // Default fallback
         Collider col = item.GetComponent<Collider>();
         if (col != null)
         {
-            // Calculate how far the bottom of the collider is from the pivot in local space.
-            // col.bounds is in world space, so we convert the bottom point to local space.
-            Vector3 worldBottom = col.bounds.center - new Vector3(0, col.bounds.extents.y, 0);
-            Vector3 localBottom = item.transform.InverseTransformPoint(worldBottom);
-            
-            // To place the bottom at Y=0 local, the pivot must be at -localBottom.y
-            yOffset = -localBottom.y;
+            float localBottomY = GetLocalBottomY(col);
+            yOffset = -localBottomY * item.transform.localScale.y;
         }
         
         item.transform.localPosition = new Vector3(0, yOffset, 0);
@@ -119,6 +114,30 @@ public abstract class StationBase : MonoBehaviour, IInteractable
             AudioManager.Instance.PlayPutDown(this.gameObject);
 
         OnItemPlaced(item);
+    }
+
+    private float GetLocalBottomY(Collider col)
+    {
+        if (col == null) return 0f;
+
+        if (col is BoxCollider box)
+        {
+            return box.center.y - box.size.y * 0.5f;
+        }
+        else if (col is SphereCollider sphere)
+        {
+            return sphere.center.y - sphere.radius;
+        }
+        else if (col is CapsuleCollider capsule)
+        {
+            return capsule.center.y - capsule.height * 0.5f;
+        }
+        else if (col is MeshCollider meshCol && meshCol.sharedMesh != null)
+        {
+            return meshCol.sharedMesh.bounds.center.y - meshCol.sharedMesh.bounds.extents.y;
+        }
+
+        return 0f;
     }
 
     protected virtual void TakeItem(SimplePlayerController player)
