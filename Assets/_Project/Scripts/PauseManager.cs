@@ -60,7 +60,7 @@ public class PauseManager : MonoBehaviour
         edgeImg.color = Gold;
         RectTransform edgeRect = edge.GetComponent<RectTransform>();
         edgeRect.anchorMin = new Vector2(0.5f, 0.5f); edgeRect.anchorMax = new Vector2(0.5f, 0.5f);
-        edgeRect.sizeDelta = new Vector2(388, 410); edgeRect.anchoredPosition = new Vector2(0, 36);
+        edgeRect.sizeDelta = new Vector2(388, 368); edgeRect.anchoredPosition = new Vector2(0, 5);
 
         GameObject card = new GameObject("MenuCard");
         card.transform.SetParent(pausePanel.transform, false);
@@ -68,7 +68,7 @@ public class PauseManager : MonoBehaviour
         cardImg.color = new Color(0.11f, 0.10f, 0.16f, 1f); // card fill, matches settings
         RectTransform cardRect = card.GetComponent<RectTransform>();
         cardRect.anchorMin = new Vector2(0.5f, 0.5f); cardRect.anchorMax = new Vector2(0.5f, 0.5f);
-        cardRect.sizeDelta = new Vector2(380, 402); cardRect.anchoredPosition = new Vector2(0, 36);
+        cardRect.sizeDelta = new Vector2(380, 360); cardRect.anchoredPosition = new Vector2(0, 5);
 
         // Title Text
         GameObject titleObj = new GameObject("PauseTitle");
