@@ -123,14 +123,14 @@ public class MultiIngredientStation : StationBase
 
     private void Start()
     {
-        if (stationType == StationType.CrystalBall)
+        if (stationType == StationType.CrystalBall || stationType == StationType.Cauldron)
         {
 
 
             // Build a world-space progress bar — no parenting, use world position directly
             if (progressBarContainer == null && counterTopPoint != null)
             {
-                GameObject canvasGO = new GameObject("CrystalBall_ProgressCanvas");
+                GameObject canvasGO = new GameObject("ProgressCanvas");
                 if (stationType == StationType.CrystalBall)
                 {
                     Vector3 localOffset = new Vector3(-2.5f, 1.18f, 2.5f);
@@ -141,7 +141,7 @@ public class MultiIngredientStation : StationBase
                 }
                 else
                 {
-                    canvasGO.transform.position = counterTopPoint.position + new Vector3(-1.5f, 1.7f, 1.5f);
+                    canvasGO.transform.position = counterTopPoint.position + new Vector3(0f, 1.5f, 0f);
                 }
                 canvasGO.transform.localScale = Vector3.one * 0.01f;
 

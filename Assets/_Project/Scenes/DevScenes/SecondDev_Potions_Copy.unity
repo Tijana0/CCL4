@@ -2012,7 +2012,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProcessingStation
   stationType: 2
-  counterTopPoint: {fileID: 0}
+  counterTopPoint: {fileID: 204288681}
   itemOnStation: {fileID: 0}
   transformRules:
   - inputItem: {fileID: 11400000, guid: 9157a6224a6431947b91eb180f485b29, type: 2}
@@ -5726,7 +5726,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProcessingStation
   stationType: 3
-  counterTopPoint: {fileID: 0}
+  counterTopPoint: {fileID: 772160911}
   itemOnStation: {fileID: 0}
   transformRules:
   - inputItem: {fileID: 11400000, guid: ea1f7837d4cb0bd479a85d7fd1ae2bff, type: 2}
@@ -9788,7 +9788,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProcessingStation
   stationType: 3
-  counterTopPoint: {fileID: 0}
+  counterTopPoint: {fileID: 1428991888}
   itemOnStation: {fileID: 0}
   transformRules:
   - inputItem: {fileID: 11400000, guid: ea1f7837d4cb0bd479a85d7fd1ae2bff, type: 2}
@@ -10854,7 +10854,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProcessingStation
   stationType: 2
-  counterTopPoint: {fileID: 0}
+  counterTopPoint: {fileID: 1571539806}
   itemOnStation: {fileID: 0}
   transformRules:
   - inputItem: {fileID: 11400000, guid: 9157a6224a6431947b91eb180f485b29, type: 2}
