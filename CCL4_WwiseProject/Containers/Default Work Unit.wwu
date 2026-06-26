@@ -1146,7 +1146,7 @@
 						<Property Name="PlayMechanismStepOrContinuous" Type="int16" Value="0"/>
 						<Property Name="Volume" Type="Real64">
 							<ValueList>
-								<Value>-10</Value>
+								<Value>-5</Value>
 							</ValueList>
 						</Property>
 					</PropertyList>
@@ -2887,6 +2887,11 @@
 					</ReferenceList>
 					<ChildrenList>
 						<AudioFileSource Name="Beeping_Sound" ID="{B578A46B-538E-48B8-B059-46ADB125AF99}">
+							<PropertyList>
+								<Property Name="FadeOutDuration" Type="Real64" Value="0.46602"/>
+								<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+								<Property Name="TrimEnd" Type="Real64" Value="2.65845"/>
+							</PropertyList>
 							<Language>SFX</Language>
 							<AudioFile>Beeping_Sound.wav</AudioFile>
 							<MediaIDList>

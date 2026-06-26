@@ -411,6 +411,20 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="stop_Fail_Level" ID="{2A2742E5-AB3F-41C9-B36D-D010D9E78A00}">
+					<ChildrenList>
+						<Action Name="" ID="{C507BEE5-F41D-43FF-B507-A7C37EA31D04}" ShortID="686999584">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Fail_Level" ID="{178306A2-9F79-49F4-BFE2-EFD65E2B921D}" WorkUnitID="{F1F96160-159C-4A4B-AA6B-65E54F932751}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>

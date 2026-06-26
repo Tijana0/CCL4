@@ -31,6 +31,7 @@ public class AudioManager : MonoBehaviour
     public AK.Wwise.Event inventoryPop; // pop when taken from inventory
     public AK.Wwise.Event throwOut;     // throwing something out
     
+    public AK.Wwise.Event failLevel;
 
     [Header("Scene events")]
     public AK.Wwise.Event musicStart;
@@ -61,6 +62,7 @@ public class AudioManager : MonoBehaviour
     public void PlayPickup(GameObject o, bool isHerb) => Play(isHerb ? pickupHerb : pickupObject, o);
     public void PlayPutDown(GameObject o)            => Play(putDown, o);
     public void PlayChop(GameObject o, bool isHerb)  => Play(isHerb ? chopHerb : chopNormal, o);
+    public void PlayBurnedItem(GameObject o) => Play(burnedItem, o);
     public void PlayDeliver(GameObject o)            => Play(deliver, o);
     public void PlayBeeping(GameObject o)            => Play(beeping, o);
     public void PlayFailAction(GameObject o)         => Play(failAction, o);
@@ -72,6 +74,10 @@ public class AudioManager : MonoBehaviour
     public void PlayInventoryPop(GameObject o) => Play(inventoryPop, o);
     public void PlayThrowOut(GameObject o)     => Play(throwOut, o);
     public void PlayTimerWarning()             => Play(timerWarning, gameObject);
+    public void PlayFailLevel(GameObject o)
+    {
+        Play(failLevel, o);
+    }
     // Drop with a type, since you have 3 variants:
     public enum DropType { Glass, Liquid, Heavy }
     public void PlayDrop(GameObject o, DropType type)

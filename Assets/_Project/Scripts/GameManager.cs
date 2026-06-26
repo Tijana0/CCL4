@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     private int score = 0;
     private GameState currentState = GameState.WaitingToStart;
     private int lastProcessedSeconds = -1;
+    private bool timerWarningPlayed = false;
 
     [Header("Controller Input")]
     public InputAction switchPlayerAction = new InputAction("SwitchPlayer", binding: "<Gamepad>/leftShoulder");
@@ -77,6 +78,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         Time.timeScale = 1f; 
+        timerWarningPlayed = false;
         timeRemaining = gameTime;
         score = 0;
 
@@ -165,7 +167,16 @@ public class GameManager : MonoBehaviour
         {
             timeRemaining -= Time.deltaTime;
             if (timeRemaining < 0) timeRemaining = 0;
-            
+
+            // ✅ TIMER WARNING (Wwise trigger at 2 seconds)
+            if (!timerWarningPlayed && timeRemaining <= 2f)
+            {
+                timerWarningPlayed = true;
+
+                if (AudioManager.Instance != null)
+                    AudioManager.Instance.PlayTimerWarning();
+            }
+
             int currentSeconds = Mathf.FloorToInt(timeRemaining);
             if (currentSeconds != lastProcessedSeconds)
             {
