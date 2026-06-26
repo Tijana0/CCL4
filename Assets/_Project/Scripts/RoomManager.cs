@@ -22,15 +22,16 @@ public class RoomManager : MonoBehaviour
     private void Awake()
     {
         config = GetComponent<RoomConfig>();
+        if (orderManager == null)
+            orderManager = FindFirstObjectByType<OrderManager>();
+        // Register recipes in Awake so they're set before any OrderManager.Start
+        // spawns its first order (otherwise the first order falls back to legacy).
+        RegisterRecipes();
     }
 
     private void Start()
     {
-        if (orderManager == null)
-            orderManager = FindFirstObjectByType<OrderManager>();
-
         ConfigureStations();
-        RegisterRecipes();
 
         Debug.Log($"[RoomManager] Room '{config.roomName}' initialised. " +
                   $"{config.availableItems.Count} items, {config.recipes.Count} recipes.");

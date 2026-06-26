@@ -6992,15 +6992,15 @@ MonoBehaviour:
     requiredOutput: {fileID: 11400000, guid: 20ac45d0edccdd84c9c0c7068811ddaf, type: 2}
     scoreValue: 10
     timeLimit: 60
-  - recipeName: immortality potion 1
+  - recipeName: immortality potion 2
     requiredOutput: {fileID: 11400000, guid: 344ff13924d5da04e97359ad3a87018b, type: 2}
     scoreValue: 10
     timeLimit: 60
-  - recipeName: immortality potion 2
+  - recipeName: immortality potion 3
     requiredOutput: {fileID: 11400000, guid: 7ceace1a6cb75284698451e010ec5979, type: 2}
     scoreValue: 10
     timeLimit: 60
-  - recipeName: immortality potion 3
+  - recipeName: immortality potion 4
     requiredOutput: {fileID: 11400000, guid: 90e4ef4034c5aa146bc8d73919642b9c, type: 2}
     scoreValue: 10
     timeLimit: 60
