@@ -64,6 +64,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickupObject
   itemType: 0
   value: 0
+  dropType: 2
   skipPivotCentering: 0
 --- !u!65 &5977793619192292438
 BoxCollider:
@@ -140,8 +141,8 @@ Transform:
   m_GameObject: {fileID: 7379234805622696314}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
-  m_LocalPosition: {x: -7.5200005, y: -0.43103445, z: -1.3899999}
-  m_LocalScale: {x: 100, y: 100, z: 172.41382}
+  m_LocalPosition: {x: -7.5200005, y: -0.4513, z: -1.3899999}
+  m_LocalScale: {x: 100, y: 100, z: 179.31036}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8436105521946278706}
