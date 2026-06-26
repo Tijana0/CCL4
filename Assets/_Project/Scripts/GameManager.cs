@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
                 }
                 if (module.move != null && module.move.action != null)
                 {
-                    module.move.action.AddBinding("<Joystick>/stick");
+                    module.move.action.AddBinding("<Joystick>/stick").WithProcessor("invertVector2(invertX=false,invertY=true)");
                 }
             }
         }

@@ -80,11 +80,10 @@ public class PauseManager : MonoBehaviour
         settingsMenu = gameObject.AddComponent<SettingsMenu>();
         settingsMenu.Build(canvas, OnSettingsClosed);
 
-        // Explicit navigation, inverted to counteract inverted Y-axis gamepads
-        // (up cycles visually down, down cycles visually up — matches existing scheme).
-        SetNav(resumeBtn,   up: settingsBtn, down: hubBtn);
-        SetNav(settingsBtn, up: hubBtn,      down: resumeBtn);
-        SetNav(hubBtn,      up: resumeBtn,   down: settingsBtn);
+        // Explicit navigation, standard orientation.
+        SetNav(resumeBtn,   up: hubBtn,      down: settingsBtn);
+        SetNav(settingsBtn, up: resumeBtn,   down: hubBtn);
+        SetNav(hubBtn,      up: settingsBtn, down: resumeBtn);
 
         pausePanel.SetActive(false);
     }

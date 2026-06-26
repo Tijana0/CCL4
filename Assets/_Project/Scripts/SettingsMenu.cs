@@ -320,7 +320,16 @@ public class SettingsMenu : MonoBehaviour
 
         var img = imgGO.AddComponent<Image>();
         var sprite = LoadControlSprite(resourceName);
-        if (sprite != null) { img.sprite = sprite; img.preserveAspect = true; img.color = Color.white; }
+        if (sprite != null)
+        {
+            img.sprite = sprite;
+            img.color = Color.white;
+
+            // Use AspectRatioFitter to perfectly preserve the original proportions of the graphic
+            var arf = imgGO.AddComponent<AspectRatioFitter>();
+            arf.aspectMode = AspectRatioFitter.AspectMode.FitInParent;
+            arf.aspectRatio = sprite.rect.width / sprite.rect.height;
+        }
         else
         {
             img.color = new Color(1f, 1f, 1f, 0.06f);

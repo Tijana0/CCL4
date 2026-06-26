@@ -37,9 +37,17 @@ public class ReportCard : MonoBehaviour
     public Color passColor = new Color(0.18f, 0.42f, 0.23f);
     public Color failColor = new Color(0.62f, 0.13f, 0.13f);
 
+    [Header("Hide these when the report appears")]
+    public GameObject[] hideOnShow;   // drag Timer, ScoreText, etc. here
+
     public void Show(string playedClassName, int starsEarned, int score, bool won)
     {
         gameObject.SetActive(true);
+
+        // hide the live HUD (timer, on-screen score, anything else dragged in)
+        if (hideOnShow != null)
+            foreach (var go in hideOnShow)
+                if (go != null) go.SetActive(false);
 
         if (subjectTitle) subjectTitle.text = playedClassName.ToUpper();
         SetStars(starsEarned);
@@ -81,12 +89,13 @@ public class ReportCard : MonoBehaviour
             {
                 t[0].text = entry.displayName;
                 t[1].text = grade;
-                if (isPlayed)
+
+                // force a consistent, smaller size on every row
+                foreach (var tmp in t)
                 {
-                    t[0].fontStyle |= FontStyles.Bold;
-                    t[1].fontStyle |= FontStyles.Bold;
-                    Color c = won ? highlightColor : failColor;
-                    t[0].color = c; t[1].color = c;
+                    tmp.enableAutoSizing = false;
+                    tmp.fontSize = 18f;          // tweak to taste
+                    tmp.paragraphSpacing = 0.1f;
                 }
             }
         }
