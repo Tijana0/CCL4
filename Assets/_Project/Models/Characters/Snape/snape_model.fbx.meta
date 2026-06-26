@@ -8,7 +8,7 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Snape_Mat
-    second: {fileID: 2100000, guid: 1a813f492298bd1479d81a5e66c54879, type: 2}
+    second: {fileID: 2100000, guid: 3abb36e712fc1f14aa46b79a3f4dbf3b, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
