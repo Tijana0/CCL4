@@ -1399,7 +1399,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
   - {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
   - {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
-  - {fileID: 11400000, guid: 223230be2e336574daebb5033bf479df, type: 2}
   recipes:
   - recipeName: immortality potion
     requiredIngredients:
@@ -1487,9 +1486,7 @@ MonoBehaviour:
   - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
     brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
     filledContainerItem: {fileID: 11400000, guid: 1d09b4f9f600a904da863999f29da4d5, type: 2}
-  ingredientReturnMappings:
-  - ingredientItem: {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
-    returnItem: {fileID: 11400000, guid: 223230be2e336574daebb5033bf479df, type: 2}
+  ingredientReturnMappings: []
   emptyVisual: {fileID: 0}
   activeVisual: {fileID: 0}
   doneVisual: {fileID: 0}
@@ -4716,14 +4713,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1102235439998126260, guid: 66921c1264acb4cdba380ad732169c48, type: 3}
-      propertyPath: m_AABB.m_Extent.x
-      value: 0.001393388
-      objectReference: {fileID: 0}
-    - target: {fileID: 1102235439998126260, guid: 66921c1264acb4cdba380ad732169c48, type: 3}
-      propertyPath: m_AABB.m_Extent.y
-      value: 0.001839412
-      objectReference: {fileID: 0}
     - target: {fileID: 3702668900793905889, guid: 66921c1264acb4cdba380ad732169c48, type: 3}
       propertyPath: m_Name
       value: Pixie
@@ -4735,10 +4724,6 @@ PrefabInstance:
     - target: {fileID: 3726220373116934397, guid: 66921c1264acb4cdba380ad732169c48, type: 3}
       propertyPath: heightMin
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3726220373116934397, guid: 66921c1264acb4cdba380ad732169c48, type: 3}
-      propertyPath: moveSpeed
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3726220373116934397, guid: 66921c1264acb4cdba380ad732169c48, type: 3}
       propertyPath: roomAnchor
@@ -4765,16 +4750,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3726220373116934397, guid: 66921c1264acb4cdba380ad732169c48, type: 3}
-      propertyPath: triggerRadius
-      value: 0.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 3726220373116934397, guid: 66921c1264acb4cdba380ad732169c48, type: 3}
       propertyPath: useRoomBounds
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3726220373116934397, guid: 66921c1264acb4cdba380ad732169c48, type: 3}
       propertyPath: freezeDuration
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3726220373116934397, guid: 66921c1264acb4cdba380ad732169c48, type: 3}
       propertyPath: noiseFrequency
@@ -5355,14 +5336,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pixie_2
       objectReference: {fileID: 0}
-    - target: {fileID: 3524067964684240644, guid: ae51099e2ea2448f38f512e3bbfb75d0, type: 3}
-      propertyPath: m_AABB.m_Extent.x
-      value: 0.000593388
-      objectReference: {fileID: 0}
-    - target: {fileID: 3524067964684240644, guid: ae51099e2ea2448f38f512e3bbfb75d0, type: 3}
-      propertyPath: m_AABB.m_Extent.y
-      value: 0.001800941
-      objectReference: {fileID: 0}
     - target: {fileID: 3556333867352430867, guid: ae51099e2ea2448f38f512e3bbfb75d0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.03
@@ -5429,16 +5402,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2e38f52bcc554aa3a707381ed703442, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PixieAI
-  moveSpeed: 2
+  moveSpeed: 1.5
   heightMin: 0
   heightMax: 1.5
-  freezeDuration: 3
+  freezeDuration: 4
   useRoomBounds: 1
   roomAnchor: {fileID: 593755671}
   roomCenter: {x: 0.21, y: 0, z: 0}
   roomSize: {x: 5.5, y: 9}
-  triggerRadius: 0.6
-  applyRadiusToExistingSphere: 1
   noiseFrequency: 0.3
 --- !u!1001 &738612620
 PrefabInstance:
@@ -9042,7 +9013,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
   - {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
   - {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
-  - {fileID: 11400000, guid: 223230be2e336574daebb5033bf479df, type: 2}
   recipes:
   - recipeName: immortality potion
     requiredIngredients:
@@ -9130,9 +9100,7 @@ MonoBehaviour:
   - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
     brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
     filledContainerItem: {fileID: 11400000, guid: 1d09b4f9f600a904da863999f29da4d5, type: 2}
-  ingredientReturnMappings:
-  - ingredientItem: {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
-    returnItem: {fileID: 11400000, guid: 223230be2e336574daebb5033bf479df, type: 2}
+  ingredientReturnMappings: []
   emptyVisual: {fileID: 0}
   activeVisual: {fileID: 0}
   doneVisual: {fileID: 0}
@@ -9890,7 +9858,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
   - {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
   - {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
-  - {fileID: 11400000, guid: 223230be2e336574daebb5033bf479df, type: 2}
   recipes:
   - recipeName: immortality potion
     requiredIngredients:
@@ -9978,9 +9945,7 @@ MonoBehaviour:
   - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
     brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
     filledContainerItem: {fileID: 11400000, guid: 1d09b4f9f600a904da863999f29da4d5, type: 2}
-  ingredientReturnMappings:
-  - ingredientItem: {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
-    returnItem: {fileID: 11400000, guid: 223230be2e336574daebb5033bf479df, type: 2}
+  ingredientReturnMappings: []
   emptyVisual: {fileID: 0}
   activeVisual: {fileID: 0}
   doneVisual: {fileID: 0}
@@ -12358,7 +12323,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d3175e5613ed21e4796f08099312e644, type: 2}
   - {fileID: 11400000, guid: 570e85d51b1c4f94b97d8d9c526ff745, type: 2}
   - {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
-  - {fileID: 11400000, guid: 223230be2e336574daebb5033bf479df, type: 2}
   recipes:
   - recipeName: immortality potion
     requiredIngredients:
@@ -12446,9 +12410,7 @@ MonoBehaviour:
   - containerItem: {fileID: 11400000, guid: 75d19f8fc7201e944839732248a1e8af, type: 2}
     brewedResultItem: {fileID: 11400000, guid: 8bd4b3968b779794f948ef3fe1bc4055, type: 2}
     filledContainerItem: {fileID: 11400000, guid: 1d09b4f9f600a904da863999f29da4d5, type: 2}
-  ingredientReturnMappings:
-  - ingredientItem: {fileID: 11400000, guid: d17d6bfe9bead2048981ac7218b35fdd, type: 2}
-    returnItem: {fileID: 11400000, guid: 223230be2e336574daebb5033bf479df, type: 2}
+  ingredientReturnMappings: []
   emptyVisual: {fileID: 0}
   activeVisual: {fileID: 0}
   doneVisual: {fileID: 0}
