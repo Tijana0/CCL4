@@ -64,6 +64,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickupObject
   itemType: 0
   value: 0
+  startKinematic: 0
   dropType: 2
   skipPivotCentering: 0
 --- !u!65 &5977793619192292438
@@ -181,7 +182,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: -6922793697723135513, guid: c981caa837e120a4180278cde56425b0, type: 3}
-  - {fileID: -6629797300637803691, guid: c981caa837e120a4180278cde56425b0, type: 3}
+  - {fileID: 2100000, guid: 0e2132a0a802c4dd2af7a42006d3c93a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

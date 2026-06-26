@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 33.226, y: 1.45, z: -8.523}
-  m_LocalScale: {x: 0.29808557, y: 0.247411, z: 0.29808557}
+  m_LocalScale: {x: 0.65218145, y: 0.54131055, z: 0.65218145}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4806151159310801811}
@@ -91,6 +91,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickupObject
   itemType: 0
   value: 0
+  startKinematic: 0
   dropType: 2
   skipPivotCentering: 0
 --- !u!65 &5252688624397070901
