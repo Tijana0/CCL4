@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: unicorn tears
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: unicorn tears
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 8cc371e83df604e17a29b1b74c338233, type: 3}
   prefab: {fileID: 920585850318946664, guid: 715571e2f4762aa42b610592cf5c1ee3, type: 3}
   potionColour: {r: 0.9245283, g: 0.054076135, b: 0.91143924, a: 1}
   isColourless: 0

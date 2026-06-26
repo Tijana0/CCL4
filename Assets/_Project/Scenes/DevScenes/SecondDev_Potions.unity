@@ -377,6 +377,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickupObject
   itemType: 3
   value: 50
+  startKinematic: 0
   dropType: 2
   skipPivotCentering: 0
 --- !u!54 &82649654
@@ -1104,6 +1105,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickupObject
   itemType: 2
   value: 5
+  startKinematic: 0
   dropType: 2
   skipPivotCentering: 0
 --- !u!54 &157078164
@@ -3338,10 +3340,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbde7aff9ab8e4e56bb6d5de1b694b01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OrderManager
-  orderCardPrefab: {fileID: 1177066682249617858, guid: 228c3a1a27ee64302aa3c63675a77725, type: 3}
+  orderCardPrefab: {fileID: 4415485248397454626, guid: d7c1415ccf3c947d9bd403d739df3eb3, type: 3}
   orderContainer: {fileID: 0}
   circleSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  ingredientIconPrefab: {fileID: 0}
+  ingredientIconPrefab: {fileID: 1629118148488109662, guid: f76f99017f48949139c11629bb6709a8, type: 3}
+  teapotProcessIcon: {fileID: 0}
+  crystalBallProcessIcon: {fileID: 0}
+  prophecyProcessIcon: {fileID: 0}
   availableRecipes:
   - recipeName: RedBlue
     mainDishSprite: {fileID: 21300000, guid: 551fdd6064cf1406ab46354e05be8330, type: 3}
@@ -6125,6 +6130,9 @@ MonoBehaviour:
   orderContainer: {fileID: 0}
   circleSprite: {fileID: 0}
   ingredientIconPrefab: {fileID: 0}
+  teapotProcessIcon: {fileID: 0}
+  crystalBallProcessIcon: {fileID: 0}
+  prophecyProcessIcon: {fileID: 0}
   availableRecipes: []
   spawnInterval: 9
   maxOrders: 3
@@ -7372,6 +7380,8 @@ MonoBehaviour:
   progressBarFill: {fileID: 0}
   progressBarContainer: {fileID: 0}
   resultSpawnPoint: {fileID: 0}
+  ingredientDisplayAnchor: {fileID: 0}
+  ingredientStackHeight: 0.05
 --- !u!65 &1170844872
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7428,6 +7438,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickupObject
   itemType: 1
   value: 10
+  startKinematic: 0
   dropType: 2
   skipPivotCentering: 0
 --- !u!54 &1172510834
@@ -9541,6 +9552,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickupObject
   itemType: 0
   value: 0
+  startKinematic: 0
   dropType: 2
   skipPivotCentering: 0
 --- !u!54 &1671977210

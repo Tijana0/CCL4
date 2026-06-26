@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: potion wrong 2
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: potion2 wrong
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: ae216bbf366da4dc8a7a1505d0e0ce90, type: 3}
   prefab: {fileID: 6406048461766515699, guid: 0115e5a202759e94aa079a233e5f9085, type: 3}
   potionColour: {r: 1, g: 1, b: 1, a: 1}
   isColourless: 0

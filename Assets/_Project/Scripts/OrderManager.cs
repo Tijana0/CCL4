@@ -313,6 +313,22 @@ public class OrderManager : MonoBehaviour
         List<ItemData> ings = new List<ItemData>();
         if (target == null) return ings;
 
+        // ── Container-swap results (e.g. a final potion = glass + brewed raw) ──
+        // The cauldron brews a "_raw" potion, then a glass swaps into the final
+        // potion. Resolve the final potion to the brewed item's ingredients so the
+        // card shows what the potion is actually made of (the cauldron ingredients).
+        foreach (var st in FindObjectsByType<MultiIngredientStation>(FindObjectsSortMode.None))
+        {
+            if (st.containerSwapMappings == null) continue;
+            foreach (var m in st.containerSwapMappings)
+            {
+                if (m == null || m.filledContainerItem != target || m.brewedResultItem == null
+                    || m.brewedResultItem == target) continue;
+                var inner = GetIngredientsFor(m.brewedResultItem);
+                if (inner.Count > 0) return inner;
+            }
+        }
+
         // ── Station recipes are the real source of truth ──────────────────────
         // Visions (crystal ball), prophecy cards (prophecy table) and teas (teapot)
         // are produced by stations, not by ItemData combine/process rules. Look

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: leap potion 2
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: leap potion 2
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 36036c8b1900a484da9bb74e4798047d, type: 3}
   prefab: {fileID: 2722869481245753802, guid: 2ee2066ab8432b146bec03c880bec92d, type: 3}
   potionColour: {r: 1, g: 1, b: 1, a: 1}
   isColourless: 0

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: dragon blood
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: dragon blood
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: da5c4b215796640789239b1997917a93, type: 3}
   prefab: {fileID: 1194989836355337545, guid: 6f38835416aa3cd4298779cd51fc02d5, type: 3}
   potionColour: {r: 0.5849056, g: 0.05186896, b: 0.05186896, a: 1}
   isColourless: 0

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Strength Potion 2
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: strength potion 2
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: b548eb235998b4c96979e1129bcc273c, type: 3}
   prefab: {fileID: 1978278029540188833, guid: 8171356fc019cb744bf727521b6e6e99, type: 3}
   potionColour: {r: 1, g: 1, b: 1, a: 1}
   isColourless: 0
