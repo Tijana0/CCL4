@@ -94,11 +94,11 @@ public class HeatSource : MonoBehaviour
                 colorBySpeed.enabled = false;
 
                 // Make particles smaller but increase the count/density
-                main.startSizeMultiplier *= 0.28f;
-                main.startSpeedMultiplier *= 0.55f;
+                main.startSizeMultiplier = 0.28f;
+                main.startSpeedMultiplier = 0.55f;
                 
                 var emission = ps.emission;
-                emission.rateOverTimeMultiplier *= 1.3f;
+                emission.rateOverTimeMultiplier = 1.3f;
             }
 
             // If there are lights in the cloned flame, change their color too!
