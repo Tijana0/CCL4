@@ -638,14 +638,39 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                 if (counter != null)
                 {
                     // Block snapping to dispenser slots
-                    if (counter.gameObject.name == "counter2_slot_2" || 
-                        counter.gameObject.name == "counter2_slot_3" || 
-                        counter.gameObject.name == "counter2_slot_4")
+                    string cName = counter.gameObject.name;
+                    if (cName.StartsWith("counter1_slot") || 
+                        cName == "counter2_slot_2" || 
+                        cName == "counter2_slot_3" || 
+                        cName == "counter2_slot_4")
                     {
                         continue;
                     }
 
                     Vector3 counterPos = counter.counterTopPoint != null ? counter.counterTopPoint.position : counter.transform.position;
+
+                    // Skip snapping to counters/tables that are occupied by or next to special stations (like crystal balls, cauldrons, dispensers)
+                    bool tooCloseToSpecialStation = false;
+                    Collider[] hitsNearCounter = Physics.OverlapSphere(counterPos, 0.85f);
+                    foreach (var h in hitsNearCounter)
+                    {
+                        if (h == null) continue;
+                        StationBase otherStation = h.GetComponent<StationBase>();
+                        if (otherStation == null) otherStation = h.GetComponentInParent<StationBase>();
+                        if (otherStation != null && otherStation != counter)
+                        {
+                            if (otherStation is MultiIngredientStation || otherStation is ItemContainerStation)
+                            {
+                                tooCloseToSpecialStation = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (tooCloseToSpecialStation)
+                    {
+                        continue;
+                    }
+
                     float dist = Vector2.Distance(new Vector2(interactionCenter.x, interactionCenter.z), new Vector2(counterPos.x, counterPos.z));
                     if (dist < closestDist)
                     {

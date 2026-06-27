@@ -43,9 +43,12 @@ public abstract class StationBase : MonoBehaviour, IInteractable
         if (stationType == StationType.Bin || stationType == StationType.Sink)
             return;
 
-        // Block placing/combining items on counter2 dispenser slots
+        // Block placing/combining items on counter1 and counter2 dispenser slots
         if (player.heldItem != null && 
-            (gameObject.name == "counter2_slot_2" || gameObject.name == "counter2_slot_3" || gameObject.name == "counter2_slot_4"))
+            (gameObject.name.StartsWith("counter1_slot") ||
+             gameObject.name == "counter2_slot_2" || 
+             gameObject.name == "counter2_slot_3" || 
+             gameObject.name == "counter2_slot_4"))
         {
             Debug.Log($"[StationBase] Cannot place items on dispenser slot: {gameObject.name}");
             return;
@@ -64,8 +67,11 @@ public abstract class StationBase : MonoBehaviour, IInteractable
 
     protected virtual void TryPlaceItem(SimplePlayerController player)
     {
-        // Block placing/combining items on counter2 dispenser slots
-        if (gameObject.name == "counter2_slot_2" || gameObject.name == "counter2_slot_3" || gameObject.name == "counter2_slot_4")
+        // Block placing/combining items on counter1 and counter2 dispenser slots
+        if (gameObject.name.StartsWith("counter1_slot") ||
+            gameObject.name == "counter2_slot_2" || 
+            gameObject.name == "counter2_slot_3" || 
+            gameObject.name == "counter2_slot_4")
         {
             Debug.Log($"[StationBase] Cannot place items on dispenser slot in TryPlaceItem: {gameObject.name}");
             return;
