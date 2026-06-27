@@ -51,7 +51,7 @@ public class PortableCooker : MonoBehaviour
     [Tooltip("Resting local scale relative to homeAnchor. Automatically captured at startup if not customized.")]
     public Vector3 homeLocalScale = Vector3.one;
     [Tooltip("How close (when not held) the pot must be to its home before it snaps back onto the stand.")]
-    public float homeSnapRange = 0.6f;
+    public float homeSnapRange = 1.0f;
 
     [Header("Recipes")]
     public List<MultiIngredientRecipe> recipes = new List<MultiIngredientRecipe>();

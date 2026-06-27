@@ -630,6 +630,25 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         {
             if (cHit.gameObject != this.gameObject && cHit.gameObject != heldItem)
             {
+                // Snap cookers directly to HeatSources (stoves)
+                bool holdingCooker = heldItem.GetComponent<PortableCooker>() != null;
+                if (holdingCooker)
+                {
+                    HeatSource hs = cHit.GetComponent<HeatSource>();
+                    if (hs == null) hs = cHit.GetComponentInParent<HeatSource>();
+                    if (hs != null)
+                    {
+                        Vector3 heatPos = hs.GetHeatPoint().position;
+                        float dist = Vector2.Distance(new Vector2(interactionCenter.x, interactionCenter.z), new Vector2(heatPos.x, heatPos.z));
+                        if (dist < closestDist)
+                        {
+                            closestDist = dist;
+                            targetSnapPos = heatPos;
+                            snappedToCounter = true;
+                        }
+                    }
+                }
+
                 Counter counter = cHit.GetComponent<Counter>();
                 if (counter == null)
                 {
