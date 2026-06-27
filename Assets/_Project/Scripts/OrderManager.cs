@@ -365,9 +365,13 @@ public class OrderManager : MonoBehaviour
 
     private Color GetProcessIconColor(Sprite sprite, Color fireColor)
     {
-        if (sprite == teapotProcessIcon || sprite == brazierProcessIcon)
+        if (sprite == teapotProcessIcon)
         {
-            return fireColor;
+            return new Color(1.0f, 0.85f, 0.0f, 1.0f); // Yellow
+        }
+        else if (sprite == brazierProcessIcon)
+        {
+            return fireColor; // Reddish-orange
         }
         else if (sprite == crystalBallProcessIcon)
         {
