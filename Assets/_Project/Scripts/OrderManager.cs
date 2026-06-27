@@ -260,6 +260,27 @@ public class OrderManager : MonoBehaviour
 
             // Find ingredients for this output
             List<ItemData> ings = GetIngredientsFor(recipe.requiredOutput);
+            if (recipe.requiredOutput != null && recipe.requiredOutput.itemName.ToLower().Contains("tea"))
+            {
+                int waterIndex = -1;
+                int herbIndex = -1;
+                for (int i = 0; i < ings.Count; i++)
+                {
+                    if (ings[i] == null) continue;
+                    string nameLower = ings[i].itemName.ToLower();
+                    if (nameLower.Contains("teacup") || nameLower.Contains("water") || nameLower.Contains("cup"))
+                        waterIndex = i;
+                    else if (nameLower.Contains("herb") || nameLower.Contains("leaf") || nameLower.Contains("tea"))
+                        herbIndex = i;
+                }
+                if (waterIndex != -1 && herbIndex != -1 && waterIndex > herbIndex)
+                {
+                    ItemData temp = ings[waterIndex];
+                    ings[waterIndex] = ings[herbIndex];
+                    ings[herbIndex] = temp;
+                }
+            }
+
             foreach (var ing in ings)
             {
                 if (ing.icon == null) continue;
