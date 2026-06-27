@@ -54,27 +54,57 @@ public class HeatSource : MonoBehaviour
             GameObject stoveFlame = Instantiate(flameTemplate, spawnPos, Quaternion.identity, transform);
             stoveFlame.name = "StoveFlame";
 
-            // Make particles smaller but increase the count/density
-            ParticleSystem ps = stoveFlame.GetComponent<ParticleSystem>();
-            if (ps != null)
+            Color yellowColor = new Color(1.0f, 0.85f, 0.0f, 1.0f); // Yellow
+
+            // Adjust all particle systems in the stove flame
+            foreach (var ps in stoveFlame.GetComponentsInChildren<ParticleSystem>(true))
             {
+                // Instantiate the material and clear its hardcoded orange/red color to white,
+                // so it can be tinted perfectly by the particle system's startColor.
+                var psRenderer = ps.GetComponent<ParticleSystemRenderer>();
+                if (psRenderer != null)
+                {
+                    Material instMat = psRenderer.material;
+                    if (instMat != null)
+                    {
+                        instMat.color = Color.white;
+                        if (instMat.HasProperty("_BaseColor"))
+                        {
+                            instMat.SetColor("_BaseColor", Color.white);
+                        }
+                    }
+                }
+
                 var main = ps.main;
-                main.startSizeMultiplier = 0.28f; // smaller particles
-                main.startSpeedMultiplier = 0.55f; // slightly slower rising
+                main.startColor = new ParticleSystem.MinMaxGradient(yellowColor);
+
+                // Override Color over Lifetime to prevent the template's red/orange gradient from overriding our color
+                var colorOverLifetime = ps.colorOverLifetime;
+                if (colorOverLifetime.enabled)
+                {
+                    Gradient grad = new Gradient();
+                    grad.SetKeys(
+                        new GradientColorKey[] { new GradientColorKey(Color.white, 0.0f), new GradientColorKey(Color.white, 1.0f) },
+                        new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(0.0f, 1.0f) }
+                    );
+                    colorOverLifetime.color = new ParticleSystem.MinMaxGradient(grad);
+                }
+
+                var colorBySpeed = ps.colorBySpeed;
+                colorBySpeed.enabled = false;
+
+                // Make particles smaller but increase the count/density
+                main.startSizeMultiplier *= 0.28f;
+                main.startSpeedMultiplier *= 0.55f;
                 
                 var emission = ps.emission;
-                emission.rateOverTimeMultiplier = 1.3f; // more particles (dense flame)
-                
-                // Also adjust any child particle systems if they exist
-                foreach (var childPs in stoveFlame.GetComponentsInChildren<ParticleSystem>())
-                {
-                    if (childPs == ps) continue;
-                    var cMain = childPs.main;
-                    cMain.startSizeMultiplier *= 0.28f;
-                    cMain.startSpeedMultiplier *= 0.55f;
-                    var cEmission = childPs.emission;
-                    cEmission.rateOverTimeMultiplier *= 1.3f;
-                }
+                emission.rateOverTimeMultiplier *= 1.3f;
+            }
+
+            // If there are lights in the cloned flame, change their color too!
+            foreach (var light in stoveFlame.GetComponentsInChildren<Light>(true))
+            {
+                light.color = yellowColor;
             }
         }
     }
