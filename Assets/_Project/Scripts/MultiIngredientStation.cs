@@ -300,7 +300,7 @@ public class MultiIngredientStation : StationBase
                 main.startLifetimeMultiplier = 1.4f; // short lifetime so they fade out before going too high
                 
                 var emission = ps.emission;
-                emission.rateOverTimeMultiplier = 35f; // high density of sparkles
+                emission.rateOverTimeMultiplier = (stationType == StationType.CrystalBall) ? 35f : 15f; // card deck has fewer particles
 
                 // Enable Noise module for a magical dancing/swirling effect!
                 var noise = ps.noise;
