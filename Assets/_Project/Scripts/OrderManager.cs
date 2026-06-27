@@ -318,7 +318,7 @@ public class OrderManager : MonoBehaviour
                     if (pimg != null)
                     {
                         pimg.sprite = sprites[0];
-                        pimg.color = (sprites[0] == teapotProcessIcon || sprites[0] == brazierProcessIcon) ? fireColor : Color.white;
+                        pimg.color = (sprites[0] == brazierProcessIcon) ? fireColor : Color.white;
                     }
                     processT.gameObject.SetActive(true);
                 }
@@ -349,7 +349,7 @@ public class OrderManager : MonoBehaviour
                         if (cimg != null)
                         {
                             cimg.sprite = sprites[i];
-                            cimg.color = (sprites[i] == teapotProcessIcon || sprites[i] == brazierProcessIcon) ? fireColor : Color.white;
+                            cimg.color = (sprites[i] == brazierProcessIcon) ? fireColor : Color.white;
                         }
                         
                         clone.SetActive(true);
