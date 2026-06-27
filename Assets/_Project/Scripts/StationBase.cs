@@ -43,6 +43,14 @@ public abstract class StationBase : MonoBehaviour, IInteractable
         if (stationType == StationType.Bin || stationType == StationType.Sink)
             return;
 
+        // Block placing/combining items on counter2 dispenser slots
+        if (player.heldItem != null && 
+            (gameObject.name == "counter2_slot_2" || gameObject.name == "counter2_slot_3" || gameObject.name == "counter2_slot_4"))
+        {
+            Debug.Log($"[StationBase] Cannot place items on dispenser slot: {gameObject.name}");
+            return;
+        }
+
         bool playerHasItem = player.heldItem != null;
         bool stationHasItem = itemOnStation != null;
 
@@ -56,6 +64,13 @@ public abstract class StationBase : MonoBehaviour, IInteractable
 
     protected virtual void TryPlaceItem(SimplePlayerController player)
     {
+        // Block placing/combining items on counter2 dispenser slots
+        if (gameObject.name == "counter2_slot_2" || gameObject.name == "counter2_slot_3" || gameObject.name == "counter2_slot_4")
+        {
+            Debug.Log($"[StationBase] Cannot place items on dispenser slot in TryPlaceItem: {gameObject.name}");
+            return;
+        }
+
         WorldItem worldItem = player.heldItem.GetComponent<WorldItem>();
 
         if (worldItem == null)
