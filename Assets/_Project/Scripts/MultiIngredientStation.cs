@@ -296,7 +296,7 @@ public class MultiIngredientStation : StationBase
                 
                 // Tune size, speed, and lifetime so they stay close to the station and look like sparkling dust
                 main.startSizeMultiplier = 0.06f; // very small sparkling dust
-                main.startSpeedMultiplier = 0.04f; // slower rising
+                main.startSpeedMultiplier = 0f; // zero start speed so they don't shoot upwards like fire
                 main.startLifetimeMultiplier = 1.4f; // short lifetime so they fade out before going too high
                 
                 var emission = ps.emission;
@@ -314,7 +314,10 @@ public class MultiIngredientStation : StationBase
                 var velocityOverLifetime = ps.velocityOverLifetime;
                 velocityOverLifetime.enabled = true;
                 velocityOverLifetime.space = ParticleSystemSimulationSpace.Local;
-                velocityOverLifetime.orbitalY = new ParticleSystem.MinMaxCurve(1.5f, 2.5f); // orbit/spin around the vertical Y axis
+                velocityOverLifetime.x = new ParticleSystem.MinMaxCurve(0f);
+                velocityOverLifetime.y = new ParticleSystem.MinMaxCurve(0.02f, 0.08f); // extremely slow upward drift
+                velocityOverLifetime.z = new ParticleSystem.MinMaxCurve(0f);
+                velocityOverLifetime.orbitalY = new ParticleSystem.MinMaxCurve(3.5f, 5.5f); // faster, beautiful swirling orbit
                 velocityOverLifetime.radial = new ParticleSystem.MinMaxCurve(-0.08f, -0.02f); // gently pull particles inward to hug the station
 
                 // Make particles spawn in a sphere shell around the station (crystal ball / card deck)
