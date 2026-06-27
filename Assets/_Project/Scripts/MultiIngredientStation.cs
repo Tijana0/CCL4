@@ -277,6 +277,21 @@ public class MultiIngredientStation : StationBase
                 var main = ps.main;
                 main.startColor = new ParticleSystem.MinMaxGradient(targetColor);
                 
+                // Override Color over Lifetime to prevent the template's red/orange gradient from overriding our color
+                var colorOverLifetime = ps.colorOverLifetime;
+                if (colorOverLifetime.enabled)
+                {
+                    Gradient grad = new Gradient();
+                    grad.SetKeys(
+                        new GradientColorKey[] { new GradientColorKey(Color.white, 0.0f), new GradientColorKey(Color.white, 1.0f) },
+                        new GradientAlphaKey[] { new GradientAlphaKey(1.0f, 0.0f), new GradientAlphaKey(0.0f, 1.0f) }
+                    );
+                    colorOverLifetime.color = new ParticleSystem.MinMaxGradient(grad);
+                }
+
+                var colorBySpeed = ps.colorBySpeed;
+                colorBySpeed.enabled = false;
+                
                 // Tune size, speed, and lifetime so they stay close to the station and look like sparkling dust
                 main.startSizeMultiplier = 0.06f; // very small sparkling dust
                 main.startSpeedMultiplier = 0.08f; // very slow rise
