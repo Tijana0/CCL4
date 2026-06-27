@@ -309,6 +309,14 @@ public class MultiIngredientStation : StationBase
                 noise.frequency = 1.5f;
                 noise.scrollSpeed = 0.15f; // slower noise movement
 
+                // Enable Velocity over Lifetime for orbital swirling (orbiting around the Y-axis)
+                // This makes it feel completely different from fire, creating a swirling magic nebula/vortex!
+                var velocityOverLifetime = ps.velocityOverLifetime;
+                velocityOverLifetime.enabled = true;
+                velocityOverLifetime.space = ParticleSystemSimulationSpace.Local;
+                velocityOverLifetime.orbitalY = new ParticleSystem.MinMaxCurve(1.5f, 2.5f); // orbit/spin around the vertical Y axis
+                velocityOverLifetime.radial = new ParticleSystem.MinMaxCurve(-0.08f, -0.02f); // gently pull particles inward to hug the station
+
                 // Make particles spawn in a sphere shell around the station (crystal ball / card deck)
                 if (stationType == StationType.CrystalBall || stationType == StationType.ProphecyTable)
                 {
