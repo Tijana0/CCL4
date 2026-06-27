@@ -749,6 +749,25 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         }
         Vector3 dropPos = new Vector3(dX, dropY + heightOffset, dZ);
 
+        // Block physical drops that are too close to any station (prevent overlapping/clipping)
+        if (!snappedToCounter)
+        {
+            Vector2 dropPosXZ = new Vector2(dropPos.x, dropPos.z);
+            StationBase[] stations = FindObjectsByType<StationBase>(FindObjectsSortMode.None);
+            foreach (var station in stations)
+            {
+                if (station == null) continue;
+                Vector3 sPos = station.counterTopPoint != null ? station.counterTopPoint.position : station.transform.position;
+                Vector2 sPosXZ = new Vector2(sPos.x, sPos.z);
+                float distXZ = Vector2.Distance(dropPosXZ, sPosXZ);
+                if (distXZ < 0.7f)
+                {
+                    Debug.Log($"[PlaceHeldItem] Drop blocked by proximity to station '{station.gameObject.name}' (distance: {distXZ:F2}m)");
+                    return;
+                }
+            }
+        }
+
         // Prevent placing items so they clip into stairs/platforms.
         // The box is shrunk to 85% so resting ON TOP of a platform is still allowed;
         // only positions that actually overlap the geometry are rejected.
@@ -759,13 +778,6 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             if (bh == null) continue;
             if (bh.gameObject == this.gameObject || bh.gameObject == heldItem) continue;
             if (bh.isTrigger) continue;
-
-            // Block dropping if it overlaps with any station (unless it is a valid snapped placement)
-            if (!snappedToCounter && (bh.GetComponent<StationBase>() != null || bh.GetComponentInParent<StationBase>() != null))
-            {
-                Debug.Log($"[PlaceHeldItem] Drop blocked by station overlap: {bh.gameObject.name}");
-                return;
-            }
 
             string bn = bh.gameObject.name.ToLower();
             if (bn.StartsWith("platform") || bn.StartsWith("stairs"))
