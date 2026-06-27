@@ -296,7 +296,7 @@ public class MultiIngredientStation : StationBase
                 
                 // Tune size, speed, and lifetime so they stay close to the station and look like sparkling dust
                 main.startSizeMultiplier = 0.06f; // very small sparkling dust
-                main.startSpeedMultiplier = 0.08f; // very slow rise
+                main.startSpeedMultiplier = 0.04f; // slower rising
                 main.startLifetimeMultiplier = 1.4f; // short lifetime so they fade out before going too high
                 
                 var emission = ps.emission;
@@ -305,9 +305,9 @@ public class MultiIngredientStation : StationBase
                 // Enable Noise module for a magical dancing/swirling effect!
                 var noise = ps.noise;
                 noise.enabled = true;
-                noise.strength = 0.2f;
+                noise.strength = 0.12f; // subtler swirl force
                 noise.frequency = 1.5f;
-                noise.scrollSpeed = 0.4f;
+                noise.scrollSpeed = 0.15f; // slower noise movement
 
                 // Make particles spawn in a sphere shell around the station (crystal ball / card deck)
                 if (stationType == StationType.CrystalBall || stationType == StationType.ProphecyTable)
