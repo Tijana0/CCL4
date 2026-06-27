@@ -757,12 +757,20 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             foreach (var station in stations)
             {
                 if (station == null) continue;
-                Vector3 sPos = station.counterTopPoint != null ? station.counterTopPoint.position : station.transform.position;
-                Vector2 sPosXZ = new Vector2(sPos.x, sPos.z);
-                float distXZ = Vector2.Distance(dropPosXZ, sPosXZ);
-                if (distXZ < 0.7f)
+                
+                Vector3 sPos1 = station.transform.position;
+                float distXZ1 = Vector2.Distance(dropPosXZ, new Vector2(sPos1.x, sPos1.z));
+                float distXZ2 = 999f;
+                if (station.counterTopPoint != null)
                 {
-                    Debug.Log($"[PlaceHeldItem] Drop blocked by proximity to station '{station.gameObject.name}' (distance: {distXZ:F2}m)");
+                    Vector3 sPos2 = station.counterTopPoint.position;
+                    distXZ2 = Vector2.Distance(dropPosXZ, new Vector2(sPos2.x, sPos2.z));
+                }
+                
+                float minDistXZ = Mathf.Min(distXZ1, distXZ2);
+                if (minDistXZ < 0.95f)
+                {
+                    Debug.Log($"[PlaceHeldItem] Drop blocked by proximity to station '{station.gameObject.name}' (distance: {minDistXZ:F2}m)");
                     return;
                 }
             }
