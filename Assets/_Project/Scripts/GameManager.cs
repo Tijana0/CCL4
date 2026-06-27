@@ -202,7 +202,7 @@ public class GameManager : MonoBehaviour
     private void UpdateScoreUI()
     {
         if (scoreText != null)
-            scoreText.text = $"<color=#e5c158><i>Score: {score}</i></color>";
+            scoreText.text = $"Score: {score}";
     }
 
     private void UpdateTimerUI(int totalSeconds)
@@ -243,7 +243,7 @@ public void EndGame(bool won)
     else if (gameOverPanel != null)   // fallback to old panel
     {
         gameOverPanel.SetActive(true);
-        if (finalScoreText != null) finalScoreText.text = $"<color=#e5c158><i>Final Score: {score}</i></color>";
+        if (finalScoreText != null) finalScoreText.text = $"Final Score: {score}";
     }
 
     FreezePlayers();
