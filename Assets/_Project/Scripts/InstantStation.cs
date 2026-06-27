@@ -223,8 +223,18 @@ public class InstantStation : StationBase
 
         if (wi != null && !wi.itemData.isDisposable)
         {
-            Debug.Log($"[Bin] {wi.itemData.itemName} cannot be thrown away — not disposable.");
-            return;
+            // Allow cards, herbs, crystals, and books to be thrown away regardless of their isDisposable setting
+            string nameLower = wi.itemData.itemName.ToLower();
+            bool isAllowedClassroomItem = nameLower.Contains("card") || 
+                                          nameLower.Contains("herb") || 
+                                          nameLower.Contains("crystal") || 
+                                          nameLower.Contains("book");
+            
+            if (!isAllowedClassroomItem)
+            {
+                Debug.Log($"[Bin] {wi.itemData.itemName} cannot be thrown away — not disposable.");
+                return;
+            }
         }
 
         Debug.Log($"[Bin] Destroyed: {player.heldItem.name}");
