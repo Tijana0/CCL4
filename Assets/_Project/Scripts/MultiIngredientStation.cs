@@ -257,16 +257,33 @@ public class MultiIngredientStation : StationBase
                 ? new Color(0.68f, 0.15f, 1.0f, 1.0f) // Magical Purple
                 : new Color(0.15f, 0.6f, 1.0f, 1.0f); // Magical Blue
 
-            // Adjust all particle systems in the clone
+            // Adjust all particle systems in the clone to feel like magical fairy dust
             foreach (var ps in magicFlame.GetComponentsInChildren<ParticleSystem>(true))
             {
                 var main = ps.main;
                 main.startColor = new ParticleSystem.MinMaxGradient(targetColor);
-                main.startSizeMultiplier *= 0.35f; // small and subtle
-                main.startSpeedMultiplier *= 0.4f; // slow, magical swirl
+                main.startSizeMultiplier *= 0.25f; // make particles much smaller (magical dust)
+                main.startSpeedMultiplier *= 0.3f; // slow, gentle drifting
+                main.startLifetimeMultiplier *= 2.5f; // float longer
                 
                 var emission = ps.emission;
-                emission.rateOverTimeMultiplier *= 0.6f; // slightly fewer particles
+                emission.rateOverTimeMultiplier *= 2.5f; // increase density of the sparkles
+
+                // Enable Noise module for a magical dancing/swirling effect!
+                var noise = ps.noise;
+                noise.enabled = true;
+                noise.strength = 0.15f;
+                noise.frequency = 0.8f;
+                noise.scrollSpeed = 0.2f;
+
+                // For the crystal ball, make particles spawn in a sphere shell around the ball instead of within it
+                if (stationType == StationType.CrystalBall)
+                {
+                    var shape = ps.shape;
+                    shape.shapeType = ParticleSystemShapeType.Sphere;
+                    shape.radius = 0.25f; // slightly larger than the ball radius to surround it
+                    shape.radiusThickness = 0.05f; // spawn on the outer shell
+                }
             }
             
             // If there are lights in the cloned flame, change their color too!
