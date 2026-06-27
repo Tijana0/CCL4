@@ -55,7 +55,7 @@ public class HubManager : MonoBehaviour
             {
                 int stars = PersistentGameState.Instance.starsPerLevel[level1Index];
                 level1StarsText.text = $"Stars: {stars}";
-                level1Completed = true;
+                level1Completed = stars >= 1;
             }
             else
             {
