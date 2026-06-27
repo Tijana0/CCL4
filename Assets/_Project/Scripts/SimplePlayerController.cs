@@ -756,6 +756,17 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         Collider[] blockHits = Physics.OverlapBox(dropPos, blockHalf, Quaternion.identity, ~0, QueryTriggerInteraction.Ignore);
         foreach (Collider bh in blockHits)
         {
+            if (bh == null) continue;
+            if (bh.gameObject == this.gameObject || bh.gameObject == heldItem) continue;
+            if (bh.isTrigger) continue;
+
+            // Block dropping if it overlaps with any station (unless it is a valid snapped placement)
+            if (!snappedToCounter && (bh.GetComponent<StationBase>() != null || bh.GetComponentInParent<StationBase>() != null))
+            {
+                Debug.Log($"[PlaceHeldItem] Drop blocked by station overlap: {bh.gameObject.name}");
+                return;
+            }
+
             string bn = bh.gameObject.name.ToLower();
             if (bn.StartsWith("platform") || bn.StartsWith("stairs"))
             {
