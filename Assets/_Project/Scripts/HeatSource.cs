@@ -54,26 +54,26 @@ public class HeatSource : MonoBehaviour
             GameObject stoveFlame = Instantiate(flameTemplate, spawnPos, Quaternion.identity, transform);
             stoveFlame.name = "StoveFlame";
 
-            // Make it smaller/subtler ("less")
+            // Make particles smaller but increase the count/density
             ParticleSystem ps = stoveFlame.GetComponent<ParticleSystem>();
             if (ps != null)
             {
                 var main = ps.main;
-                main.startSizeMultiplier = 0.45f; // about half size
-                main.startSpeedMultiplier = 0.5f; // slower rising
+                main.startSizeMultiplier = 0.28f; // smaller particles
+                main.startSpeedMultiplier = 0.55f; // slightly slower rising
                 
                 var emission = ps.emission;
-                emission.rateOverTimeMultiplier = 0.5f; // half emission rate
+                emission.rateOverTimeMultiplier = 1.3f; // more particles (dense flame)
                 
                 // Also adjust any child particle systems if they exist
                 foreach (var childPs in stoveFlame.GetComponentsInChildren<ParticleSystem>())
                 {
                     if (childPs == ps) continue;
                     var cMain = childPs.main;
-                    cMain.startSizeMultiplier *= 0.45f;
-                    cMain.startSpeedMultiplier *= 0.5f;
+                    cMain.startSizeMultiplier *= 0.28f;
+                    cMain.startSpeedMultiplier *= 0.55f;
                     var cEmission = childPs.emission;
-                    cEmission.rateOverTimeMultiplier *= 0.5f;
+                    cEmission.rateOverTimeMultiplier *= 1.3f;
                 }
             }
         }
