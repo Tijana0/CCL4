@@ -257,21 +257,23 @@ public class MultiIngredientStation : StationBase
                 ? new Color(0.68f, 0.15f, 1.0f, 1.0f) // Magical Purple
                 : new Color(0.15f, 0.6f, 1.0f, 1.0f); // Magical Blue
 
-            // Load a built-in particle material that tints perfectly to purple/blue
-            Material defaultMat = Resources.GetBuiltinResource<Material>("Default-Particle.mat");
-            if (defaultMat == null)
-            {
-                defaultMat = Resources.GetBuiltinResource<Material>("Sprites-Default.mat");
-            }
-
             // Adjust all particle systems in the clone to feel like magical fairy dust
             foreach (var ps in magicFlame.GetComponentsInChildren<ParticleSystem>(true))
             {
-                // Set the material to the tintable default particle material
+                // Instantiate the material and clear its hardcoded orange/red color to white,
+                // so it can be tinted perfectly by the particle system's startColor.
                 var psRenderer = ps.GetComponent<ParticleSystemRenderer>();
-                if (psRenderer != null && defaultMat != null)
+                if (psRenderer != null)
                 {
-                    psRenderer.material = defaultMat;
+                    Material instMat = psRenderer.material;
+                    if (instMat != null)
+                    {
+                        instMat.color = Color.white;
+                        if (instMat.HasProperty("_BaseColor"))
+                        {
+                            instMat.SetColor("_BaseColor", Color.white);
+                        }
+                    }
                 }
 
                 var main = ps.main;
