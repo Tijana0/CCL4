@@ -309,7 +309,7 @@ public class OrderManager : MonoBehaviour
             List<Sprite> sprites = GetProcessIconsFor(recipe.requiredOutput);
             if (sprites != null && sprites.Count > 0)
             {
-                Color fireColor = new Color(1.0f, 0.6f, 0.15f, 1.0f); // Matches the fire particle animation
+                Color fireColor = new Color(1.0f, 0.3f, 0.0f, 1.0f); // Matches the deep reddish-orange fire particle animation
 
                 if (sprites.Count == 1)
                 {
