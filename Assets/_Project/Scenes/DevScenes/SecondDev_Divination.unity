@@ -10022,6 +10022,7 @@ GameObject:
   m_Component:
   - component: {fileID: 793876886}
   - component: {fileID: 793876887}
+  - component: {fileID: 2144157391}
   m_Layer: 0
   m_Name: counter 3_slot_1
   m_TagString: Untagged
@@ -20257,6 +20258,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1948743302}
   - component: {fileID: 1948743303}
+  - component: {fileID: 2144157393}
   m_Layer: 0
   m_Name: counter 3_slot_3
   m_TagString: Untagged
@@ -20907,6 +20909,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2072460723}
   - component: {fileID: 2072460724}
+  - component: {fileID: 2144157392}
   m_Layer: 0
   m_Name: counter 3_slot_2
   m_TagString: Untagged
@@ -22204,3 +22207,51 @@ SceneRoots:
   - {fileID: 7262525039397163930}
   - {fileID: 4206309376342019414}
   - {fileID: 6164539852773818931}
+--- !u!114 &2144157391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793876885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3924f18f23ec649518cc9a33b22f0ef0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Counter
+  stationType: 0
+  counterTopPoint: {fileID: 1611483216}
+  itemOnStation: {fileID: 0}
+  combineRules: []
+--- !u!114 &2144157392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2072460722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3924f18f23ec649518cc9a33b22f0ef0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Counter
+  stationType: 0
+  counterTopPoint: {fileID: 628706865}
+  itemOnStation: {fileID: 0}
+  combineRules: []
+--- !u!114 &2144157393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1948743301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3924f18f23ec649518cc9a33b22f0ef0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Counter
+  stationType: 0
+  counterTopPoint: {fileID: 1237994359}
+  itemOnStation: {fileID: 0}
+  combineRules: []
