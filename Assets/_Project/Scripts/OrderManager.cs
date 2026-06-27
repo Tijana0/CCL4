@@ -318,7 +318,7 @@ public class OrderManager : MonoBehaviour
                     if (pimg != null)
                     {
                         pimg.sprite = sprites[0];
-                        pimg.color = (sprites[0] == teapotProcessIcon || sprites[0] == brazierProcessIcon) ? fireColor : Color.white;
+                        pimg.color = GetProcessIconColor(sprites[0], fireColor);
                     }
                     processT.gameObject.SetActive(true);
                 }
@@ -349,7 +349,7 @@ public class OrderManager : MonoBehaviour
                         if (cimg != null)
                         {
                             cimg.sprite = sprites[i];
-                            cimg.color = (sprites[i] == teapotProcessIcon || sprites[i] == brazierProcessIcon) ? fireColor : Color.white;
+                            cimg.color = GetProcessIconColor(sprites[i], fireColor);
                         }
                         
                         clone.SetActive(true);
@@ -361,6 +361,23 @@ public class OrderManager : MonoBehaviour
                 processT.gameObject.SetActive(false);
             }
         }
+    }
+
+    private Color GetProcessIconColor(Sprite sprite, Color fireColor)
+    {
+        if (sprite == teapotProcessIcon || sprite == brazierProcessIcon)
+        {
+            return fireColor;
+        }
+        else if (sprite == crystalBallProcessIcon)
+        {
+            return new Color(0.68f, 0.15f, 1.0f, 1.0f); // Magical Purple
+        }
+        else if (sprite == prophecyProcessIcon)
+        {
+            return new Color(0.15f, 0.6f, 1.0f, 1.0f); // Magical Blue
+        }
+        return Color.white;
     }
 
     /// <summary>Returns the process/station icon for a deliverable (teapot / crystal ball / prophecy).</summary>
