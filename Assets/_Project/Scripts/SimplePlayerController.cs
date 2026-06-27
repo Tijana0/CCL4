@@ -718,6 +718,13 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                         hit.collider.gameObject != heldItem &&
                         hit.collider.GetComponent<SimplePlayerController>() == null)
                     {
+                        // Ignore station colliders so non-snapped items fall to the actual ground
+                        if (hit.collider.GetComponent<StationBase>() != null || 
+                            hit.collider.GetComponentInParent<StationBase>() != null)
+                        {
+                            continue;
+                        }
+
                         // We want the highest solid surface below the ray start
                         if (hit.point.y > bestY && hit.point.y <= transform.position.y + 0.5f)
                         {
@@ -787,6 +794,13 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                 hit.collider.gameObject != heldItem &&
                 hit.collider.GetComponent<SimplePlayerController>() == null)
             {
+                // Ignore station colliders so non-snapped items fall to the actual ground
+                if (hit.collider.GetComponent<StationBase>() != null || 
+                    hit.collider.GetComponentInParent<StationBase>() != null)
+                {
+                    continue;
+                }
+
                 if (hit.point.y > bestY && hit.point.y <= p.y + 0.5f) { bestY = hit.point.y; foundFloor = true; }
             }
         }
