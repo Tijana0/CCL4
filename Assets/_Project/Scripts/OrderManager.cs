@@ -309,11 +309,17 @@ public class OrderManager : MonoBehaviour
             List<Sprite> sprites = GetProcessIconsFor(recipe.requiredOutput);
             if (sprites != null && sprites.Count > 0)
             {
+                Color fireColor = new Color(1.0f, 0.6f, 0.15f, 1.0f); // Matches the fire particle animation
+
                 if (sprites.Count == 1)
                 {
                     Transform pIcon = processT.Find("Icon");
                     Image pimg = pIcon != null ? pIcon.GetComponent<Image>() : processT.GetComponent<Image>();
-                    if (pimg != null) pimg.sprite = sprites[0];
+                    if (pimg != null)
+                    {
+                        pimg.sprite = sprites[0];
+                        pimg.color = (sprites[0] == teapotProcessIcon || sprites[0] == brazierProcessIcon) ? fireColor : Color.white;
+                    }
                     processT.gameObject.SetActive(true);
                 }
                 else
@@ -340,7 +346,11 @@ public class OrderManager : MonoBehaviour
                         
                         Transform cIcon = clone.transform.Find("Icon");
                         Image cimg = cIcon != null ? cIcon.GetComponent<Image>() : clone.GetComponent<Image>();
-                        if (cimg != null) cimg.sprite = sprites[i];
+                        if (cimg != null)
+                        {
+                            cimg.sprite = sprites[i];
+                            cimg.color = (sprites[i] == teapotProcessIcon || sprites[i] == brazierProcessIcon) ? fireColor : Color.white;
+                        }
                         
                         clone.SetActive(true);
                     }
