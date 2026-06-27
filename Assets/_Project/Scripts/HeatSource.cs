@@ -25,4 +25,57 @@ public class HeatSource : MonoBehaviour
     public float detectionRange = 0.6f;
 
     public Transform GetHeatPoint() => heatPoint != null ? heatPoint : transform;
+
+    private void Start()
+    {
+        // Only add a flame if there is not already a ParticleSystem in our children (e.g. braziers already have one)
+        if (GetComponentInChildren<ParticleSystem>() != null)
+        {
+            return;
+        }
+
+        // Clone the flame from the scene to have a nice fire animation on the stove!
+        GameObject flameTemplate = GameObject.Find("Flame");
+        if (flameTemplate == null)
+        {
+            // Fallback: try finding by type/tag if it is named differently in some scenes
+            ParticleSystem existingPs = FindAnyObjectByType<ParticleSystem>();
+            if (existingPs != null && existingPs.gameObject.name.Contains("Flame"))
+            {
+                flameTemplate = existingPs.gameObject;
+            }
+        }
+
+        if (flameTemplate != null)
+        {
+            Transform point = GetHeatPoint();
+            // Offset it slightly down so it sits nicely inside/on the stove burner
+            Vector3 spawnPos = point.position + new Vector3(0f, -0.05f, 0f);
+            GameObject stoveFlame = Instantiate(flameTemplate, spawnPos, Quaternion.identity, transform);
+            stoveFlame.name = "StoveFlame";
+
+            // Make it smaller/subtler ("less")
+            ParticleSystem ps = stoveFlame.GetComponent<ParticleSystem>();
+            if (ps != null)
+            {
+                var main = ps.main;
+                main.startSizeMultiplier = 0.45f; // about half size
+                main.startSpeedMultiplier = 0.5f; // slower rising
+                
+                var emission = ps.emission;
+                emission.rateOverTimeMultiplier = 0.5f; // half emission rate
+                
+                // Also adjust any child particle systems if they exist
+                foreach (var childPs in stoveFlame.GetComponentsInChildren<ParticleSystem>())
+                {
+                    if (childPs == ps) continue;
+                    var cMain = childPs.main;
+                    cMain.startSizeMultiplier *= 0.45f;
+                    cMain.startSpeedMultiplier *= 0.5f;
+                    var cEmission = childPs.emission;
+                    cEmission.rateOverTimeMultiplier *= 0.5f;
+                }
+            }
+        }
+    }
 }
