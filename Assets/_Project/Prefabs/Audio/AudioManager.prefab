@@ -84,6 +84,10 @@ MonoBehaviour:
     idInternal: 0
     valueGuidInternal: 
     WwiseObjectReference: {fileID: 11400000, guid: b813039f63a084e90b33c3c616948b99, type: 2}
+  cauldron:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: 0ff53eed04a6540d58006fb8d3b880b0, type: 2}
   failAction:
     idInternal: 0
     valueGuidInternal: 
@@ -152,3 +156,19 @@ MonoBehaviour:
     idInternal: 0
     valueGuidInternal: 
     WwiseObjectReference: {fileID: 11400000, guid: b5f168bfcc790494e86dd584afde4bc6, type: 2}
+  failMusicStart:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: 73f623123482f464ebf90b28603a814f, type: 2}
+  failMusicStop:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: 513d298894772459ea200a090cb5ed79, type: 2}
+  normalMusicStart:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: 6eb7a5a397b2e4c949fd32b8b168e175, type: 2}
+  normalMusicStop:
+    idInternal: 0
+    valueGuidInternal: 
+    WwiseObjectReference: {fileID: 11400000, guid: 6ea7da7a33332423080b775c8b775114, type: 2}

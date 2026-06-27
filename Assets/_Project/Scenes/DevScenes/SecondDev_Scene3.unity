@@ -195,6 +195,7 @@ MonoBehaviour:
   extractionTime: 2
   requiredItemSwaps: []
   consumeRequiredItem: 1
+  cookerFillItem: {fileID: 0}
   itemIconRenderer: {fileID: 0}
 --- !u!1 &10052000
 GameObject:
@@ -623,6 +624,10 @@ MonoBehaviour:
   progressBarContainer: {fileID: 0}
   enableOvercook: 1
   overcookDelay: 20
+  overcookResultItem: {fileID: 0}
+  autoProcess: 0
+  dropRejectedItems: 0
+  hideItemWhileOnStation: 0
 --- !u!1 &146505697
 GameObject:
   m_ObjectHideFlags: 0
@@ -1692,6 +1697,7 @@ MonoBehaviour:
   extractionTime: 2
   requiredItemSwaps: []
   consumeRequiredItem: 1
+  cookerFillItem: {fileID: 0}
   itemIconRenderer: {fileID: 0}
 --- !u!1 &324750888
 GameObject:
@@ -1769,6 +1775,7 @@ MonoBehaviour:
   extractionTime: 0.5
   requiredItemSwaps: []
   consumeRequiredItem: 1
+  cookerFillItem: {fileID: 0}
   itemIconRenderer: {fileID: 0}
 --- !u!1 &355894820
 GameObject:
@@ -2326,6 +2333,7 @@ MonoBehaviour:
   boilOverDelay: 15
   maxIngredients: 2
   defaultCookingTime: 5
+  blockedIngredients: []
   recipes:
   - recipeName: Vision 1
     requiredIngredients:
@@ -2340,8 +2348,9 @@ MonoBehaviour:
   requireSpecificIngredient: 1
   requiredStartIngredient: {fileID: 0}
   allowContainerSwap: 0
-  containerItem: {fileID: 0}
+  containerItems: []
   containerSwapMappings: []
+  ingredientReturnMappings: []
   emptyVisual: {fileID: 0}
   activeVisual: {fileID: 0}
   doneVisual: {fileID: 0}
@@ -2349,6 +2358,8 @@ MonoBehaviour:
   progressBarFill: {fileID: 0}
   progressBarContainer: {fileID: 0}
   resultSpawnPoint: {fileID: 0}
+  ingredientDisplayAnchor: {fileID: 0}
+  ingredientStackHeight: 0.05
 --- !u!1 &549809974
 GameObject:
   m_ObjectHideFlags: 0
@@ -2404,6 +2415,7 @@ MonoBehaviour:
   boilOverDelay: 15
   maxIngredients: 2
   defaultCookingTime: 5
+  blockedIngredients: []
   recipes:
   - recipeName: Vision 2
     requiredIngredients:
@@ -2418,8 +2430,9 @@ MonoBehaviour:
   requireSpecificIngredient: 1
   requiredStartIngredient: {fileID: 0}
   allowContainerSwap: 0
-  containerItem: {fileID: 0}
+  containerItems: []
   containerSwapMappings: []
+  ingredientReturnMappings: []
   emptyVisual: {fileID: 0}
   activeVisual: {fileID: 0}
   doneVisual: {fileID: 0}
@@ -2427,6 +2440,8 @@ MonoBehaviour:
   progressBarFill: {fileID: 0}
   progressBarContainer: {fileID: 0}
   resultSpawnPoint: {fileID: 0}
+  ingredientDisplayAnchor: {fileID: 0}
+  ingredientStackHeight: 0.05
 --- !u!1001 &568349122
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3679,6 +3694,7 @@ MonoBehaviour:
   extractionTime: 2
   requiredItemSwaps: []
   consumeRequiredItem: 1
+  cookerFillItem: {fileID: 0}
   itemIconRenderer: {fileID: 0}
 --- !u!1 &731791953
 GameObject:
@@ -3766,6 +3782,10 @@ MonoBehaviour:
   progressBarContainer: {fileID: 0}
   enableOvercook: 1
   overcookDelay: 20
+  overcookResultItem: {fileID: 0}
+  autoProcess: 0
+  dropRejectedItems: 0
+  hideItemWhileOnStation: 0
 --- !u!1001 &741737199
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5071,6 +5091,7 @@ MonoBehaviour:
   extractionTime: 2
   requiredItemSwaps: []
   consumeRequiredItem: 1
+  cookerFillItem: {fileID: 0}
   itemIconRenderer: {fileID: 0}
 --- !u!1001 &882739440
 PrefabInstance:
@@ -7053,6 +7074,7 @@ MonoBehaviour:
   boilOverDelay: 15
   maxIngredients: 4
   defaultCookingTime: 5
+  blockedIngredients: []
   recipes:
   - recipeName: Prophecy card 1
     requiredIngredients:
@@ -7107,8 +7129,9 @@ MonoBehaviour:
   requireSpecificIngredient: 1
   requiredStartIngredient: {fileID: 0}
   allowContainerSwap: 0
-  containerItem: {fileID: 0}
+  containerItems: []
   containerSwapMappings: []
+  ingredientReturnMappings: []
   emptyVisual: {fileID: 0}
   activeVisual: {fileID: 0}
   doneVisual: {fileID: 0}
@@ -7116,6 +7139,8 @@ MonoBehaviour:
   progressBarFill: {fileID: 0}
   progressBarContainer: {fileID: 0}
   resultSpawnPoint: {fileID: 0}
+  ingredientDisplayAnchor: {fileID: 0}
+  ingredientStackHeight: 0.05
 --- !u!1 &1374137408
 GameObject:
   m_ObjectHideFlags: 0
@@ -8456,6 +8481,7 @@ MonoBehaviour:
   extractionTime: 2
   requiredItemSwaps: []
   consumeRequiredItem: 1
+  cookerFillItem: {fileID: 0}
   itemIconRenderer: {fileID: 0}
 --- !u!1 &1822152870
 GameObject:
@@ -8775,6 +8801,7 @@ MonoBehaviour:
   boilOverDelay: 15
   maxIngredients: 4
   defaultCookingTime: 5
+  blockedIngredients: []
   recipes:
   - recipeName: Prophecy card 1
     requiredIngredients:
@@ -8829,8 +8856,9 @@ MonoBehaviour:
   requireSpecificIngredient: 1
   requiredStartIngredient: {fileID: 0}
   allowContainerSwap: 0
-  containerItem: {fileID: 0}
+  containerItems: []
   containerSwapMappings: []
+  ingredientReturnMappings: []
   emptyVisual: {fileID: 0}
   activeVisual: {fileID: 0}
   doneVisual: {fileID: 0}
@@ -8838,6 +8866,8 @@ MonoBehaviour:
   progressBarFill: {fileID: 0}
   progressBarContainer: {fileID: 0}
   resultSpawnPoint: {fileID: 0}
+  ingredientDisplayAnchor: {fileID: 0}
+  ingredientStackHeight: 0.05
 --- !u!1 &1875019799
 GameObject:
   m_ObjectHideFlags: 0
@@ -10296,6 +10326,7 @@ MonoBehaviour:
   extractionTime: 0.5
   requiredItemSwaps: []
   consumeRequiredItem: 1
+  cookerFillItem: {fileID: 0}
   itemIconRenderer: {fileID: 0}
 --- !u!1 &2102834102
 GameObject:
@@ -11461,6 +11492,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: af636c11872cf284795fa75905c1ff4a, type: 2}
   - {fileID: 11400000, guid: d03e934b1b9ad3043a087124b094d9db, type: 2}
   heatDetectionRange: 0.6
+  homeAnchor: {fileID: 0}
+  homeLocalPosition: {x: 0, y: 0, z: 0}
+  homeLocalEuler: {x: 0, y: 0, z: 0}
+  homeLocalScale: {x: 1, y: 1, z: 1}
+  homeSnapRange: 2.5
   recipes:
   - recipeName: Tea 1
     requiredIngredients:
@@ -11488,6 +11524,10 @@ MonoBehaviour:
     wrongOrderResult: {fileID: 0}
   improvisedResultItem: {fileID: 11400000, guid: b109e5496fa49ad47af34e94a896c08b, type: 2}
   defaultCookingTime: 6
+  enableOvercook: 1
+  overcookDelay: 5
+  progressBarFill: {fileID: 0}
+  progressBarContainer: {fileID: 0}
   emptyVisual: {fileID: 0}
   filledVisual: {fileID: 0}
   cookingVisual: {fileID: 0}

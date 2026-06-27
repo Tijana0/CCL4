@@ -172,9 +172,12 @@ public class GameManager : MonoBehaviour
             if (!timerWarningPlayed && timeRemaining <= 2f)
             {
                 timerWarningPlayed = true;
-
+                Debug.Log($"[GameManager] Timer warning firing. AudioManager null? {AudioManager.Instance == null}");
                 if (AudioManager.Instance != null)
-                    AudioManager.Instance.PlayTimerWarning();
+                {
+                    uint id = AudioManager.Instance.timerWarning != null ? AudioManager.Instance.timerWarning.Post(AudioManager.Instance.gameObject) : 0;
+                    Debug.Log($"[GameManager] timerWarning posted, playingID={id}, valid={AudioManager.Instance.timerWarning?.IsValid()}");
+                }
             }
 
             int currentSeconds = Mathf.FloorToInt(timeRemaining);
@@ -270,6 +273,9 @@ void FreezePlayers()
     public void ReturnToHub()
     {
         Time.timeScale = 1f;
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.StopCurrentMusic();
+
         if (SceneLoader.Instance != null)
         {
             SceneLoader.Instance.LoadScene(2); // Hub is now index 2
