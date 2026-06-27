@@ -239,11 +239,35 @@ public void EndGame(bool won)
     }
 
     if (reportCard != null)
+    {
         reportCard.Show(classNameForReport, stars, score, won);
+        // Find and select the button under the report card
+        UnityEngine.UI.Button btn = reportCard.GetComponentInChildren<UnityEngine.UI.Button>(true);
+        if (btn != null)
+        {
+            var colors = btn.colors;
+            colors.selectedColor = new Color(0.9f, 0.7f, 0.1f, 1f);
+            colors.highlightedColor = new Color(1f, 0.8f, 0.2f, 1f);
+            btn.colors = colors;
+
+            btn.Select();
+        }
+    }
     else if (gameOverPanel != null)   // fallback to old panel
     {
         gameOverPanel.SetActive(true);
         if (finalScoreText != null) finalScoreText.text = $"Final Score: {score}";
+        // Find and select the button under the game over panel
+        UnityEngine.UI.Button btn = gameOverPanel.GetComponentInChildren<UnityEngine.UI.Button>(true);
+        if (btn != null)
+        {
+            var colors = btn.colors;
+            colors.selectedColor = new Color(0.9f, 0.7f, 0.1f, 1f);
+            colors.highlightedColor = new Color(1f, 0.8f, 0.2f, 1f);
+            btn.colors = colors;
+
+            btn.Select();
+        }
     }
 
     FreezePlayers();

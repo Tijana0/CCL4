@@ -51,6 +51,7 @@ public class InstantStation : StationBase
 
     public override void Interact(SimplePlayerController player)
     {
+        Debug.Log($"[InstantStation] Interact called. stationType: {stationType}, heldItem: {(player.heldItem != null ? player.heldItem.name : "null")}");
         if (player.heldItem == null) return;
 
         // For Bin and Sink, act immediately — no whitelist, no placement
@@ -100,6 +101,7 @@ public class InstantStation : StationBase
                 TriggerWrongItemAnimation();
             }
 
+            Debug.Log($"[HandIn] Destroyed: {item.name}");
             Destroy(item);
             itemOnStation = null;
         }
@@ -208,13 +210,19 @@ public class InstantStation : StationBase
 
     private void HandleBin(SimplePlayerController player)
     {
-        if (player.heldItem == null) return;
+        if (player.heldItem == null)
+        {
+            Debug.Log("[Bin] HandleBin: player.heldItem is null.");
+            return;
+        }
+
+        Debug.Log($"[Bin] HandleBin called for: {player.heldItem.name}");
 
         // Blacklist: Permanent tools that must never be destroyed/thrown away
         PortableCooker cooker = player.heldItem.GetComponent<PortableCooker>();
         if (cooker != null)
         {
-            Debug.Log("[Bin] Teapot cannot be put in the trash.");
+            Debug.Log("[Bin] Teapot (PortableCooker) cannot be put in the trash.");
             return;
         }
 
@@ -222,11 +230,16 @@ public class InstantStation : StationBase
         if (wi != null)
         {
             string nameLower = wi.itemData.itemName.ToLower();
+            Debug.Log($"[Bin] Item name: {nameLower}, isDisposable: {wi.itemData.isDisposable}");
             if (nameLower.Contains("bucket") || nameLower.Contains("teacup"))
             {
                 Debug.Log($"[Bin] {wi.itemData.itemName} is a permanent tool and cannot be thrown away.");
                 return;
             }
+        }
+        else
+        {
+            Debug.Log("[Bin] Held item has no WorldItem component.");
         }
 
         if (AudioManager.Instance != null)

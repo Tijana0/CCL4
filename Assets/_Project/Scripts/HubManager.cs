@@ -80,6 +80,47 @@ public class HubManager : MonoBehaviour
 
         level2Button.interactable = level1Completed;
 
+        // Configure colors for high visibility when selected
+        if (level1Button != null)
+        {
+            var colors = level1Button.colors;
+            colors.selectedColor = new Color(0.9f, 0.7f, 0.1f, 1f);
+            colors.highlightedColor = new Color(1f, 0.8f, 0.2f, 1f);
+            level1Button.colors = colors;
+        }
+        if (level2Button != null)
+        {
+            var colors = level2Button.colors;
+            colors.selectedColor = new Color(0.9f, 0.7f, 0.1f, 1f);
+            colors.highlightedColor = new Color(1f, 0.8f, 0.2f, 1f);
+            level2Button.colors = colors;
+        }
+
+        // Setup explicit navigation between buttons
+        if (level1Button != null && level2Button != null)
+        {
+            if (level1Completed)
+            {
+                Navigation nav1 = level1Button.navigation;
+                nav1.mode = Navigation.Mode.Explicit;
+                nav1.selectOnRight = level2Button;
+                nav1.selectOnLeft = level2Button;
+                level1Button.navigation = nav1;
+
+                Navigation nav2 = level2Button.navigation;
+                nav2.mode = Navigation.Mode.Explicit;
+                nav2.selectOnLeft = level1Button;
+                nav2.selectOnRight = level1Button;
+                level2Button.navigation = nav2;
+            }
+            else
+            {
+                Navigation nav1 = level1Button.navigation;
+                nav1.mode = Navigation.Mode.None;
+                level1Button.navigation = nav1;
+            }
+        }
+
         if (level1Button != null)
         {
             level1Button.onClick.RemoveAllListeners();
