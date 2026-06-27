@@ -208,13 +208,12 @@ public class InstantStation : StationBase
 
     private void HandleBin(SimplePlayerController player)
     {
-        // Special case: PortableCooker items (e.g. Teapot) are NEVER destroyed
-        // at the Bin — their contents are cleared instead, keeping the item reusable.
+        // Special case: PortableCooker items (e.g. Teapot) cannot be thrown away or put in the bin.
+        // We swallow the interaction here so the player keeps it in their hand instead of dropping it.
         PortableCooker cooker = player.heldItem.GetComponent<PortableCooker>();
         if (cooker != null)
         {
-            cooker.ClearContents();
-            Debug.Log("[Bin] Cleared contents — item kept in hand, now empty.");
+            Debug.Log("[Bin] Teapot cannot be put in the trash.");
             return;
         }
         if (AudioManager.Instance != null)

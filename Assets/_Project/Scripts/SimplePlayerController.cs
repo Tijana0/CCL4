@@ -586,13 +586,14 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
                 }
 
                 // A held pot (PortableCooker, e.g. the Teapot) must never be consumed as an
-                // ingredient or parked on another special station. Only a fill station (the sink) 
-                // or a plain counter may act on it; everything else is skipped.
+                // ingredient or parked on another special station. Only a fill station (the sink), 
+                // a plain counter, or the trash bin (to prevent dropping/parking it there) may act on it.
                 if (holdingCooker)
                 {
                     bool isFillStation = station is ItemContainerStation fics && fics.cookerFillItem != null;
                     bool isPlainCounter = station is Counter;
-                    if (!isFillStation && !isPlainCounter) continue;
+                    bool isBin = station.stationType == StationType.Bin;
+                    if (!isFillStation && !isPlainCounter && !isBin) continue;
                 }
             }
 
