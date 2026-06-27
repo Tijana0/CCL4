@@ -305,9 +305,9 @@ public class MultiIngredientStation : StationBase
                 // Enable Noise module for a magical dancing/swirling effect!
                 var noise = ps.noise;
                 noise.enabled = true;
-                noise.strength = 0.12f; // subtler swirl force
+                noise.strength = 0.08f; // even subtler swirl force
                 noise.frequency = 1.5f;
-                noise.scrollSpeed = 0.15f; // slower noise movement
+                noise.scrollSpeed = 0.1f; // slower noise movement
 
                 // Enable Velocity over Lifetime for orbital swirling (orbiting around the Y-axis)
                 // This makes it feel completely different from fire, creating a swirling magic nebula/vortex!
@@ -315,10 +315,10 @@ public class MultiIngredientStation : StationBase
                 velocityOverLifetime.enabled = true;
                 velocityOverLifetime.space = ParticleSystemSimulationSpace.Local;
                 velocityOverLifetime.x = new ParticleSystem.MinMaxCurve(0f);
-                velocityOverLifetime.y = new ParticleSystem.MinMaxCurve(0.05f); // slow upward drift (Constant mode)
+                velocityOverLifetime.y = new ParticleSystem.MinMaxCurve(0.04f); // slower upward drift (Constant mode)
                 velocityOverLifetime.z = new ParticleSystem.MinMaxCurve(0f);
-                velocityOverLifetime.orbitalY = new ParticleSystem.MinMaxCurve(4.5f); // beautiful swirling orbit (Constant mode)
-                velocityOverLifetime.radial = new ParticleSystem.MinMaxCurve(-0.05f); // gently pull particles inward to hug the station (Constant mode)
+                velocityOverLifetime.orbitalY = new ParticleSystem.MinMaxCurve(2.2f); // slower swirling orbit (Constant mode)
+                velocityOverLifetime.radial = new ParticleSystem.MinMaxCurve(-0.03f); // gently pull particles inward to hug the station (Constant mode)
 
                 // Make particles spawn in a sphere shell around the station (crystal ball / card deck)
                 if (stationType == StationType.CrystalBall || stationType == StationType.ProphecyTable)
