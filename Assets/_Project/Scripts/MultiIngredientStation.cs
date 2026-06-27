@@ -309,12 +309,12 @@ public class MultiIngredientStation : StationBase
                 noise.frequency = 1.5f;
                 noise.scrollSpeed = 0.4f;
 
-                // For the crystal ball, make particles spawn in a sphere shell around the ball instead of within it
-                if (stationType == StationType.CrystalBall)
+                // Make particles spawn in a sphere shell around the station (crystal ball / card deck)
+                if (stationType == StationType.CrystalBall || stationType == StationType.ProphecyTable)
                 {
                     var shape = ps.shape;
                     shape.shapeType = ParticleSystemShapeType.Sphere;
-                    shape.radius = 0.26f; // sits exactly around the outer shell of the crystal ball
+                    shape.radius = (stationType == StationType.CrystalBall) ? 0.26f : 0.22f; // sized to fit each station
                     shape.radiusThickness = 0.02f; // thin shell
                 }
             }
