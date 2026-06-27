@@ -637,6 +637,14 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
                 if (counter != null)
                 {
+                    // Block snapping to dispenser slots
+                    if (counter.gameObject.name == "counter2_slot_2" || 
+                        counter.gameObject.name == "counter2_slot_3" || 
+                        counter.gameObject.name == "counter2_slot_4")
+                    {
+                        continue;
+                    }
+
                     Vector3 counterPos = counter.counterTopPoint != null ? counter.counterTopPoint.position : counter.transform.position;
                     float dist = Vector2.Distance(new Vector2(interactionCenter.x, interactionCenter.z), new Vector2(counterPos.x, counterPos.z));
                     if (dist < closestDist)
