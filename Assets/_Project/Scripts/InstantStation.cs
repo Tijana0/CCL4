@@ -208,34 +208,29 @@ public class InstantStation : StationBase
 
     private void HandleBin(SimplePlayerController player)
     {
-        // Special case: PortableCooker items (e.g. Teapot) cannot be thrown away or put in the bin.
-        // We swallow the interaction here so the player keeps it in their hand instead of dropping it.
+        if (player.heldItem == null) return;
+
+        // Blacklist: Permanent tools that must never be destroyed/thrown away
         PortableCooker cooker = player.heldItem.GetComponent<PortableCooker>();
         if (cooker != null)
         {
             Debug.Log("[Bin] Teapot cannot be put in the trash.");
             return;
         }
-        if (AudioManager.Instance != null)
-            AudioManager.Instance.PlayThrowOut(this.gameObject);
 
         WorldItem wi = player.heldItem.GetComponent<WorldItem>();
-
-        if (wi != null && !wi.itemData.isDisposable)
+        if (wi != null)
         {
-            // Allow cards, herbs, crystals, and books to be thrown away regardless of their isDisposable setting
             string nameLower = wi.itemData.itemName.ToLower();
-            bool isAllowedClassroomItem = nameLower.Contains("card") || 
-                                          nameLower.Contains("herb") || 
-                                          nameLower.Contains("crystal") || 
-                                          nameLower.Contains("book");
-            
-            if (!isAllowedClassroomItem)
+            if (nameLower.Contains("bucket") || nameLower.Contains("teacup"))
             {
-                Debug.Log($"[Bin] {wi.itemData.itemName} cannot be thrown away — not disposable.");
+                Debug.Log($"[Bin] {wi.itemData.itemName} is a permanent tool and cannot be thrown away.");
                 return;
             }
         }
+
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayThrowOut(this.gameObject);
 
         Debug.Log($"[Bin] Destroyed: {player.heldItem.name}");
         Destroy(player.heldItem);
