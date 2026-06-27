@@ -637,6 +637,12 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
                 if (counter != null)
                 {
+                    // Block snapping to occupied counters
+                    if (counter.itemOnStation != null && counter.itemOnStation != heldItem)
+                    {
+                        continue;
+                    }
+
                     // Block snapping to dispenser slots
                     string cName = counter.gameObject.name;
                     if (cName.StartsWith("counter1_slot") || 
