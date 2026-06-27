@@ -10,10 +10,43 @@ public class InstantStation : StationBase
     [Header("Hand-In Settings")]
     public OrderManager orderManager;
 
+    private Transform portalTransform;
+    private Vector3 originalPortalScale;
+    private Coroutine portalAnimationCoroutine;
+
     private void Start()
     {
         if (orderManager == null)
             orderManager = FindFirstObjectByType<OrderManager>();
+
+        FindPortal();
+    }
+
+    private void FindPortal()
+    {
+        // Search children
+        foreach (Transform child in transform)
+        {
+            if (child.name.Contains("Portal"))
+            {
+                portalTransform = child;
+                originalPortalScale = portalTransform.localScale;
+                return;
+            }
+        }
+        // Search parent's children (siblings)
+        if (transform.parent != null)
+        {
+            foreach (Transform sibling in transform.parent)
+            {
+                if (sibling.name.Contains("Portal"))
+                {
+                    portalTransform = sibling;
+                    originalPortalScale = portalTransform.localScale;
+                    return;
+                }
+            }
+        }
     }
 
     public override void Interact(SimplePlayerController player)
@@ -51,10 +84,54 @@ public class InstantStation : StationBase
             if (score > 0 && GameManager.Instance != null)
                 GameManager.Instance.AddScore(score);
             if (AudioManager.Instance != null)
-            AudioManager.Instance.PlayDeliver(this.gameObject);
+                AudioManager.Instance.PlayDeliver(this.gameObject);
+
+            // Trigger portal animation
+            TriggerPortalDeliveryAnimation();
+
             Destroy(item);
             itemOnStation = null;
         }
+    }
+
+    public void TriggerPortalDeliveryAnimation()
+    {
+        if (portalTransform == null) return;
+        if (portalAnimationCoroutine != null) StopCoroutine(portalAnimationCoroutine);
+        portalAnimationCoroutine = StartCoroutine(AnimatePortalShrinkExpand());
+    }
+
+    private System.Collections.IEnumerator AnimatePortalShrinkExpand()
+    {
+        float duration = 0.35f;
+        float elapsed = 0f;
+
+        // Shrink phase
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            // Smoothly interpolate from original scale to 0 (t*t for ease-in)
+            portalTransform.localScale = Vector3.Lerp(originalPortalScale, Vector3.zero, t * t);
+            yield return null;
+        }
+
+        portalTransform.localScale = Vector3.zero;
+        yield return new WaitForSeconds(0.15f);
+
+        // Expand phase
+        elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            // Smoothly interpolate from 0 to original scale (1-(1-t)^2 for ease-out)
+            portalTransform.localScale = Vector3.Lerp(Vector3.zero, originalPortalScale, 1f - (1f - t) * (1f - t));
+            yield return null;
+        }
+
+        portalTransform.localScale = originalPortalScale;
+        portalAnimationCoroutine = null;
     }
 
     private void HandleBin(SimplePlayerController player)
