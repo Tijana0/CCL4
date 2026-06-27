@@ -81,13 +81,24 @@ public class InstantStation : StationBase
             if (orderManager != null)
                 score = orderManager.TryCompleteOrder(wi.itemData);
 
-            if (score > 0 && GameManager.Instance != null)
-                GameManager.Instance.AddScore(score);
-            if (AudioManager.Instance != null)
-                AudioManager.Instance.PlayDeliver(this.gameObject);
+            if (score > 0)
+            {
+                if (GameManager.Instance != null)
+                    GameManager.Instance.AddScore(score);
+                if (AudioManager.Instance != null)
+                    AudioManager.Instance.PlayDeliver(this.gameObject);
 
-            // Trigger portal animation
-            TriggerPortalDeliveryAnimation();
+                // Success animation
+                TriggerPortalDeliveryAnimation();
+            }
+            else
+            {
+                if (AudioManager.Instance != null)
+                    AudioManager.Instance.PlayFailAction(this.gameObject);
+
+                // Wrong item animation (jitter + pulse + shrink)
+                TriggerWrongItemAnimation();
+            }
 
             Destroy(item);
             itemOnStation = null;
@@ -99,6 +110,13 @@ public class InstantStation : StationBase
         if (portalTransform == null) return;
         if (portalAnimationCoroutine != null) StopCoroutine(portalAnimationCoroutine);
         portalAnimationCoroutine = StartCoroutine(AnimatePortalShrinkExpand());
+    }
+
+    public void TriggerWrongItemAnimation()
+    {
+        if (portalTransform == null) return;
+        if (portalAnimationCoroutine != null) StopCoroutine(portalAnimationCoroutine);
+        portalAnimationCoroutine = StartCoroutine(AnimatePortalWrongDelivery());
     }
 
     private System.Collections.IEnumerator AnimatePortalShrinkExpand()
@@ -126,6 +144,60 @@ public class InstantStation : StationBase
             elapsed += Time.deltaTime;
             float t = elapsed / duration;
             // Smoothly interpolate from 0 to original scale (1-(1-t)^2 for ease-out)
+            portalTransform.localScale = Vector3.Lerp(Vector3.zero, originalPortalScale, 1f - (1f - t) * (1f - t));
+            yield return null;
+        }
+
+        portalTransform.localScale = originalPortalScale;
+        portalAnimationCoroutine = null;
+    }
+
+    private System.Collections.IEnumerator AnimatePortalWrongDelivery()
+    {
+        float shakeDuration = 0.4f;
+        float elapsed = 0f;
+        Vector3 originalLocalPos = portalTransform.localPosition;
+
+        // Shake & Jitter phase
+        while (elapsed < shakeDuration)
+        {
+            elapsed += Time.deltaTime;
+            // Generate random jitter offset
+            float jitterX = Random.Range(-0.06f, 0.06f);
+            float jitterY = Random.Range(-0.06f, 0.06f);
+            portalTransform.localPosition = originalLocalPos + new Vector3(jitterX, jitterY, 0f);
+
+            // Pulse scale rapidly to look unstable
+            float scalePulse = 1f + Mathf.Sin(elapsed * 50f) * 0.12f;
+            portalTransform.localScale = originalPortalScale * scalePulse;
+
+            yield return null;
+        }
+
+        // Reset position
+        portalTransform.localPosition = originalLocalPos;
+
+        // Shrink phase (quick pop)
+        elapsed = 0f;
+        float shrinkDuration = 0.2f;
+        while (elapsed < shrinkDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / shrinkDuration;
+            portalTransform.localScale = Vector3.Lerp(originalPortalScale, Vector3.zero, t * t);
+            yield return null;
+        }
+        portalTransform.localScale = Vector3.zero;
+
+        yield return new WaitForSeconds(0.1f);
+
+        // Expand phase (slow recovery)
+        elapsed = 0f;
+        float expandDuration = 0.4f;
+        while (elapsed < expandDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / expandDuration;
             portalTransform.localScale = Vector3.Lerp(Vector3.zero, originalPortalScale, 1f - (1f - t) * (1f - t));
             yield return null;
         }
