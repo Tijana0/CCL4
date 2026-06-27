@@ -351,10 +351,38 @@ public class MultiIngredientStation : StationBase
             return;
         }
 
+        // Check RoomConfig whitelist first (if set)
+        if (stationType != StationType.Counter && !IsItemAllowed(wi.itemData))
+        {
+            Debug.Log($"[MultiIngredientStation:{stationType}] {wi.itemData.itemName} is not allowed here (whitelist).");
+            Vector3 dropPos = counterTopPoint != null ? counterTopPoint.position + Vector3.up * 0.2f : transform.position + Vector3.up * 0.5f;
+            player.ForceDropHeldItem(dropPos);
+            return;
+        }
+
+        // Explicit restriction for Cauldron in non-potions scenes/rooms (like MainDev_Scene)
+        if (stationType == StationType.Cauldron)
+        {
+            string sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            if (sceneName == "MainDev_Scene" || !sceneName.ToLower().Contains("potions"))
+            {
+                string nameLower = wi.itemData.itemName.ToLower();
+                if (nameLower != "herb 1" && nameLower != "herb 2" && nameLower != "herb 3")
+                {
+                    Debug.Log($"[MultiIngredientStation:Cauldron] Only herbs are allowed in the cauldron in this scene. Rejected {wi.itemData.itemName}.");
+                    Vector3 dropPos = counterTopPoint != null ? counterTopPoint.position + Vector3.up * 0.2f : transform.position + Vector3.up * 0.5f;
+                    player.ForceDropHeldItem(dropPos);
+                    return;
+                }
+            }
+        }
+
         // Check blocked ingredients blacklist
         if (blockedIngredients.Count > 0 && blockedIngredients.Contains(wi.itemData))
         {
             Debug.Log($"[MultiIngredientStation] {wi.itemData.itemName} is not allowed here.");
+            Vector3 dropPos = counterTopPoint != null ? counterTopPoint.position + Vector3.up * 0.2f : transform.position + Vector3.up * 0.5f;
+            player.ForceDropHeldItem(dropPos);
             return;
         }
 

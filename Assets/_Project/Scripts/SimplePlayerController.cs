@@ -792,6 +792,17 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
         heldItem = null;
     }
 
+    // Forcibly drops the held item onto a custom position, enabling physics
+    public void ForceDropHeldItem(Vector3 dropPosition)
+    {
+        if (heldItem == null) return;
+        PickupObject pickup = heldItem.GetComponent<PickupObject>();
+        if (pickup == null) { heldItem = null; return; }
+
+        pickup.Drop(dropPosition);
+        heldItem = null;
+    }
+
     public void Freeze(float duration)
     {
         if (isFrozen) return; // Don't re-freeze if already frozen

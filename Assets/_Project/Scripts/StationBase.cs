@@ -24,6 +24,12 @@ public abstract class StationBase : MonoBehaviour, IInteractable
         whitelistSet = true;
     }
 
+    public bool IsItemAllowed(ItemData item)
+    {
+        if (!whitelistSet || allowedItems.Count == 0) return true;
+        return allowedItems.Contains(item);
+    }
+
     public bool CanInteract() => true;
 
     // Override in subclasses that have a ready result the player can pick up
