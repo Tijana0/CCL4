@@ -257,32 +257,48 @@ public class MultiIngredientStation : StationBase
                 ? new Color(0.68f, 0.15f, 1.0f, 1.0f) // Magical Purple
                 : new Color(0.15f, 0.6f, 1.0f, 1.0f); // Magical Blue
 
+            // Load a built-in particle material that tints perfectly to purple/blue
+            Material defaultMat = Resources.GetBuiltinResource<Material>("Default-Particle.mat");
+            if (defaultMat == null)
+            {
+                defaultMat = Resources.GetBuiltinResource<Material>("Sprites-Default.mat");
+            }
+
             // Adjust all particle systems in the clone to feel like magical fairy dust
             foreach (var ps in magicFlame.GetComponentsInChildren<ParticleSystem>(true))
             {
+                // Set the material to the tintable default particle material
+                var psRenderer = ps.GetComponent<ParticleSystemRenderer>();
+                if (psRenderer != null && defaultMat != null)
+                {
+                    psRenderer.material = defaultMat;
+                }
+
                 var main = ps.main;
                 main.startColor = new ParticleSystem.MinMaxGradient(targetColor);
-                main.startSizeMultiplier *= 0.25f; // make particles much smaller (magical dust)
-                main.startSpeedMultiplier *= 0.3f; // slow, gentle drifting
-                main.startLifetimeMultiplier *= 2.5f; // float longer
+                
+                // Tune size, speed, and lifetime so they stay close to the station and look like sparkling dust
+                main.startSizeMultiplier = 0.06f; // very small sparkling dust
+                main.startSpeedMultiplier = 0.08f; // very slow rise
+                main.startLifetimeMultiplier = 1.4f; // short lifetime so they fade out before going too high
                 
                 var emission = ps.emission;
-                emission.rateOverTimeMultiplier *= 2.5f; // increase density of the sparkles
+                emission.rateOverTimeMultiplier = 35f; // high density of sparkles
 
                 // Enable Noise module for a magical dancing/swirling effect!
                 var noise = ps.noise;
                 noise.enabled = true;
-                noise.strength = 0.15f;
-                noise.frequency = 0.8f;
-                noise.scrollSpeed = 0.2f;
+                noise.strength = 0.2f;
+                noise.frequency = 1.5f;
+                noise.scrollSpeed = 0.4f;
 
                 // For the crystal ball, make particles spawn in a sphere shell around the ball instead of within it
                 if (stationType == StationType.CrystalBall)
                 {
                     var shape = ps.shape;
                     shape.shapeType = ParticleSystemShapeType.Sphere;
-                    shape.radius = 0.25f; // slightly larger than the ball radius to surround it
-                    shape.radiusThickness = 0.05f; // spawn on the outer shell
+                    shape.radius = 0.26f; // sits exactly around the outer shell of the crystal ball
+                    shape.radiusThickness = 0.02f; // thin shell
                 }
             }
             
