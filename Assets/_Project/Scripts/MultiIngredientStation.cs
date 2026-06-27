@@ -355,8 +355,7 @@ public class MultiIngredientStation : StationBase
         if (stationType != StationType.Counter && !IsItemAllowed(wi.itemData))
         {
             Debug.Log($"[MultiIngredientStation:{stationType}] {wi.itemData.itemName} is not allowed here (whitelist).");
-            Vector3 dropPos = counterTopPoint != null ? counterTopPoint.position + Vector3.up * 0.2f : transform.position + Vector3.up * 0.5f;
-            player.ForceDropHeldItem(dropPos);
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayFailAction(player.gameObject);
             return;
         }
 
@@ -370,8 +369,7 @@ public class MultiIngredientStation : StationBase
                 if (nameLower != "herb 1" && nameLower != "herb 2" && nameLower != "herb 3")
                 {
                     Debug.Log($"[MultiIngredientStation:Cauldron] Only herbs are allowed in the cauldron in this scene. Rejected {wi.itemData.itemName}.");
-                    Vector3 dropPos = counterTopPoint != null ? counterTopPoint.position + Vector3.up * 0.2f : transform.position + Vector3.up * 0.5f;
-                    player.ForceDropHeldItem(dropPos);
+                    if (AudioManager.Instance != null) AudioManager.Instance.PlayFailAction(player.gameObject);
                     return;
                 }
             }
@@ -381,8 +379,7 @@ public class MultiIngredientStation : StationBase
         if (blockedIngredients.Count > 0 && blockedIngredients.Contains(wi.itemData))
         {
             Debug.Log($"[MultiIngredientStation] {wi.itemData.itemName} is not allowed here.");
-            Vector3 dropPos = counterTopPoint != null ? counterTopPoint.position + Vector3.up * 0.2f : transform.position + Vector3.up * 0.5f;
-            player.ForceDropHeldItem(dropPos);
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayFailAction(player.gameObject);
             return;
         }
 
@@ -390,6 +387,7 @@ public class MultiIngredientStation : StationBase
         if (maxIngredients > 0 && ingredients.Count >= maxIngredients)
         {
             Debug.Log($"[MultiIngredientStation] Max ingredients ({maxIngredients}) reached.");
+            if (AudioManager.Instance != null) AudioManager.Instance.PlayFailAction(player.gameObject);
             return;
         }
 
