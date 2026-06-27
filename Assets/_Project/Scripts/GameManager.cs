@@ -211,7 +211,7 @@ public class GameManager : MonoBehaviour
         {
             int minutes = totalSeconds / 60;
             int seconds = totalSeconds % 60;
-            timerText.text = string.Format("Time: {0:00}:{1:00}", minutes, seconds);
+            timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
             
             if (totalSeconds <= 10)
             {
