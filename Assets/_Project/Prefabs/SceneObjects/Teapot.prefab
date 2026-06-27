@@ -141,7 +141,7 @@ MonoBehaviour:
   homeAnchor: {fileID: 0}
   homeLocalPosition: {x: 0, y: 0, z: 0}
   homeLocalEuler: {x: 0, y: 0, z: 0}
-  homeSnapRange: 2.5
+  homeSnapRange: 0.6
   recipes:
   - recipeName: Tea 1
     requiredIngredients:
