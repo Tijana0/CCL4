@@ -369,7 +369,7 @@ public class PortableCooker : MonoBehaviour
     {
         transform.SetParent(homeAnchor);
         transform.localPosition = homeLocalPosition;
-        transform.localRotation = Quaternion.Euler(homeLocalEuler);
+        // Keep the rotation as is when putting it down instead of snapping to homeLocalEuler
         transform.localScale = homeLocalScale;
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb == null) rb = GetComponentInChildren<Rigidbody>();
