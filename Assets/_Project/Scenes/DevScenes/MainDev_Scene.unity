@@ -3230,6 +3230,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 2ffbb71ce58b24a04a42fb2ccbcfecf6, type: 3}
     - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
+      propertyPath: brazierProcessIcon
+      value: 
+      objectReference: {fileID: 21300000, guid: 3a071e3293cc446ca268042023c25834, type: 3}
+    - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
       propertyPath: prophecyProcessIcon
       value: 
       objectReference: {fileID: 21300000, guid: 25fbef7d8b343464aaa1d412c4ab17b3, type: 3}

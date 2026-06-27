@@ -35,6 +35,8 @@ public class OrderManager : MonoBehaviour
     public Sprite choppingProcessIcon;
     [Tooltip("Icon for cauldron brewing.")]
     public Sprite cauldronProcessIcon;
+    [Tooltip("Icon for the brazier/fire stand.")]
+    public Sprite brazierProcessIcon;
 
     [Header("Configuration")]
     public List<Recipe> availableRecipes;
@@ -472,6 +474,13 @@ public class OrderManager : MonoBehaviour
         // Add main station icon
         if (mainStationIcon != null)
         {
+            if (mainStationIcon == teapotProcessIcon)
+            {
+                if (brazierProcessIcon != null)
+                {
+                    icons.Add(brazierProcessIcon);
+                }
+            }
             icons.Add(mainStationIcon);
         }
 
