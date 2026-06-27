@@ -315,10 +315,10 @@ public class MultiIngredientStation : StationBase
                 velocityOverLifetime.enabled = true;
                 velocityOverLifetime.space = ParticleSystemSimulationSpace.Local;
                 velocityOverLifetime.x = new ParticleSystem.MinMaxCurve(0f);
-                velocityOverLifetime.y = new ParticleSystem.MinMaxCurve(0.02f, 0.08f); // extremely slow upward drift
+                velocityOverLifetime.y = new ParticleSystem.MinMaxCurve(0.05f); // slow upward drift (Constant mode)
                 velocityOverLifetime.z = new ParticleSystem.MinMaxCurve(0f);
-                velocityOverLifetime.orbitalY = new ParticleSystem.MinMaxCurve(3.5f, 5.5f); // faster, beautiful swirling orbit
-                velocityOverLifetime.radial = new ParticleSystem.MinMaxCurve(-0.08f, -0.02f); // gently pull particles inward to hug the station
+                velocityOverLifetime.orbitalY = new ParticleSystem.MinMaxCurve(4.5f); // beautiful swirling orbit (Constant mode)
+                velocityOverLifetime.radial = new ParticleSystem.MinMaxCurve(-0.05f); // gently pull particles inward to hug the station (Constant mode)
 
                 // Make particles spawn in a sphere shell around the station (crystal ball / card deck)
                 if (stationType == StationType.CrystalBall || stationType == StationType.ProphecyTable)
