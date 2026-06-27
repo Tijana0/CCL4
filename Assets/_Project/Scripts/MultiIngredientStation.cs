@@ -217,6 +217,65 @@ public class MultiIngredientStation : StationBase
 
         UpdateVisuals();
         if (progressBarContainer != null) progressBarContainer.SetActive(false);
+        CreateMagicalParticles();
+    }
+
+    private void CreateMagicalParticles()
+    {
+        if (stationType != StationType.CrystalBall && stationType != StationType.ProphecyTable) return;
+
+        GameObject flameTemplate = GameObject.Find("Flame");
+        if (flameTemplate == null)
+        {
+            // Fallback: try finding by type/tag if it is named differently in some scenes
+            ParticleSystem existingPs = FindAnyObjectByType<ParticleSystem>();
+            if (existingPs != null && existingPs.gameObject.name.Contains("Flame"))
+            {
+                flameTemplate = existingPs.gameObject;
+            }
+        }
+
+        if (flameTemplate != null)
+        {
+            Vector3 spawnPos = transform.position;
+            if (stationType == StationType.CrystalBall && counterTopPoint != null)
+            {
+                Vector3 localOffset = new Vector3(-2.5f, 1.18f, 2.5f);
+                BoxCollider col = GetComponent<BoxCollider>();
+                if (col != null) localOffset = col.center;
+                spawnPos = counterTopPoint.position + counterTopPoint.rotation * localOffset;
+            }
+            else if (stationType == StationType.ProphecyTable && counterTopPoint != null)
+            {
+                spawnPos = counterTopPoint.position + new Vector3(0f, 0.05f, 0f);
+            }
+
+            GameObject magicFlame = Instantiate(flameTemplate, spawnPos, Quaternion.identity, transform);
+            magicFlame.name = $"{stationType}_MagicFlame";
+
+            Color targetColor = (stationType == StationType.CrystalBall) 
+                ? new Color(0.68f, 0.15f, 1.0f, 1.0f) // Magical Purple
+                : new Color(0.15f, 0.6f, 1.0f, 1.0f); // Magical Blue
+
+            // Adjust all particle systems in the clone
+            foreach (var ps in magicFlame.GetComponentsInChildren<ParticleSystem>(true))
+            {
+                var main = ps.main;
+                main.startColor = new ParticleSystem.MinMaxGradient(targetColor);
+                main.startSizeMultiplier *= 0.35f; // small and subtle
+                main.startSpeedMultiplier *= 0.4f; // slow, magical swirl
+                
+                var emission = ps.emission;
+                emission.rateOverTimeMultiplier *= 0.6f; // slightly fewer particles
+            }
+            
+            // If there are lights in the cloned flame, change their color too!
+            foreach (var light in magicFlame.GetComponentsInChildren<Light>(true))
+            {
+                light.color = targetColor;
+                light.range *= 0.5f;
+            }
+        }
     }
 
     private void Update()
