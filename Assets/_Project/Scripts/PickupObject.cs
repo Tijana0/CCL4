@@ -44,9 +44,19 @@ public class PickupObject : MonoBehaviour, IInteractable
         if (transform.parent == null && rb != null && !startKinematic)
         {
             rb.isKinematic = false;
-            rb.linearDamping = 10f; // High drag so they stop quickly when pushed
-            rb.angularDamping = 10f; // High angular drag so they don't roll forever
-            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Keep upright
+            bool isBook = gameObject.name.ToLower().Contains("book");
+            if (isBook)
+            {
+                rb.linearDamping = 1f;
+                rb.angularDamping = 1f;
+                rb.constraints = RigidbodyConstraints.None;
+            }
+            else
+            {
+                rb.linearDamping = 10f; // High drag so they stop quickly when pushed
+                rb.angularDamping = 10f; // High angular drag so they don't roll forever
+                rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Keep upright
+            }
         }
     }
 
@@ -162,9 +172,21 @@ public class PickupObject : MonoBehaviour, IInteractable
         if (rb != null)
         {
             rb.isKinematic = false;
-            rb.linearDamping = 10f; // High drag so they stop quickly when pushed
-            rb.angularDamping = 10f; // High angular drag so they don't roll forever
-            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Keep upright
+            bool isBook = gameObject.name.ToLower().Contains("book");
+            if (isBook)
+            {
+                rb.linearDamping = 1f;
+                rb.angularDamping = 1f;
+                rb.constraints = RigidbodyConstraints.None;
+                // Add a tiny random tilt so it topples naturally on the floor/each other
+                transform.rotation = transform.rotation * Quaternion.Euler(Random.Range(-15f, 15f), Random.Range(-15f, 15f), Random.Range(-15f, 15f));
+            }
+            else
+            {
+                rb.linearDamping = 10f; // High drag so they stop quickly when pushed
+                rb.angularDamping = 10f; // High angular drag so they don't roll forever
+                rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ; // Keep upright
+            }
         }
         // reenable colliders to allow pickup again
         SetCollidersEnabled(true);

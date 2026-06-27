@@ -43,6 +43,24 @@ public abstract class StationBase : MonoBehaviour, IInteractable
         if (stationType == StationType.Bin || stationType == StationType.Sink)
             return;
 
+        // Block interaction if this is a plain Counter but has a special station (like a crystal ball or cauldron) sitting on it
+        if (stationType == StationType.Counter)
+        {
+            Transform anchor = counterTopPoint != null ? counterTopPoint : transform;
+            Collider[] hits = Physics.OverlapSphere(anchor.position, 0.5f);
+            foreach (var h in hits)
+            {
+                if (h == null || h.gameObject == gameObject) continue;
+                MultiIngredientStation mis = h.GetComponent<MultiIngredientStation>();
+                if (mis == null) mis = h.GetComponentInParent<MultiIngredientStation>();
+                if (mis != null)
+                {
+                    Debug.Log($"[StationBase] Counter {gameObject.name} is occupied by special station {mis.gameObject.name}. Blocking interaction.");
+                    return;
+                }
+            }
+        }
+
         // Block placing/combining items on counter1 and counter2 dispenser slots
         if (player.heldItem != null && 
             (gameObject.name.StartsWith("counter1_slot") ||
