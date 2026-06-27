@@ -309,7 +309,7 @@ public class OrderManager : MonoBehaviour
             List<Sprite> sprites = GetProcessIconsFor(recipe.requiredOutput);
             if (sprites != null && sprites.Count > 0)
             {
-                Color fireColor = new Color(1.0f, 0.3f, 0.0f, 1.0f); // Matches the deep reddish-orange fire particle animation
+                Color fireColor = new Color(0.75f, 0.35f, 0.15f, 1.0f); // Matches the deep reddish-orange fire particle animation (desaturated)
 
                 if (sprites.Count == 1)
                 {
@@ -367,19 +367,19 @@ public class OrderManager : MonoBehaviour
     {
         if (sprite == teapotProcessIcon)
         {
-            return new Color(1.0f, 0.85f, 0.0f, 1.0f); // Yellow
+            return new Color(0.8f, 0.7f, 0.2f, 1.0f); // Less saturated yellow/gold
         }
         else if (sprite == brazierProcessIcon)
         {
-            return fireColor; // Reddish-orange
+            return fireColor; // Less saturated orange/red
         }
         else if (sprite == crystalBallProcessIcon)
         {
-            return new Color(0.68f, 0.15f, 1.0f, 1.0f); // Magical Purple
+            return new Color(0.55f, 0.3f, 0.7f, 1.0f); // Less saturated purple/lavender
         }
         else if (sprite == prophecyProcessIcon)
         {
-            return new Color(0.15f, 0.6f, 1.0f, 1.0f); // Magical Blue
+            return new Color(0.3f, 0.5f, 0.7f, 1.0f); // Less saturated blue/slate
         }
         return Color.white;
     }
