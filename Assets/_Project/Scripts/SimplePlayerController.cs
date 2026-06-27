@@ -42,6 +42,8 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
     public TMPro.TextMeshPro freezeLabel; // Assign in inspector or code
 
     private Rigidbody rb;
+    private StationBase[] allStations;
+    private Vector3 lastValidPosition;
     private Vector2 currentMoveInput;
 
     /// <summary>Current movement input this frame (read-only). Used by PlayerAnimatorDriver.</summary>
@@ -125,6 +127,9 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
             holdPoint = hp.transform;
         }
         UpdateBoundariesFromRoomBase();
+
+        allStations = FindObjectsByType<StationBase>(FindObjectsSortMode.None);
+        lastValidPosition = transform.position;
     }
 
     public void UpdateBoundariesFromRoomBase()
@@ -455,16 +460,65 @@ public class SimplePlayerController : MonoBehaviour, IInteractable
 
     private void LateUpdate()
     {
-        if (useBoundaries && rb != null)
+        if (rb != null)
         {
-            // Use rb.position instead of transform.position to keep the physics
-            // engine in sync — setting transform.position directly on a Rigidbody
-            // desyncs its internal state and breaks collision detection.
             Vector3 pos = rb.position;
-            pos.x = Mathf.Clamp(pos.x, minBounds.x, maxBounds.x);
-            pos.z = Mathf.Clamp(pos.z, minBounds.y, maxBounds.y);
-            rb.position = pos;
+
+            // Prevent player from walking on top of counters
+            Vector3 pushDir;
+            if (IsOnTopOfAnyStation(pos, out pushDir))
+            {
+                // Push the player off the counter horizontally
+                pos += pushDir * 0.15f;
+                // Zero out upward velocity so they drop instantly
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, Mathf.Min(rb.linearVelocity.y, 0f), rb.linearVelocity.z);
+                rb.position = pos;
+            }
+            else
+            {
+                // Save last valid ground position
+                lastValidPosition = pos;
+            }
+
+            if (useBoundaries)
+            {
+                pos.x = Mathf.Clamp(pos.x, minBounds.x, maxBounds.x);
+                pos.z = Mathf.Clamp(pos.z, minBounds.y, maxBounds.y);
+                rb.position = pos;
+            }
         }
+    }
+
+    private bool IsOnTopOfAnyStation(Vector3 position, out Vector3 pushDirection)
+    {
+        pushDirection = Vector3.zero;
+        if (allStations == null) return false;
+
+        foreach (var station in allStations)
+        {
+            if (station == null) continue;
+            
+            Collider[] colliders = station.GetComponentsInChildren<Collider>();
+            foreach (var col in colliders)
+            {
+                if (col == null || col.isTrigger) continue;
+                
+                Bounds b = col.bounds;
+                // Extend the bounds slightly horizontally to be safe
+                bool insideX = position.x >= (b.min.x - 0.15f) && position.x <= (b.max.x + 0.15f);
+                bool insideZ = position.z >= (b.min.z - 0.15f) && position.z <= (b.max.z + 0.15f);
+                
+                // If the player's center is horizontally inside, and they are above the middle of the collider
+                if (insideX && insideZ && position.y > (b.center.y - 0.1f))
+                {
+                    Vector3 dir = (position - b.center);
+                    dir.y = 0f;
+                    pushDirection = dir.magnitude > 0.01f ? dir.normalized : transform.forward * -1f;
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void FixedUpdate()
