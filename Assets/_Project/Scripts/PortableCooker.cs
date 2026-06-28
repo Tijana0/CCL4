@@ -81,7 +81,7 @@ public class PortableCooker : MonoBehaviour
     public GameObject doneVisual;
 
     // ── Runtime state ────────────────────────────────────────────────────────
-    private List<ItemData> ingredients = new List<ItemData>();
+    [HideInInspector] public List<ItemData> ingredients = new List<ItemData>();
     private bool isCooking = false;
     private float cookProgress = 0f;
     private float currentCookTime = 6f;
