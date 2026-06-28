@@ -106,7 +106,6 @@ public class PourTarget : MonoBehaviour
         StationBase station = GetComponentInParent<StationBase>();
         if (station != null && station.itemOnStation == gameObject)
             station.itemOnStation = newItem;
-
         Debug.Log($"[PourTarget] Dynamic Filled! Became {resultItem.itemName} at {pos}");
 
         // Kill the OLD teacup — disable its colliders/pickup immediately so it
