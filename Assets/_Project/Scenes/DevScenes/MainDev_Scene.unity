@@ -3263,24 +3263,92 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
       propertyPath: spawnInterval
-      value: 20
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
+      propertyPath: dividerColor.a
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
+      propertyPath: dividerColor.b
+      value: 0.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
+      propertyPath: dividerColor.g
+      value: 0.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
+      propertyPath: dividerColor.r
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
       propertyPath: orderContainer
       value: 
-      objectReference: {fileID: 1522661998}
+      objectReference: {fileID: 0}
+    - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
+      propertyPath: orderCardPrefab
+      value: 
+      objectReference: {fileID: 4415485248397454626, guid: d7c1415ccf3c947d9bd403d739df3eb3, type: 3}
+    - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
+      propertyPath: timerBarColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
+      propertyPath: timerBarColor.g
+      value: 0.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
+      propertyPath: timerBarColor.r
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
+      propertyPath: cardInnerColor.b
+      value: 0.28
+      objectReference: {fileID: 0}
+    - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
+      propertyPath: cardInnerColor.g
+      value: 0.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
+      propertyPath: cardInnerColor.r
+      value: 0.18
+      objectReference: {fileID: 0}
+    - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
+      propertyPath: cardBorderColor.b
+      value: 0.0394659
+      objectReference: {fileID: 0}
+    - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
+      propertyPath: cardBorderColor.g
+      value: 0.68582463
+      objectReference: {fileID: 0}
+    - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
+      propertyPath: cardBorderColor.r
+      value: 0.90943396
+      objectReference: {fileID: 0}
+    - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
+      propertyPath: mortarProcessIcon
+      value: 
+      objectReference: {fileID: 21300000, guid: 7ec5296a230c4480db260ce15abe8294, type: 3}
     - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
       propertyPath: teapotProcessIcon
       value: 
-      objectReference: {fileID: 21300000, guid: 2ffbb71ce58b24a04a42fb2ccbcfecf6, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
       propertyPath: brazierProcessIcon
       value: 
-      objectReference: {fileID: 21300000, guid: 3a071e3293cc446ca268042023c25834, type: 3}
+      objectReference: {fileID: 0}
+    - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
+      propertyPath: cauldronProcessIcon
+      value: 
+      objectReference: {fileID: 21300000, guid: 48c656896e4404e4294646cea68ab041, type: 3}
+    - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
+      propertyPath: choppingProcessIcon
+      value: 
+      objectReference: {fileID: 21300000, guid: c6ee6dbf158a440fdbddf93a08568283, type: 3}
     - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
       propertyPath: prophecyProcessIcon
       value: 
-      objectReference: {fileID: 21300000, guid: 25fbef7d8b343464aaa1d412c4ab17b3, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
       propertyPath: ingredientIconPrefab
       value: 
@@ -3288,7 +3356,7 @@ PrefabInstance:
     - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
       propertyPath: crystalBallProcessIcon
       value: 
-      objectReference: {fileID: 21300000, guid: f04243cc1ad9943c2bf2bc9baa7c381b, type: 3}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4530,11 +4598,6 @@ PrefabInstance:
       addedObject: {fileID: 411407789}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf2a8b2b18eb14d8da2bf3bb15fa5034, type: 3}
---- !u!224 &1522661998 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2607919165619074837, guid: bf2a8b2b18eb14d8da2bf3bb15fa5034, type: 3}
-  m_PrefabInstance: {fileID: 1522661997}
-  m_PrefabAsset: {fileID: 0}
 --- !u!134 &1530462412
 PhysicsMaterial:
   m_ObjectHideFlags: 0

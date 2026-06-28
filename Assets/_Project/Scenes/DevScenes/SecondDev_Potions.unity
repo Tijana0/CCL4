@@ -4909,7 +4909,17 @@ MonoBehaviour:
   cauldronProcessIcon: {fileID: 21300000, guid: 48c656896e4404e4294646cea68ab041, type: 3}
   brazierProcessIcon: {fileID: 0}
   roundedRectSprite: {fileID: 0}
-  dishBackSprite: {fileID: 0}
+  cardBorderColor: {r: 0.347505, g: 0.045788497, b: 0.4113207, a: 1}
+  cardInnerColor: {r: 0.18, g: 0.08, b: 0.28, a: 0.97}
+  dividerColor: {r: 0.75, g: 0.45, b: 0.95, a: 0.5}
+  timerBarColor: {r: 0.8, g: 0.55, b: 1, a: 1}
+  cardWidth: 130
+  mainDishSize: 70
+  iconSize: 52
+  iconGap: 6
+  padding: 10
+  timerBarHeight: 6
+  processIconSize: 36
   availableRecipes:
   - recipeName: RedBlue
     mainDishSprite: {fileID: 21300000, guid: 551fdd6064cf1406ab46354e05be8330, type: 3}
