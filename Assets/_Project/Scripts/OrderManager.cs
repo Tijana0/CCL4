@@ -20,144 +20,112 @@ public class OrderManager : MonoBehaviour
     public GameObject orderCardPrefab;
     public Transform orderContainer;
     public Sprite circleSprite;
-    public GameObject ingredientIconPrefab; // New prefab for dynamic icons
+    public GameObject ingredientIconPrefab;
 
-    [Header("Process Icons (shown under each card)")]
-    [Tooltip("Icon for tea orders (made in the teapot/cooker).")]
+    [Header("Process Icons")]
     public Sprite teapotProcessIcon;
-    [Tooltip("Icon for vision orders (made at the crystal ball).")]
     public Sprite crystalBallProcessIcon;
-    [Tooltip("Icon for prophecy orders (made at the prophecy table).")]
     public Sprite prophecyProcessIcon;
-    [Tooltip("Icon for mortar & pestle grinding.")]
     public Sprite mortarProcessIcon;
-    [Tooltip("Icon for chopping/cutting board.")]
     public Sprite choppingProcessIcon;
-    [Tooltip("Icon for cauldron brewing.")]
     public Sprite cauldronProcessIcon;
-    [Tooltip("Icon for the brazier/fire stand.")]
     public Sprite brazierProcessIcon;
+
+    [Header("Card Sprites")]
+    [Tooltip("RoundedRect sprite for card panels. Leave empty for plain rectangles.")]
+    public Sprite roundedRectSprite;
+    [Tooltip("Optional decorative corner/stamp sprite shown behind the main dish.")]
+    public Sprite dishBackSprite;
 
     [Header("Configuration")]
     public List<Recipe> availableRecipes;
     public float spawnInterval = 9f;
     public int maxOrders = 3;
 
-    // Room recipes set by RoomManager at runtime
+    // ── Colours ───────────────────────────────────────────────────────────────
+    static readonly Color ColBorder = new Color(0.80f, 0.65f, 0.15f, 1.00f); // gold
+    static readonly Color ColBorderGlow = new Color(0.95f, 0.85f, 0.35f, 1.00f); // bright gold rim
+    static readonly Color ColInner = new Color(0.09f, 0.07f, 0.05f, 0.98f); // near-black parchment
+    static readonly Color ColPanel = new Color(0.14f, 0.11f, 0.08f, 1.00f); // slightly lighter panel
+    static readonly Color ColDivider = new Color(0.80f, 0.65f, 0.15f, 0.40f); // faded gold line
+    static readonly Color ColDishBack = new Color(0.20f, 0.16f, 0.10f, 1.00f); // dark gold-tinted circle behind dish
+    static readonly Color ColIngBG = new Color(0.18f, 0.14f, 0.10f, 1.00f); // ingredient slot background
+    static readonly Color ColIngRim = new Color(0.80f, 0.65f, 0.15f, 0.70f); // ingredient slot rim
+    static readonly Color ColTimerBG = new Color(0.08f, 0.06f, 0.04f, 1.00f); // timer track
+    static readonly Color ColTimer = new Color(0.80f, 0.65f, 0.15f, 1.00f); // timer fill gold
+    static readonly Color ColTimerLow = new Color(0.85f, 0.18f, 0.10f, 1.00f); // timer fill red
+    static readonly Color ColProcessBG = new Color(0.16f, 0.12f, 0.08f, 1.00f); // process badge bg
+
+    // ── Layout constants ──────────────────────────────────────────────────────
+    const float CardW = 138f;
+    const float BorderPad = 5f;  // outer border thickness
+    const float InnerPad = 10f;  // inner content padding
+    const float DishSize = 72f;  // main result icon
+    const float DishBackSize = 84f;  // decorative circle behind dish
+    const float IngSize = 50f;  // ingredient icon slots
+    const float IngGap = 6f;
+    const float ProcSize = 32f;  // process badge icons
+    const float ProcGap = 5f;
+    const float DivH = 1.5f;
+    const float TimerH = 7f;
+    const float SectionGap = 8f;
+
+    // ── Runtime ───────────────────────────────────────────────────────────────
     private List<RoomRecipe> roomRecipes = new List<RoomRecipe>();
     private bool usingRoomRecipes = false;
     private bool useProcedural = false;
-
-    // Discovered procedural orders
     private List<RoomRecipe> discoveredOrders = new List<RoomRecipe>();
-
     private float timeSinceLastSpawn = 0f;
 
-    /// <summary>Called by RoomManager to register this room's recipe list.</summary>
+    // ─────────────────────────────────────────────────────────────────────────
+    // Setup
+    // ─────────────────────────────────────────────────────────────────────────
+
     public void SetRoomRecipes(List<RoomRecipe> recipes, bool procedural, List<ItemData> roomItems)
     {
         roomRecipes = recipes ?? new List<RoomRecipe>();
         useProcedural = procedural;
         usingRoomRecipes = roomRecipes.Count > 0 || useProcedural;
-
-        if (useProcedural)
-        {
-            DiscoverProceduralOrders(roomItems);
-        }
-
-        Debug.Log($"[OrderManager] Initialized. Recipes: {roomRecipes.Count}, Procedural: {useProcedural} ({discoveredOrders.Count} discovered).");
+        if (useProcedural) DiscoverProceduralOrders(roomItems);
+        Debug.Log($"[OrderManager] Recipes: {roomRecipes.Count}, Procedural: {useProcedural} ({discoveredOrders.Count} discovered).");
     }
 
     private void DiscoverProceduralOrders(List<ItemData> items)
     {
         discoveredOrders.Clear();
         if (items == null) return;
-
-        // 1. Add base ingredients as simple orders
         foreach (var item in items)
         {
-            if (item == null) continue;
-            if (!item.isDisposable) continue;
-            discoveredOrders.Add(new RoomRecipe {
-                recipeName = item.itemName,
-                requiredOutput = item,
-                scoreValue = 5,
-                timeLimit = 45f
-            });
+            if (item == null || !item.isDisposable) continue;
+            discoveredOrders.Add(new RoomRecipe { recipeName = item.itemName, requiredOutput = item, scoreValue = 5, timeLimit = 45f });
         }
-
-        // 2. Discover combinations
         foreach (var item in items)
         {
             if (item == null) continue;
-
             if (item.combineRules != null)
-            {
                 foreach (var rule in item.combineRules)
-                {
-                    if (rule == null) continue;
-                    // If both inputs and output exist in the room (or are valid results)
-                    if (rule.outputItem != null)
-                    {
-                        // Check if we already added this result to avoid duplicates
-                        if (!discoveredOrders.Exists(r => r.requiredOutput == rule.outputItem))
-                        {
-                            discoveredOrders.Add(new RoomRecipe {
-                                recipeName = rule.outputItem.itemName,
-                                requiredOutput = rule.outputItem,
-                                scoreValue = 15,
-                                timeLimit = 60f
-                            });
-                        }
-                    }
-                }
-            }
-
-            // 3. Discover processing results
+                    if (rule?.outputItem != null && !discoveredOrders.Exists(r => r.requiredOutput == rule.outputItem))
+                        discoveredOrders.Add(new RoomRecipe { recipeName = rule.outputItem.itemName, requiredOutput = rule.outputItem, scoreValue = 15, timeLimit = 60f });
             if (item.processingRules != null)
-            {
                 foreach (var rule in item.processingRules)
-                {
-                    if (rule == null) continue;
-                    if (rule.outputItem != null)
-                    {
-                        if (!discoveredOrders.Exists(r => r.requiredOutput == rule.outputItem))
-                        {
-                            discoveredOrders.Add(new RoomRecipe {
-                                recipeName = rule.outputItem.itemName,
-                                requiredOutput = rule.outputItem,
-                                scoreValue = 10,
-                                timeLimit = 50f
-                            });
-                        }
-                    }
-                }
-            }
+                    if (rule?.outputItem != null && !discoveredOrders.Exists(r => r.requiredOutput == rule.outputItem))
+                        discoveredOrders.Add(new RoomRecipe { recipeName = rule.outputItem.itemName, requiredOutput = rule.outputItem, scoreValue = 10, timeLimit = 50f });
         }
     }
 
     private void Start()
     {
-        // Dynamically find UI elements to prevent prefab reference loss
         if (orderContainer == null)
         {
             GameObject canvas = GameObject.Find("UI_Canvas");
             if (canvas != null)
             {
-                Transform container = canvas.transform.Find("TopLeftBoxes");
-                if (container != null) orderContainer = container;
+                Transform t = canvas.transform.Find("TopLeftBoxes");
+                if (t != null) orderContainer = t;
             }
         }
-
-        // Clear any existing editor placeholders
         if (orderContainer != null)
-        {
-            foreach (Transform child in orderContainer)
-            {
-                Destroy(child.gameObject);
-            }
-        }
-
+            foreach (Transform child in orderContainer) Destroy(child.gameObject);
         SpawnRandomOrder();
     }
 
@@ -165,67 +133,33 @@ public class OrderManager : MonoBehaviour
     {
         if (GameManager.Instance != null && GameManager.Instance.timeRemaining <= 0) return;
         if (orderContainer == null) return;
-
         if (orderContainer.childCount < maxOrders)
         {
             timeSinceLastSpawn += Time.deltaTime;
-            if (timeSinceLastSpawn >= spawnInterval)
-            {
-                timeSinceLastSpawn = 0f;
-                SpawnRandomOrder();
-            }
+            if (timeSinceLastSpawn >= spawnInterval) { timeSinceLastSpawn = 0f; SpawnRandomOrder(); }
         }
     }
 
     public void SpawnRandomOrder()
     {
-        // Prefer room recipes or procedural if registered
-        if (usingRoomRecipes)
-        {
-            SpawnRoomRecipeOrder();
-            return;
-        }
-
-        // Fallback to legacy visual recipes
-        if (orderCardPrefab == null)
-        {
-            Debug.LogError("[OrderManager] orderCardPrefab is missing! Cannot spawn orders.");
-            return;
-        }
-        if (orderContainer == null)
-        {
-            Debug.LogError("[OrderManager] orderContainer is missing! Cannot spawn orders.");
-            return;
-        }
-
-        if (availableRecipes == null || availableRecipes.Count == 0)
-        {
-            Debug.LogWarning("[OrderManager] No availableRecipes or roomRecipes to spawn.");
-            return;
-        }
-
-        Recipe recipe = availableRecipes[Random.Range(0, availableRecipes.Count)];
-        SpawnLegacyOrderCard(recipe);
+        if (usingRoomRecipes) { SpawnRoomRecipeOrder(); return; }
+        if (orderCardPrefab == null || orderContainer == null) return;
+        if (availableRecipes == null || availableRecipes.Count == 0) return;
+        SpawnLegacyOrderCard(availableRecipes[Random.Range(0, availableRecipes.Count)]);
     }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Card builder
+    // ─────────────────────────────────────────────────────────────────────────
 
     private void SpawnRoomRecipeOrder()
     {
-        if (orderCardPrefab == null)
-        {
-            Debug.LogError("[OrderManager] orderCardPrefab is missing! Cannot spawn room recipe orders.");
-            return;
-        }
-        if (orderContainer == null)
-        {
-            Debug.LogError("[OrderManager] orderContainer is missing! Cannot spawn room recipe orders.");
-            return;
-        }
+        if (orderContainer == null) return;
 
         RoomRecipe recipe;
         if (useProcedural && discoveredOrders.Count > 0)
         {
-            // Pick from discovered or manual recipes
-            List<RoomRecipe> pool = new List<RoomRecipe>(discoveredOrders);
+            var pool = new List<RoomRecipe>(discoveredOrders);
             pool.AddRange(roomRecipes);
             recipe = pool[Random.Range(0, pool.Count)];
         }
@@ -235,360 +169,376 @@ public class OrderManager : MonoBehaviour
             recipe = roomRecipes[Random.Range(0, roomRecipes.Count)];
         }
 
-        GameObject newCard = Instantiate(orderCardPrefab, orderContainer);
-        newCard.name = "ActiveOrder_" + recipe.recipeName;
+        // ── Gather data ───────────────────────────────────────────────────────
+        List<ItemData> ings = GetIngredientsFor(recipe.requiredOutput);
+        SortTeaIngredients(recipe.requiredOutput, ings);
 
-        // Store recipe reference on the card for matching at hand-in
-        var tracker = newCard.AddComponent<ActiveOrderTracker>();
-        tracker.roomRecipe = recipe;
-        tracker.SetupTimer(recipe.timeLimit, () => {
-            Destroy(newCard);
-            Debug.Log($"[OrderManager] Order expired: {recipe.recipeName}");
-        });
+        List<ItemData> displayIngs = new List<ItemData>();
+        foreach (var ing in ings) if (ing != null && ing.icon != null) displayIngs.Add(ing);
 
-        // Update card UI — use item icon if available
-        Transform mainDish = newCard.transform.Find("MainDish");
-        if (mainDish != null && recipe.requiredOutput?.icon != null)
+        int ingCount = displayIngs.Count;
+        int ingCols = Mathf.Min(ingCount, 2);
+        int ingRows = ingCount == 0 ? 0 : Mathf.CeilToInt((float)ingCount / 2f);
+        float ingAreaH = ingRows > 0 ? ingRows * IngSize + (ingRows - 1) * IngGap : 0f;
+
+        List<Sprite> procSprites = GetProcessIconsFor(recipe.requiredOutput);
+        float procAreaH = procSprites.Count > 0 ? ProcSize + SectionGap : 0f;
+
+        // Total card height
+        float totalH = BorderPad * 2f
+                     + InnerPad
+                     + DishSize
+                     + SectionGap
+                     + DivH
+                     + SectionGap
+                     + (ingAreaH > 0 ? ingAreaH + SectionGap : 0f)
+                     + procAreaH
+                     + TimerH
+                     + InnerPad;
+
+        // ── Root card (gold outer border) ─────────────────────────────────────
+        GameObject card = new GameObject("ActiveOrder_" + recipe.recipeName, typeof(RectTransform));
+        card.transform.SetParent(orderContainer, false);
+        RectTransform cardRT = card.GetComponent<RectTransform>();
+        cardRT.sizeDelta = new Vector2(CardW, totalH);
+
+        // Outer gold glow border (slightly larger, brighter)
+        Image borderImg = card.AddComponent<Image>();
+        borderImg.sprite = roundedRectSprite;
+        borderImg.color = ColBorderGlow;
+        borderImg.type = roundedRectSprite != null ? Image.Type.Sliced : Image.Type.Simple;
+
+        // Inner gold border
+        GameObject border2GO = MakePanel(card, "Border", ColBorder,
+            new Vector2(2f, 2f), new Vector2(-2f, -2f));
+
+        // Dark inner background
+        GameObject innerGO = MakePanel(border2GO, "Inner", ColInner,
+            new Vector2(BorderPad, BorderPad), new Vector2(-BorderPad, -BorderPad));
+
+        // ── Layout cursor from top of inner ───────────────────────────────────
+        // We position children relative to card centre using anchoredPosition
+        float halfH = totalH * 0.5f;
+        float cursor = halfH - BorderPad - InnerPad; // start at top inner edge, move downward
+
+        // ── Dish back circle ──────────────────────────────────────────────────
+        cursor -= DishBackSize * 0.5f;
+        GameObject dishBack = MakeChild(card, "DishBack");
+        SetAnchored(dishBack, new Vector2(CardW * 0.5f, totalH * 0.5f),
+                    new Vector2(DishBackSize, DishBackSize),
+                    new Vector2(0f, cursor));
+        Image dbImg = dishBack.AddComponent<Image>();
+        dbImg.sprite = dishBackSprite != null ? dishBackSprite : roundedRectSprite;
+        dbImg.color = ColDishBack;
+        dbImg.type = Image.Type.Sliced;
+
+        // ── Main dish icon ────────────────────────────────────────────────────
+        if (recipe.requiredOutput?.icon != null)
         {
-            Image img = mainDish.GetComponent<Image>();
-            if (img != null) img.sprite = recipe.requiredOutput.icon;
+            GameObject dish = MakeChild(card, "MainDish");
+            SetAnchored(dish, new Vector2(CardW * 0.5f, totalH * 0.5f),
+                        new Vector2(DishSize, DishSize),
+                        new Vector2(0f, cursor));
+            Image dImg = dish.AddComponent<Image>();
+            dImg.sprite = recipe.requiredOutput.icon;
+            dImg.preserveAspect = true;
         }
+        cursor -= DishBackSize * 0.5f + SectionGap;
 
-        // Dynamic Ingredients UI
-        Transform ingredientsParent = newCard.transform.Find("Ingredients");
-        if (ingredientsParent != null)
+        // ── Gold divider ──────────────────────────────────────────────────────
+        GameObject div = MakeChild(card, "Divider");
+        float divW = CardW - BorderPad * 4f;
+        SetAnchored(div, new Vector2(CardW * 0.5f, totalH * 0.5f),
+                    new Vector2(divW, DivH),
+                    new Vector2(0f, cursor));
+        div.AddComponent<Image>().color = ColDivider;
+        cursor -= DivH + SectionGap;
+
+        // ── Ingredient grid ───────────────────────────────────────────────────
+        if (ingCount > 0)
         {
-            // Clear existing placeholder icons
-            foreach (Transform child in ingredientsParent) Destroy(child.gameObject);
+            float gridW = ingCols * IngSize + (ingCols - 1) * IngGap;
+            float startX = -gridW * 0.5f + IngSize * 0.5f;
 
-            // Find ingredients for this output
-            List<ItemData> ings = GetIngredientsFor(recipe.requiredOutput);
-            if (recipe.requiredOutput != null && recipe.requiredOutput.itemName.ToLower().Contains("tea"))
+            for (int i = 0; i < ingCount; i++)
             {
-                int waterIndex = -1;
-                int herbIndex = -1;
-                for (int i = 0; i < ings.Count; i++)
-                {
-                    if (ings[i] == null) continue;
-                    string nameLower = ings[i].itemName.ToLower();
-                    if (nameLower.Contains("teacup") || nameLower.Contains("water") || nameLower.Contains("cup"))
-                        waterIndex = i;
-                    else if (nameLower.Contains("herb") || nameLower.Contains("leaf") || nameLower.Contains("tea"))
-                        herbIndex = i;
-                }
-                if (waterIndex != -1 && herbIndex != -1 && waterIndex < herbIndex)
-                {
-                    ItemData temp = ings[waterIndex];
-                    ings[waterIndex] = ings[herbIndex];
-                    ings[herbIndex] = temp;
-                }
-            }
+                int col = i % 2;
+                int row = i / 2;
+                float ix = startX + col * (IngSize + IngGap);
+                float iy = cursor - IngSize * 0.5f - row * (IngSize + IngGap);
 
-            // Remove any existing layout group — we're doing manual 2x2 grid positioning
-            UnityEngine.UI.GridLayoutGroup existingGrid = ingredientsParent.GetComponent<UnityEngine.UI.GridLayoutGroup>();
-            if (existingGrid != null) Destroy(existingGrid);
-            UnityEngine.UI.HorizontalLayoutGroup existingH = ingredientsParent.GetComponent<UnityEngine.UI.HorizontalLayoutGroup>();
-            if (existingH != null) Destroy(existingH);
+                // Slot background circle
+                GameObject slot = MakeChild(card, "IngSlot_" + i);
+                SetAnchored(slot, new Vector2(CardW * 0.5f, totalH * 0.5f),
+                            new Vector2(IngSize + 6f, IngSize + 6f),
+                            new Vector2(ix, iy));
+                Image slotImg = slot.AddComponent<Image>();
+                slotImg.sprite = roundedRectSprite;
+                slotImg.color = ColIngRim;
+                slotImg.type = roundedRectSprite != null ? Image.Type.Sliced : Image.Type.Simple;
 
-            float iconSize = 54f;   // ← tweak this to make icons bigger/smaller
-            float gap = 6f;         // ← gap between icons
+                // Slot inner
+                GameObject slotInner = MakePanel(slot, "SlotInner", ColIngBG,
+                    new Vector2(3f, 3f), new Vector2(-3f, -3f));
 
-            int col = 0;
-            int row = 0;
-
-            foreach (var ing in ings)
-            {
-                if (ing == null) continue;
-                if (ing.icon == null) continue;
-
+                // Icon — use prefab if assigned, otherwise plain Image
                 GameObject iconObj = ingredientIconPrefab != null
-                    ? Instantiate(ingredientIconPrefab, ingredientsParent)
-                    : new GameObject("IngredientIcon", typeof(RectTransform), typeof(Image));
+                    ? Instantiate(ingredientIconPrefab, card.transform)
+                    : MakeChild(card, "Ing_" + i);
+                iconObj.name = "Ing_" + i;
+                iconObj.transform.SetParent(card.transform, false);
 
-                iconObj.transform.SetParent(ingredientsParent, false);
-
-                RectTransform iconRT = iconObj.GetComponent<RectTransform>();
-                iconRT.sizeDelta = new Vector2(iconSize, iconSize);
-                iconRT.anchorMin = new Vector2(0f, 1f);
-                iconRT.anchorMax = new Vector2(0f, 1f);
-                iconRT.pivot = new Vector2(0f, 1f);
-                iconRT.anchoredPosition = new Vector2(
-                    col * (iconSize + gap),
-                    -row * (iconSize + gap)
-                );
+                RectTransform iRT = iconObj.GetComponent<RectTransform>();
+                iRT.anchorMin = new Vector2(0.5f, 0.5f);
+                iRT.anchorMax = new Vector2(0.5f, 0.5f);
+                iRT.sizeDelta = new Vector2(IngSize - 6f, IngSize - 6f);
+                iRT.anchoredPosition = new Vector2(ix, iy);
 
                 Transform iconChild = iconObj.transform.Find("Icon");
-                Image img = iconChild != null
-                    ? iconChild.GetComponent<Image>()
-                    : iconObj.GetComponent<Image>();
-                img.sprite = ing.icon;
-                img.raycastTarget = false;
-
-                col++;
-                if (col >= 2) { col = 0; row++; } // wrap to next row after 2 columns
+                if (iconChild != null)
+                {
+                    RectTransform cRT = iconChild.GetComponent<RectTransform>();
+                    if (cRT != null) { cRT.anchorMin = Vector2.zero; cRT.anchorMax = Vector2.one; cRT.offsetMin = Vector2.zero; cRT.offsetMax = Vector2.zero; }
+                }
+                Image img = iconChild != null ? iconChild.GetComponent<Image>() : iconObj.GetComponent<Image>();
+                if (img != null) { img.sprite = displayIngs[i].icon; img.preserveAspect = true; img.raycastTarget = false; }
             }
-
-            // Resize the ingredients parent to fit the grid
-            int totalIcons = ings.FindAll(i => i != null && i.icon != null).Count;
-            int rows = Mathf.CeilToInt(totalIcons / 2f);
-            RectTransform ingRT = ingredientsParent.GetComponent<RectTransform>();
-            ingRT.sizeDelta = new Vector2(
-                2 * iconSize + gap,
-                rows * iconSize + (rows - 1) * gap
-            );
+            cursor -= ingAreaH + SectionGap;
         }
 
-        // Process icon (badge under the card): which station(s) make this order?
-        Transform processT = newCard.transform.Find("ProcessIcon");
-        if (processT != null)
+        // ── Process station badges ────────────────────────────────────────────
+        if (procSprites.Count > 0)
         {
-            List<Sprite> sprites = GetProcessIconsFor(recipe.requiredOutput);
-            if (sprites != null && sprites.Count > 0)
+            Color fireColor = new Color(0.75f, 0.35f, 0.15f, 1f);
+            float totalPW = procSprites.Count * ProcSize + (procSprites.Count - 1) * ProcGap;
+            float pStartX = -totalPW * 0.5f + ProcSize * 0.5f;
+            float pY = cursor - ProcSize * 0.5f;
+
+            for (int i = 0; i < procSprites.Count; i++)
             {
-                Color fireColor = new Color(0.75f, 0.35f, 0.15f, 1.0f); // Matches the deep reddish-orange fire particle animation (desaturated)
+                // Badge background
+                GameObject badge = MakeChild(card, "ProcBadge_" + i);
+                SetAnchored(badge, new Vector2(CardW * 0.5f, totalH * 0.5f),
+                            new Vector2(ProcSize + 4f, ProcSize + 4f),
+                            new Vector2(pStartX + i * (ProcSize + ProcGap), pY));
+                Image badgeImg = badge.AddComponent<Image>();
+                badgeImg.sprite = roundedRectSprite;
+                badgeImg.color = ColProcessBG;
+                badgeImg.type = roundedRectSprite != null ? Image.Type.Sliced : Image.Type.Simple;
 
-                if (sprites.Count == 1)
-                {
-                    Transform pIcon = processT.Find("Icon");
-                    Image pimg = pIcon != null ? pIcon.GetComponent<Image>() : processT.GetComponent<Image>();
-                    if (pimg != null)
-                    {
-                        pimg.sprite = sprites[0];
-                        pimg.color = GetProcessIconColor(sprites[0], fireColor);
-                    }
-                    processT.gameObject.SetActive(true);
-                }
-                else
-                {
-                    // Deactivate original template
-                    processT.gameObject.SetActive(false);
-
-                    // Spawn multiple badges side-by-side
-                    float spacing = 60f; // 54 width + 6 gap
-                    float totalWidth = (sprites.Count - 1) * spacing;
-                    float startX = -(totalWidth / 2f);
-
-                    for (int i = 0; i < sprites.Count; i++)
-                    {
-                        GameObject clone = Instantiate(processT.gameObject, newCard.transform);
-                        clone.name = "ProcessIcon_Clone_" + i;
-                        
-                        RectTransform rt = clone.GetComponent<RectTransform>();
-                        if (rt != null)
-                        {
-                            rt.anchoredPosition = new Vector2(startX + (i * spacing), -8f);
-                            rt.pivot = new Vector2(0.5f, 1f);
-                        }
-                        
-                        Transform cIcon = clone.transform.Find("Icon");
-                        Image cimg = cIcon != null ? cIcon.GetComponent<Image>() : clone.GetComponent<Image>();
-                        if (cimg != null)
-                        {
-                            cimg.sprite = sprites[i];
-                            cimg.color = GetProcessIconColor(sprites[i], fireColor);
-                        }
-                        
-                        clone.SetActive(true);
-                    }
-                }
+                // Badge icon
+                GameObject pIcon = MakeChild(card, "ProcIcon_" + i);
+                SetAnchored(pIcon, new Vector2(CardW * 0.5f, totalH * 0.5f),
+                            new Vector2(ProcSize - 4f, ProcSize - 4f),
+                            new Vector2(pStartX + i * (ProcSize + ProcGap), pY));
+                Image pImg = pIcon.AddComponent<Image>();
+                pImg.sprite = procSprites[i];
+                pImg.color = GetProcessIconColor(procSprites[i], fireColor);
+                pImg.preserveAspect = true;
             }
-            else
-            {
-                processT.gameObject.SetActive(false);
-            }
+            cursor -= ProcSize + SectionGap;
         }
+
+        // ── Timer bar ─────────────────────────────────────────────────────────
+        float timerY = -halfH + InnerPad + TimerH * 0.5f;
+        float timerBarW = CardW - BorderPad * 4f;
+
+        // Track
+        GameObject timerTrack = MakeChild(card, "TimerTrack");
+        SetAnchored(timerTrack, new Vector2(CardW * 0.5f, totalH * 0.5f),
+                    new Vector2(timerBarW, TimerH),
+                    new Vector2(0f, timerY));
+        Image trackImg = timerTrack.AddComponent<Image>();
+        trackImg.sprite = roundedRectSprite;
+        trackImg.color = ColTimerBG;
+        trackImg.type = roundedRectSprite != null ? Image.Type.Sliced : Image.Type.Simple;
+
+        // Fill
+        GameObject timerFill = MakeChild(timerTrack, "TimerBar");
+        RectTransform tfRT = timerFill.GetComponent<RectTransform>();
+        tfRT.anchorMin = new Vector2(0f, 0f); tfRT.anchorMax = new Vector2(1f, 1f);
+        tfRT.offsetMin = new Vector2(1f, 1f); tfRT.offsetMax = new Vector2(-1f, -1f);
+        Image tfImg = timerFill.AddComponent<Image>();
+        tfImg.sprite = roundedRectSprite;
+        tfImg.color = ColTimer;
+        tfImg.type = Image.Type.Filled;
+        tfImg.fillMethod = Image.FillMethod.Horizontal;
+        tfImg.fillOrigin = (int)Image.OriginHorizontal.Left;
+        tfImg.fillAmount = 1f;
+
+        // ── Tracker ───────────────────────────────────────────────────────────
+        var tracker = card.AddComponent<ActiveOrderTracker>();
+        tracker.roomRecipe = recipe;
+        tracker.SetupTimer(recipe.timeLimit, () => {
+            Destroy(card);
+            Debug.Log($"[OrderManager] Order expired: {recipe.recipeName}");
+        });
     }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // UI helpers
+    // ─────────────────────────────────────────────────────────────────────────
+
+    private GameObject MakeChild(GameObject parent, string name)
+    {
+        var go = new GameObject(name, typeof(RectTransform));
+        go.transform.SetParent(parent.transform, false);
+        return go;
+    }
+
+    /// <summary>Full-stretch panel with offset inset.</summary>
+    private GameObject MakePanel(GameObject parent, string name, Color color,
+                                  Vector2 offsetMin, Vector2 offsetMax)
+    {
+        var go = MakeChild(parent, name);
+        var rt = go.GetComponent<RectTransform>();
+        rt.anchorMin = Vector2.zero; rt.anchorMax = Vector2.one;
+        rt.offsetMin = offsetMin; rt.offsetMax = offsetMax;
+        var img = go.AddComponent<Image>();
+        img.sprite = roundedRectSprite;
+        img.color = color;
+        img.type = roundedRectSprite != null ? Image.Type.Sliced : Image.Type.Simple;
+        return go;
+    }
+
+    /// <summary>Centre-anchored child with explicit size and position offset from card centre.</summary>
+    private void SetAnchored(GameObject go, Vector2 parentSize,
+                              Vector2 size, Vector2 centreOffset)
+    {
+        var rt = go.GetComponent<RectTransform>();
+        rt.anchorMin = new Vector2(0.5f, 0.5f);
+        rt.anchorMax = new Vector2(0.5f, 0.5f);
+        rt.sizeDelta = size;
+        rt.anchoredPosition = centreOffset;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Tea ingredient sort
+    // ─────────────────────────────────────────────────────────────────────────
+
+    private void SortTeaIngredients(ItemData output, List<ItemData> ings)
+    {
+        if (output == null || !output.itemName.ToLower().Contains("tea")) return;
+        int waterIdx = -1, herbIdx = -1;
+        for (int i = 0; i < ings.Count; i++)
+        {
+            if (ings[i] == null) continue;
+            string n = ings[i].itemName.ToLower();
+            if (n.Contains("teacup") || n.Contains("water") || n.Contains("cup")) waterIdx = i;
+            else if (n.Contains("herb") || n.Contains("leaf") || n.Contains("tea")) herbIdx = i;
+        }
+        if (waterIdx != -1 && herbIdx != -1 && waterIdx < herbIdx)
+        { var t = ings[waterIdx]; ings[waterIdx] = ings[herbIdx]; ings[herbIdx] = t; }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Process icon logic (unchanged)
+    // ─────────────────────────────────────────────────────────────────────────
 
     private Color GetProcessIconColor(Sprite sprite, Color fireColor)
     {
-        if (sprite == teapotProcessIcon)
-        {
-            return new Color(0.8f, 0.7f, 0.2f, 1.0f); // Less saturated yellow/gold
-        }
-        else if (sprite == brazierProcessIcon)
-        {
-            return fireColor; // Less saturated orange/red
-        }
-        else if (sprite == crystalBallProcessIcon)
-        {
-            return new Color(0.55f, 0.3f, 0.7f, 1.0f); // Less saturated purple/lavender
-        }
-        else if (sprite == prophecyProcessIcon)
-        {
-            return new Color(0.3f, 0.5f, 0.7f, 1.0f); // Less saturated blue/slate
-        }
+        if (sprite == teapotProcessIcon) return new Color(0.8f, 0.7f, 0.2f, 1f);
+        if (sprite == brazierProcessIcon) return fireColor;
+        if (sprite == crystalBallProcessIcon) return new Color(0.55f, 0.3f, 0.7f, 1f);
+        if (sprite == prophecyProcessIcon) return new Color(0.3f, 0.5f, 0.7f, 1f);
         return Color.white;
     }
 
-    /// <summary>Returns the process/station icon for a deliverable (teapot / crystal ball / prophecy).</summary>
     private Sprite GetProcessIconFor(ItemData target)
     {
         if (target == null) return null;
         foreach (var pc in FindObjectsByType<PortableCooker>(FindObjectsSortMode.None))
-        {
-            if (pc.recipes == null) continue;
-            foreach (var r in pc.recipes)
-                if (r != null && r.outputItem == target) return teapotProcessIcon;
-        }
+            if (pc.recipes != null) foreach (var r in pc.recipes)
+                    if (r?.outputItem == target) return teapotProcessIcon;
         foreach (var st in FindObjectsByType<MultiIngredientStation>(FindObjectsSortMode.None))
-        {
-            if (st.recipes == null) continue;
-            foreach (var r in st.recipes)
-                if (r != null && r.outputItem == target)
-                {
-                    if (st.stationType == StationType.CrystalBall) return crystalBallProcessIcon;
-                    if (st.stationType == StationType.ProphecyTable) return prophecyProcessIcon;
-                }
-        }
+            if (st.recipes != null) foreach (var r in st.recipes)
+                    if (r?.outputItem == target)
+                    {
+                        if (st.stationType == StationType.CrystalBall) return crystalBallProcessIcon;
+                        if (st.stationType == StationType.ProphecyTable) return prophecyProcessIcon;
+                    }
         return null;
     }
 
-    /// <summary>Returns a list of all process/station icons required to prepare and brew/make this item.</summary>
     private List<Sprite> GetProcessIconsFor(ItemData target)
     {
-        List<Sprite> icons = new List<Sprite>();
+        var icons = new List<Sprite>();
         if (target == null) return icons;
 
-        // 1. Check if the target or its brewed precursor is made at a MultiIngredientStation or PortableCooker
-        Sprite mainStationIcon = null;
-        
+        Sprite mainIcon = null;
         ItemData brewedPrecursor = target;
+
         foreach (var st in FindObjectsByType<MultiIngredientStation>(FindObjectsSortMode.None))
-        {
-            if (st.containerSwapMappings == null) continue;
-            foreach (var m in st.containerSwapMappings)
-            {
-                if (m != null && m.filledContainerItem == target && m.brewedResultItem != null)
-                {
-                    brewedPrecursor = m.brewedResultItem;
-                    break;
-                }
-            }
-        }
+            if (st.containerSwapMappings != null)
+                foreach (var m in st.containerSwapMappings)
+                    if (m != null && m.filledContainerItem == target && m.brewedResultItem != null)
+                    { brewedPrecursor = m.brewedResultItem; break; }
 
         foreach (var st in FindObjectsByType<MultiIngredientStation>(FindObjectsSortMode.None))
         {
             if (st.recipes == null) continue;
-            bool foundRecipe = false;
-            foreach (var r in st.recipes)
-            {
-                if (r != null && r.outputItem == brewedPrecursor)
-                {
-                    foundRecipe = true;
-                    break;
-                }
-            }
-            if (foundRecipe)
-            {
-                if (st.stationType == StationType.CrystalBall) mainStationIcon = crystalBallProcessIcon;
-                else if (st.stationType == StationType.ProphecyTable) mainStationIcon = prophecyProcessIcon;
-                else if (st.stationType == StationType.Cauldron) mainStationIcon = cauldronProcessIcon;
-                break;
-            }
+            bool found = false;
+            foreach (var r in st.recipes) if (r?.outputItem == brewedPrecursor) { found = true; break; }
+            if (!found) continue;
+            if (st.stationType == StationType.CrystalBall) mainIcon = crystalBallProcessIcon;
+            else if (st.stationType == StationType.ProphecyTable) mainIcon = prophecyProcessIcon;
+            else if (st.stationType == StationType.Cauldron) mainIcon = cauldronProcessIcon;
+            break;
         }
 
-        if (mainStationIcon == null)
-        {
+        if (mainIcon == null)
             foreach (var pc in FindObjectsByType<PortableCooker>(FindObjectsSortMode.None))
             {
                 if (pc.recipes == null) continue;
-                bool foundRecipe = false;
-                foreach (var r in pc.recipes)
-                {
-                    if (r != null && r.outputItem == target)
-                    {
-                        foundRecipe = true;
-                        break;
-                    }
-                }
-                if (foundRecipe)
-                {
-                    mainStationIcon = teapotProcessIcon;
-                    break;
-                }
+                bool found = false;
+                foreach (var r in pc.recipes) if (r?.outputItem == target) { found = true; break; }
+                if (found) { mainIcon = teapotProcessIcon; break; }
             }
-        }
 
-        // 2. Check if any of its ingredients require processing (Mortar & Pestle, Cutting Board, etc.)
-        List<ItemData> ingredients = GetIngredientsFor(target);
-        HashSet<StationType> prepStationsNeeded = new HashSet<StationType>();
-
+        var ingredients = GetIngredientsFor(target);
+        var prepStations = new HashSet<StationType>();
         foreach (var ing in ingredients)
         {
             if (ing == null) continue;
             foreach (var ps in FindObjectsByType<ProcessingStation>(FindObjectsSortMode.None))
-            {
-                if (ps.transformRules == null) continue;
-                foreach (var rule in ps.transformRules)
-                {
-                    if (rule != null && rule.outputItem == ing)
-                    {
-                        prepStationsNeeded.Add(ps.stationType);
-                    }
-                }
-            }
+                if (ps.transformRules != null)
+                    foreach (var rule in ps.transformRules)
+                        if (rule?.outputItem == ing) prepStations.Add(ps.stationType);
         }
 
-        // Add prep station icons first (e.g. Mortar -> Cauldron)
-        foreach (var stationType in prepStationsNeeded)
+        foreach (var st in prepStations)
         {
-            if (stationType == StationType.MortarAndPestle && mortarProcessIcon != null)
-                icons.Add(mortarProcessIcon);
-            else if (stationType == StationType.CuttingBoard && choppingProcessIcon != null)
-                icons.Add(choppingProcessIcon);
+            if (st == StationType.MortarAndPestle && mortarProcessIcon != null) icons.Add(mortarProcessIcon);
+            else if (st == StationType.CuttingBoard && choppingProcessIcon != null) icons.Add(choppingProcessIcon);
         }
 
-        // Add main station icon
-        if (mainStationIcon != null)
+        if (mainIcon != null)
         {
-            if (mainStationIcon == teapotProcessIcon)
-            {
-                if (brazierProcessIcon != null)
-                {
-                    icons.Add(brazierProcessIcon);
-                }
-            }
-            icons.Add(mainStationIcon);
+            if (mainIcon == teapotProcessIcon && brazierProcessIcon != null) icons.Add(brazierProcessIcon);
+            icons.Add(mainIcon);
         }
 
-        // Fallback
-        if (icons.Count == 0)
-        {
-            Sprite legacy = GetProcessIconFor(target);
-            if (legacy != null) icons.Add(legacy);
-        }
-
+        if (icons.Count == 0) { var leg = GetProcessIconFor(target); if (leg != null) icons.Add(leg); }
         return icons;
     }
 
     private List<ItemData> GetIngredientsFor(ItemData target)
     {
-        List<ItemData> ings = new List<ItemData>();
+        var ings = new List<ItemData>();
         if (target == null) return ings;
 
-        // ── Container-swap results (e.g. a final potion = glass + brewed raw) ──
-        // The cauldron brews a "_raw" potion, then a glass swaps into the final
-        // potion. Resolve the final potion to the brewed item's ingredients so the
-        // card shows what the potion is actually made of (the cauldron ingredients).
         foreach (var st in FindObjectsByType<MultiIngredientStation>(FindObjectsSortMode.None))
         {
             if (st.containerSwapMappings == null) continue;
             foreach (var m in st.containerSwapMappings)
             {
-                if (m == null || m.filledContainerItem != target || m.brewedResultItem == null
-                    || m.brewedResultItem == target) continue;
+                if (m == null || m.filledContainerItem != target || m.brewedResultItem == null || m.brewedResultItem == target) continue;
                 var inner = GetIngredientsFor(m.brewedResultItem);
-                if (m.containerItem != null && !inner.Contains(m.containerItem))
-                    inner.Add(m.containerItem);
+                if (m.containerItem != null && !inner.Contains(m.containerItem)) inner.Add(m.containerItem);
                 if (inner.Count > 0) return inner;
             }
         }
 
-        // ── Station recipes are the real source of truth ──────────────────────
-        // Visions (crystal ball), prophecy cards (prophecy table) and teas (teapot)
-        // are produced by stations, not by ItemData combine/process rules. Look
-        // there first so an order shows the ingredients it's actually made of
-        // (e.g. vision 2 = bookblue + crystal).
         foreach (var st in FindObjectsByType<MultiIngredientStation>(FindObjectsSortMode.None))
         {
             if (st.recipes == null) continue;
@@ -599,6 +549,7 @@ public class OrderManager : MonoBehaviour
                 if (ings.Count > 0) return ings;
             }
         }
+
         foreach (var pc in FindObjectsByType<PortableCooker>(FindObjectsSortMode.None))
         {
             if (pc.recipes == null) continue;
@@ -610,88 +561,52 @@ public class OrderManager : MonoBehaviour
             }
         }
 
-        // Check combinations (looking for results in other items)
-        // Note: This is a simple 1-level search. 
-        // We'll search all items in the project or room to see who produces this target.
-        // For efficiency, we scan the room items.
-        
-        // This is a bit tricky because ItemData rules point forward (A+B=C).
-        // To find ingredients for C, we scan all items to see which rule results in C.
-        
-        // Let's use a simpler heuristic: if we are in a room, check all available items.
         var roomManager = FindFirstObjectByType<RoomManager>();
-        List<ItemData> allRoomItems = roomManager != null ? roomManager.GetAvailableItems() : new List<ItemData>();
-
+        var allRoomItems = roomManager != null ? roomManager.GetAvailableItems() : new List<ItemData>();
         foreach (var item in allRoomItems)
         {
             if (item == null) continue;
             foreach (var rule in item.combineRules)
-            {
-                if (rule.outputItem == target)
-                {
-                    ings.Add(item);
-                    ings.Add(rule.otherItem);
-                    return ings;
-                }
-            }
+                if (rule.outputItem == target) { ings.Add(item); ings.Add(rule.otherItem); return ings; }
             foreach (var rule in item.processingRules)
-            {
-                if (rule.outputItem == target)
-                {
-                    ings.Add(item);
-                    return ings;
-                }
-            }
+                if (rule.outputItem == target) { ings.Add(item); return ings; }
         }
 
-        // If no ingredients found, it's a base item
-        if (ings.Count == 0) ings.Add(target); 
+        if (ings.Count == 0) ings.Add(target);
         return ings;
     }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Legacy card (fallback, unchanged)
+    // ─────────────────────────────────────────────────────────────────────────
 
     private void SpawnLegacyOrderCard(Recipe recipe)
     {
         GameObject newCard = Instantiate(orderCardPrefab, orderContainer);
         newCard.name = "ActiveOrder_" + recipe.recipeName;
-
         Transform mainDish = newCard.transform.Find("MainDish");
         if (mainDish != null)
         {
-            Image img = mainDish.GetComponent<Image>();
-            img.sprite = recipe.mainDishSprite;
-            RectTransform rt = mainDish.GetComponent<RectTransform>();
-            rt.sizeDelta = recipe.mainDishSize;
+            mainDish.GetComponent<Image>().sprite = recipe.mainDishSprite;
+            mainDish.GetComponent<RectTransform>().sizeDelta = recipe.mainDishSize;
         }
-
         Transform ings = newCard.transform.Find("Ingredients");
         if (ings != null)
         {
             Transform ing1 = ings.GetChild(0);
-            if (ing1 != null)
-            {
-                Image i1 = ing1.GetComponent<Image>();
-                i1.sprite = recipe.ing1IsCircle ? circleSprite : null;
-                i1.color = recipe.ing1Color;
-            }
+            if (ing1 != null) { var i1 = ing1.GetComponent<Image>(); i1.sprite = recipe.ing1IsCircle ? circleSprite : null; i1.color = recipe.ing1Color; }
             Transform ing2 = ings.GetChild(1);
-            if (ing2 != null)
-            {
-                Image i2 = ing2.GetComponent<Image>();
-                i2.sprite = recipe.ing2IsCircle ? circleSprite : null;
-                i2.color = recipe.ing2Color;
-            }
+            if (ing2 != null) { var i2 = ing2.GetComponent<Image>(); i2.sprite = recipe.ing2IsCircle ? circleSprite : null; i2.color = recipe.ing2Color; }
         }
     }
 
-    /// <summary>
-    /// Attempts to complete an order matching the given item.
-    /// Returns the score value if matched, 0 if no match found.
-    /// Called by InstantStation (HandIn) when a player submits an item.
-    /// </summary>
+    // ─────────────────────────────────────────────────────────────────────────
+    // Hand-in
+    // ─────────────────────────────────────────────────────────────────────────
+
     public int TryCompleteOrder(ItemData submittedItem)
     {
         if (orderContainer == null) return 0;
-        
         foreach (Transform card in orderContainer)
         {
             var tracker = card.GetComponent<ActiveOrderTracker>();
@@ -699,7 +614,7 @@ public class OrderManager : MonoBehaviour
             {
                 int score = tracker.roomRecipe.scoreValue;
                 Destroy(card.gameObject);
-                Debug.Log($"[OrderManager] Order complete! +{score} points for {submittedItem.itemName}");
+                Debug.Log($"[OrderManager] Order complete! +{score} for {submittedItem.itemName}");
                 return score;
             }
         }
@@ -708,16 +623,19 @@ public class OrderManager : MonoBehaviour
     }
 }
 
-/// <summary>Sits on an active order card to track which RoomRecipe it represents.</summary>
+// ─────────────────────────────────────────────────────────────────────────────
+// ActiveOrderTracker — unchanged logic, updated timer path
+// ─────────────────────────────────────────────────────────────────────────────
+
 public class ActiveOrderTracker : MonoBehaviour
 {
     public RoomRecipe roomRecipe;
-    
+
     private float timeRemaining;
     private float totalTime;
     private System.Action onExpired;
     private bool isInitialized = false;
-    
+
     private Image timerBar;
     private Image cardImage;
     private Color originalColor;
@@ -725,66 +643,47 @@ public class ActiveOrderTracker : MonoBehaviour
     private void Start()
     {
         cardImage = GetComponent<Image>();
-        if (cardImage == null)
-        {
-            cardImage = transform.Find("Background")?.GetComponent<Image>();
-        }
-        if (cardImage != null)
-        {
-            originalColor = cardImage.color;
-        }
+        if (cardImage == null) cardImage = transform.Find("Inner")?.GetComponent<Image>();
+        if (cardImage != null) originalColor = cardImage.color;
+
+        // Timer fill is now at TimerTrack/TimerBar
+        Transform track = transform.Find("TimerTrack");
+        if (track != null) { Transform tb = track.Find("TimerBar"); if (tb != null) timerBar = tb.GetComponent<Image>(); }
+        if (timerBar == null) { Transform tb = transform.Find("TimerBar"); if (tb != null) timerBar = tb.GetComponent<Image>(); }
     }
 
     public void SetupTimer(float duration, System.Action expirationCallback)
     {
-        totalTime = duration;
-        timeRemaining = duration;
-        onExpired = expirationCallback;
-        
-        // Find timer bar (expecting a child named "TimerBar" with an Image component)
-        Transform tBar = transform.Find("TimerBar");
-        if (tBar != null) timerBar = tBar.GetComponent<Image>();
-        
-        isInitialized = true;
+        totalTime = duration; timeRemaining = duration; onExpired = expirationCallback; isInitialized = true;
     }
 
     private void Update()
     {
         if (!isInitialized) return;
-
         timeRemaining -= Time.deltaTime;
-        
+
         if (timerBar != null)
         {
-            timerBar.fillAmount = timeRemaining / totalTime;
-            
-            // Visual feedback: turn red when low
-            if (timeRemaining < totalTime * 0.25f)
-                timerBar.color = Color.red;
+            timerBar.fillAmount = Mathf.Clamp01(timeRemaining / totalTime);
+            timerBar.color = timeRemaining < totalTime * 0.25f
+                ? new Color(0.85f, 0.18f, 0.10f, 1f)
+                : new Color(0.80f, 0.65f, 0.15f, 1f);
         }
 
-        // Flash background color between original and red in the last 10 seconds or last 25% of time
-        if (timeRemaining <= 10f || timeRemaining <= totalTime * 0.25f)
+        // Flash card border red when low
+        if (cardImage != null)
         {
-            if (cardImage != null)
+            if (timeRemaining <= 10f || timeRemaining <= totalTime * 0.25f)
             {
-                float flashSpeed = 10f; // Rapid flash rate
-                float t = Mathf.PingPong(Time.time * flashSpeed, 1f);
-                cardImage.color = Color.Lerp(originalColor, new Color(1f, 0.2f, 0.2f, originalColor.a), t);
+                float t = Mathf.PingPong(Time.time * 8f, 1f);
+                cardImage.color = Color.Lerp(originalColor, new Color(0.8f, 0.15f, 0.08f, originalColor.a), t);
             }
-        }
-        else
-        {
-            if (cardImage != null && cardImage.color != originalColor)
+            else if (cardImage.color != originalColor)
             {
                 cardImage.color = originalColor;
             }
         }
 
-        if (timeRemaining <= 0)
-        {
-            isInitialized = false;
-            onExpired?.Invoke();
-        }
+        if (timeRemaining <= 0) { isInitialized = false; onExpired?.Invoke(); }
     }
 }
