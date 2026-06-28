@@ -250,6 +250,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5607186954761122551, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
   m_PrefabInstance: {fileID: 6801004506251530988}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &144446296 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 137518175886192598, guid: dbf3fccf72270074ea86e490cf1b57ec, type: 3}
+  m_PrefabInstance: {fileID: 482775582}
+  m_PrefabAsset: {fileID: 0}
 --- !u!134 &168050016
 PhysicsMaterial:
   m_ObjectHideFlags: 0
@@ -761,6 +766,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f2eb23c865cac8f4e808d03f7ea8e343, type: 3}
+--- !u!1 &355335658 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4599805608032622545, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
+  m_PrefabInstance: {fileID: 6801004506251530988}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &388716158 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3356495671672153254, guid: 63889c6f36e5c489eba3039ea034811f, type: 3}
@@ -1483,13 +1493,35 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 137518175886192598, guid: dbf3fccf72270074ea86e490cf1b57ec, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 482775584}
   m_SourcePrefab: {fileID: 100100000, guid: dbf3fccf72270074ea86e490cf1b57ec, type: 3}
 --- !u!4 &482775583 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1957123630527773630, guid: dbf3fccf72270074ea86e490cf1b57ec, type: 3}
   m_PrefabInstance: {fileID: 482775582}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &482775584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 144446296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d87eb4bd923b542b5d381cb9781838, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StationIngredientDisplay
+  hoverHeight: 2
+  bubbleSize: 0.4
+  bubbleSpacing: 0.1
+  plateColor: {r: 0.13, g: 0.1, b: 0.08, a: 0.93}
+  rimColor: {r: 0.85, g: 0.72, b: 0.28, a: 1}
+  resultRimColor: {r: 0.98, g: 0.92, b: 0.3, a: 1}
+  fallbackColors: []
 --- !u!1001 &512298364
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3351,6 +3383,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ce3c3143dc144034995e41fb62a67e21, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1129521484}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ce3c3143dc144034995e41fb62a67e21, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1129521486}
   m_SourcePrefab: {fileID: 100100000, guid: ce3c3143dc144034995e41fb62a67e21, type: 3}
 --- !u!4 &1129521482 stripped
 Transform:
@@ -3438,6 +3473,28 @@ MonoBehaviour:
   resultSpawnPoint: {fileID: 0}
   ingredientDisplayAnchor: {fileID: 0}
   ingredientStackHeight: 0.05
+  ingredients: []
+  stationState: 0
+  resultItem: {fileID: 0}
+--- !u!114 &1129521486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1129521483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d87eb4bd923b542b5d381cb9781838, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StationIngredientDisplay
+  hoverHeight: 2
+  bubbleSize: 0.4
+  bubbleSpacing: 0.1
+  plateColor: {r: 0.13, g: 0.1, b: 0.08, a: 0.93}
+  rimColor: {r: 0.85, g: 0.72, b: 0.28, a: 1}
+  resultRimColor: {r: 0.98, g: 0.92, b: 0.3, a: 1}
+  fallbackColors: []
 --- !u!4 &1142950557 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1b6296662b99a4949b66f2ef00519d02, type: 3}
@@ -3590,6 +3647,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ce3c3143dc144034995e41fb62a67e21, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1195406849}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ce3c3143dc144034995e41fb62a67e21, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1195406851}
   m_SourcePrefab: {fileID: 100100000, guid: ce3c3143dc144034995e41fb62a67e21, type: 3}
 --- !u!4 &1195406847 stripped
 Transform:
@@ -3677,6 +3737,28 @@ MonoBehaviour:
   resultSpawnPoint: {fileID: 0}
   ingredientDisplayAnchor: {fileID: 0}
   ingredientStackHeight: 0.05
+  ingredients: []
+  stationState: 0
+  resultItem: {fileID: 0}
+--- !u!114 &1195406851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1195406848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d87eb4bd923b542b5d381cb9781838, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StationIngredientDisplay
+  hoverHeight: 2
+  bubbleSize: 0.4
+  bubbleSpacing: 0.1
+  plateColor: {r: 0.13, g: 0.1, b: 0.08, a: 0.93}
+  rimColor: {r: 0.85, g: 0.72, b: 0.28, a: 1}
+  resultRimColor: {r: 0.98, g: 0.92, b: 0.3, a: 1}
+  fallbackColors: []
 --- !u!1 &1297576976
 GameObject:
   m_ObjectHideFlags: 0
@@ -4672,6 +4754,30 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1978636133}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1612236827 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3042776861968989432, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
+  m_PrefabInstance: {fileID: 6801004506251530988}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1612236829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1612236827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d87eb4bd923b542b5d381cb9781838, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StationIngredientDisplay
+  hoverHeight: 2
+  bubbleSize: 0.4
+  bubbleSpacing: 0.1
+  plateColor: {r: 0.13, g: 0.1, b: 0.08, a: 0.93}
+  rimColor: {r: 0.85, g: 0.72, b: 0.28, a: 1}
+  resultRimColor: {r: 0.98, g: 0.92, b: 0.3, a: 1}
+  fallbackColors: []
 --- !u!1 &1618559730 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3053605531497061285, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
@@ -6465,6 +6571,25 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5477614369554631096, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
   m_PrefabInstance: {fileID: 6801004506251530988}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2126536357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 355335658}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d87eb4bd923b542b5d381cb9781838, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StationIngredientDisplay
+  hoverHeight: 2
+  bubbleSize: 0.4
+  bubbleSpacing: 0.1
+  plateColor: {r: 0.13, g: 0.1, b: 0.08, a: 0.93}
+  rimColor: {r: 0.85, g: 0.72, b: 0.28, a: 1}
+  resultRimColor: {r: 0.98, g: 0.92, b: 0.3, a: 1}
+  fallbackColors: []
 --- !u!1001 &2136812265
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8409,6 +8534,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1356955648}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3042776861968989432, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1612236829}
+    - targetCorrespondingSourceObject: {fileID: 4599805608032622545, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2126536357}
     - targetCorrespondingSourceObject: {fileID: 3328343731575766247, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 884562796}
@@ -8424,9 +8555,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5008722661774393700, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6801004506251530996}
+    - targetCorrespondingSourceObject: {fileID: 5008722661774393700, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6801004506251531003}
     - targetCorrespondingSourceObject: {fileID: 5038309745777037135, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6801004506251530995}
+    - targetCorrespondingSourceObject: {fileID: 5038309745777037135, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6801004506251531000}
     - targetCorrespondingSourceObject: {fileID: 5850910045434404647, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1176852472}
@@ -8546,6 +8683,9 @@ MonoBehaviour:
   resultSpawnPoint: {fileID: 0}
   ingredientDisplayAnchor: {fileID: 1921290250}
   ingredientStackHeight: 0.05
+  ingredients: []
+  stationState: 0
+  resultItem: {fileID: 0}
 --- !u!114 &6801004506251530996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8633,6 +8773,9 @@ MonoBehaviour:
   resultSpawnPoint: {fileID: 0}
   ingredientDisplayAnchor: {fileID: 1354037690}
   ingredientStackHeight: 0.05
+  ingredients: []
+  stationState: 0
+  resultItem: {fileID: 0}
 --- !u!114 &6801004506251530998
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8654,11 +8797,49 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1887428108075311536, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
   m_PrefabInstance: {fileID: 6801004506251530988}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6801004506251531000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6801004506251530990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d87eb4bd923b542b5d381cb9781838, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StationIngredientDisplay
+  hoverHeight: 2
+  bubbleSize: 0.4
+  bubbleSpacing: 0.1
+  plateColor: {r: 0.13, g: 0.1, b: 0.08, a: 0.93}
+  rimColor: {r: 0.85, g: 0.72, b: 0.28, a: 1}
+  resultRimColor: {r: 0.98, g: 0.92, b: 0.3, a: 1}
+  fallbackColors: []
 --- !u!4 &6801004506251531001 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6424544955499640711, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
   m_PrefabInstance: {fileID: 6801004506251530988}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6801004506251531003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6801004506251530992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4d87eb4bd923b542b5d381cb9781838, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StationIngredientDisplay
+  hoverHeight: 2
+  bubbleSize: 0.4
+  bubbleSpacing: 0.1
+  plateColor: {r: 0.13, g: 0.1, b: 0.08, a: 0.93}
+  rimColor: {r: 0.85, g: 0.72, b: 0.28, a: 1}
+  resultRimColor: {r: 0.98, g: 0.92, b: 0.3, a: 1}
+  fallbackColors: []
 --- !u!1001 &7161469851841718071
 PrefabInstance:
   m_ObjectHideFlags: 0
