@@ -31,11 +31,11 @@ public class StationIngredientDisplay : MonoBehaviour
 {
     [Header("Layout")]
     [Tooltip("How high above this object's origin the bubbles float.")]
-    public float hoverHeight = 1.8f;
+    public float hoverHeight = 2f;
     [Tooltip("World-space diameter of each bubble.")]
-    public float bubbleSize = 0.16f;
+    public float bubbleSize = 0.4f;
     [Tooltip("World-space gap between bubbles.")]
-    public float bubbleSpacing = 0.03f;
+    public float bubbleSpacing = 0.1f;
 
     [Header("Visuals")]
     public Color plateColor = new Color(0.13f, 0.10f, 0.08f, 0.93f);
@@ -75,8 +75,29 @@ public class StationIngredientDisplay : MonoBehaviour
     private static Sprite _circle;
     private static Sprite Circle()
     {
-        if (_circle == null)
-            _circle = Resources.GetBuiltinResource<Sprite>("UI/Skin/Knob.psd");
+        if (_circle != null) return _circle;
+
+        // Create a circle texture procedurally — no resource dependency
+        int size = 64;
+        Texture2D tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+        Vector2 center = new Vector2(size * 0.5f, size * 0.5f);
+        float radius = size * 0.5f;
+
+        for (int y = 0; y < size; y++)
+        {
+            for (int x = 0; x < size; x++)
+            {
+                float dist = Vector2.Distance(new Vector2(x, y), center);
+                float alpha = Mathf.Clamp01((radius - dist) / 1.5f); // soft edge
+                tex.SetPixel(x, y, new Color(1f, 1f, 1f, alpha));
+            }
+        }
+        tex.Apply();
+
+        _circle = Sprite.Create(tex,
+            new Rect(0, 0, size, size),
+            new Vector2(0.5f, 0.5f),
+            size);
         return _circle;
     }
 

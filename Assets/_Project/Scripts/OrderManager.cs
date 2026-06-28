@@ -77,6 +77,7 @@ public class OrderManager : MonoBehaviour
         foreach (var item in items)
         {
             if (item == null) continue;
+            if (!item.isDisposable) continue;
             discoveredOrders.Add(new RoomRecipe {
                 recipeName = item.itemName,
                 requiredOutput = item,
@@ -283,23 +284,58 @@ public class OrderManager : MonoBehaviour
                 }
             }
 
+            // Remove any existing layout group — we're doing manual 2x2 grid positioning
+            UnityEngine.UI.GridLayoutGroup existingGrid = ingredientsParent.GetComponent<UnityEngine.UI.GridLayoutGroup>();
+            if (existingGrid != null) Destroy(existingGrid);
+            UnityEngine.UI.HorizontalLayoutGroup existingH = ingredientsParent.GetComponent<UnityEngine.UI.HorizontalLayoutGroup>();
+            if (existingH != null) Destroy(existingH);
+
+            float iconSize = 54f;   // ← tweak this to make icons bigger/smaller
+            float gap = 6f;         // ← gap between icons
+
+            int col = 0;
+            int row = 0;
+
             foreach (var ing in ings)
             {
+                if (ing == null) continue;
                 if (ing.icon == null) continue;
-                
-                GameObject iconObj = ingredientIconPrefab != null 
+
+                GameObject iconObj = ingredientIconPrefab != null
                     ? Instantiate(ingredientIconPrefab, ingredientsParent)
                     : new GameObject("IngredientIcon", typeof(RectTransform), typeof(Image));
-                
-                iconObj.transform.SetParent(ingredientsParent);
-                // The icon prefab has a light "Chip" backing as its root and the actual
-                // item sprite on a child called "Icon" (so dark icons like the green herb
-                // stay visible). Fall back to the root Image if there's no child.
+
+                iconObj.transform.SetParent(ingredientsParent, false);
+
+                RectTransform iconRT = iconObj.GetComponent<RectTransform>();
+                iconRT.sizeDelta = new Vector2(iconSize, iconSize);
+                iconRT.anchorMin = new Vector2(0f, 1f);
+                iconRT.anchorMax = new Vector2(0f, 1f);
+                iconRT.pivot = new Vector2(0f, 1f);
+                iconRT.anchoredPosition = new Vector2(
+                    col * (iconSize + gap),
+                    -row * (iconSize + gap)
+                );
+
                 Transform iconChild = iconObj.transform.Find("Icon");
-                Image img = iconChild != null ? iconChild.GetComponent<Image>() : iconObj.GetComponent<Image>();
+                Image img = iconChild != null
+                    ? iconChild.GetComponent<Image>()
+                    : iconObj.GetComponent<Image>();
                 img.sprite = ing.icon;
                 img.raycastTarget = false;
+
+                col++;
+                if (col >= 2) { col = 0; row++; } // wrap to next row after 2 columns
             }
+
+            // Resize the ingredients parent to fit the grid
+            int totalIcons = ings.FindAll(i => i != null && i.icon != null).Count;
+            int rows = Mathf.CeilToInt(totalIcons / 2f);
+            RectTransform ingRT = ingredientsParent.GetComponent<RectTransform>();
+            ingRT.sizeDelta = new Vector2(
+                2 * iconSize + gap,
+                rows * iconSize + (rows - 1) * gap
+            );
         }
 
         // Process icon (badge under the card): which station(s) make this order?
@@ -542,6 +578,8 @@ public class OrderManager : MonoBehaviour
                 if (m == null || m.filledContainerItem != target || m.brewedResultItem == null
                     || m.brewedResultItem == target) continue;
                 var inner = GetIngredientsFor(m.brewedResultItem);
+                if (m.containerItem != null && !inner.Contains(m.containerItem))
+                    inner.Add(m.containerItem);
                 if (inner.Count > 0) return inner;
             }
         }
