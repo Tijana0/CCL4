@@ -1109,7 +1109,7 @@
 					<PropertyList>
 						<Property Name="Volume" Type="Real64">
 							<ValueList>
-								<Value>-15</Value>
+								<Value>-20</Value>
 							</ValueList>
 						</Property>
 					</PropertyList>
@@ -1910,6 +1910,13 @@
 					</ActiveSourceList>
 				</Sound>
 				<BlendContainer Name="Wand" ID="{CE59E181-B1B1-4F6D-9B36-D0CED7C570C0}" ShortID="921589171">
+					<PropertyList>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value>-10</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
 					<ReferenceList>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Vorbis Quality Medium" ID="{01D20CF3-9A4C-4EEE-AE3E-2942B47543E9}" WorkUnitID="{F6B2880C-85E5-47FA-A126-645B5DFD9ACC}"/>
@@ -2277,7 +2284,7 @@
 					<PropertyList>
 						<Property Name="Volume" Type="Real64">
 							<ValueList>
-								<Value>5</Value>
+								<Value>11</Value>
 							</ValueList>
 						</Property>
 					</PropertyList>
@@ -2508,6 +2515,11 @@
 				<Sound Name="Fail_Level" ID="{178306A2-9F79-49F4-BFE2-EFD65E2B921D}" ShortID="817028032">
 					<PropertyList>
 						<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value>-20</Value>
+							</ValueList>
+						</Property>
 					</PropertyList>
 					<ReferenceList>
 						<Reference Name="Conversion">
@@ -2890,7 +2902,7 @@
 							<PropertyList>
 								<Property Name="FadeOutDuration" Type="Real64" Value="0.46602"/>
 								<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-								<Property Name="TrimEnd" Type="Real64" Value="2.65845"/>
+								<Property Name="TrimEnd" Type="Real64" Value="1.76576"/>
 							</PropertyList>
 							<Language>SFX</Language>
 							<AudioFile>Beeping_Sound.wav</AudioFile>

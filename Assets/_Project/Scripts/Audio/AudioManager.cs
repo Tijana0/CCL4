@@ -19,6 +19,7 @@ public class AudioManager : MonoBehaviour
     public AK.Wwise.Event dropHeavy;
     public AK.Wwise.Event deliver;
     public AK.Wwise.Event beeping;
+    public AK.Wwise.Event cauldron;
     public AK.Wwise.Event failAction;
     public AK.Wwise.Event wandCast;
     public AK.Wwise.Event cards;
@@ -42,6 +43,11 @@ public class AudioManager : MonoBehaviour
     [Header("Volume control (RTPC)")]
     public AK.Wwise.RTPC musicVolume;   // assign MusicVolume RTPC in Inspector
 
+    [Header("Fail / result music")]
+    public AK.Wwise.Event failMusicStart;   // assign your fail music START event
+    public AK.Wwise.Event failMusicStop;    // assign your fail music STOP event
+    public AK.Wwise.Event normalMusicStart; // the track to play when they pass (>1 star)
+    public AK.Wwise.Event normalMusicStop;  // its stop event
 
     void Awake()
     {
@@ -71,6 +77,7 @@ public class AudioManager : MonoBehaviour
     public void PlayCrystalBall(GameObject o)        => Play(crystalBall, o);
     public void PlayTeapotReady(GameObject o)        => Play(teapotReady, o);
     public void PlayWaterPour(GameObject o)    => Play(waterPour, o);
+    public void PlayCauldron(GameObject o)    => Play(cauldron, o);
     public void PlayInventoryPop(GameObject o) => Play(inventoryPop, o);
     public void PlayThrowOut(GameObject o)     => Play(throwOut, o);
     public void PlayTimerWarning()             => Play(timerWarning, gameObject);
@@ -96,14 +103,20 @@ public class AudioManager : MonoBehaviour
     /// Plays a music track, stopping whatever music was playing before.
     public void PlayMusic(AK.Wwise.Event startEvent, AK.Wwise.Event stopEvent)
     {
-        // Stop the previous track first — this is what prevents overlap
-        if (currentMusicStop != null && currentMusicStop.IsValid())
-            currentMusicStop.Post(gameObject);
+         if (currentMusicStop != null && currentMusicStop.IsValid())
+        currentMusicStop.Post(gameObject);
 
         if (startEvent != null && startEvent.IsValid())
-            startEvent.Post(gameObject);
+        {
+            uint id = startEvent.Post(gameObject);
+            Debug.Log($"[AudioManager] Hub/PlayMusic posted, playingID={id}");
+        }
+        else
+        {
+            Debug.LogWarning("[AudioManager] PlayMusic: startEvent null or invalid!");
+        }
 
-        currentMusicStop = stopEvent;   // remember how to stop THIS track later
+        currentMusicStop = stopEvent;
     }
 
     public void StopCurrentMusic()
@@ -118,4 +131,13 @@ public class AudioManager : MonoBehaviour
     
     // Volume control
     public void SetMusicVolume(float value) => musicVolume?.SetGlobalValue(value);
+    public void PlayFailMusic()
+    {
+        PlayMusic(failMusicStart, failMusicStop);
+    }
+
+    public void PlayNormalMusic()
+    {
+        PlayMusic(normalMusicStart, normalMusicStop);
+    }
 }

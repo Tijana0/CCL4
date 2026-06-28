@@ -36,7 +36,7 @@ public class ItemData : ScriptableObject
     public bool requiresProcessingBeforeCauldron = false;
     [Tooltip("If false, this item cannot be thrown in the Bin. Use for permanent scene items like buckets or teapots.")]
     public bool isDisposable = true;
-
+    
     /// <summary>
     /// Returns the output item for a given station type, or null if not processable there.
     /// </summary>

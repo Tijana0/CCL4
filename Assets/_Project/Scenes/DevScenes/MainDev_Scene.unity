@@ -1472,6 +1472,10 @@ PrefabInstance:
       propertyPath: 'recipes.Array.data[2].requiredIngredients.Array.data[1]'
       value: 
       objectReference: {fileID: 11400000, guid: d03e934b1b9ad3043a087124b094d9db, type: 2}
+    - target: {fileID: 3720458995627837695, guid: dbf3fccf72270074ea86e490cf1b57ec, type: 3}
+      propertyPath: dropType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8822433782681841994, guid: dbf3fccf72270074ea86e490cf1b57ec, type: 3}
       propertyPath: m_IsKinematic
       value: 1
@@ -3220,6 +3224,10 @@ PrefabInstance:
     - target: {fileID: 4959255437028996412, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
       propertyPath: threeStarScore
       value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 4959255437028996412, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
+      propertyPath: classNameForReport
+      value: Divinations
       objectReference: {fileID: 0}
     - target: {fileID: 5902144289190642632, guid: fbf4c0025d3ce42cb96695649f793b36, type: 3}
       propertyPath: spawnInterval
@@ -8207,6 +8215,10 @@ PrefabInstance:
     - target: {fileID: 7608043472821265725, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
       propertyPath: m_Center.y
       value: 0.35000002
+      objectReference: {fileID: 0}
+    - target: {fileID: 8089583913507916134, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
+      propertyPath: m_TagString
+      value: Carpet
       objectReference: {fileID: 0}
     - target: {fileID: 8395232367999895244, guid: 22522d5deb8c64da1b70c661b1a71ccc, type: 3}
       propertyPath: autoProcess
