@@ -21,7 +21,23 @@ public class FontAssetGenerator
             string fontName = Path.GetFileNameWithoutExtension(ttfPath);
             string assetPath = Path.Combine(fontsDir, fontName + " TMP.asset");
 
-            if (!File.Exists(assetPath))
+            bool needsGeneration = !File.Exists(assetPath);
+            if (!needsGeneration)
+            {
+                // Verify if the existing asset is corrupted (missing atlas textures or material)
+                TMP_FontAsset existingAsset = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(assetPath);
+                if (existingAsset == null || 
+                    existingAsset.atlasTextures == null || 
+                    existingAsset.atlasTextures.Length == 0 || 
+                    existingAsset.atlasTextures[0] == null ||
+                    existingAsset.material == null)
+                {
+                    Debug.Log($"[FontAssetGenerator] Detected corrupted font asset at {assetPath}. Regenerating...");
+                    needsGeneration = true;
+                }
+            }
+
+            if (needsGeneration)
             {
                 Debug.Log($"[FontAssetGenerator] Generating TMP Font Asset for {fontName}...");
                 
@@ -31,6 +47,12 @@ public class FontAssetGenerator
                 {
                     Debug.LogError($"[FontAssetGenerator] Could not load font at {ttfPath}");
                     continue;
+                }
+
+                // Delete old asset if it exists to prevent conflicts
+                if (File.Exists(assetPath))
+                {
+                    AssetDatabase.DeleteAsset(assetPath);
                 }
 
                 // Create the font asset with Dynamic population so all characters are supported
@@ -47,6 +69,25 @@ public class FontAssetGenerator
                 if (fontAsset != null)
                 {
                     AssetDatabase.CreateAsset(fontAsset, assetPath);
+
+                    // Add the texture and material as sub-assets so they are saved inside the same file
+                    if (fontAsset.atlasTextures != null)
+                    {
+                        for (int i = 0; i < fontAsset.atlasTextures.Length; i++)
+                        {
+                            if (fontAsset.atlasTextures[i] != null)
+                            {
+                                fontAsset.atlasTextures[i].name = fontName + " Atlas";
+                                AssetDatabase.AddObjectToAsset(fontAsset.atlasTextures[i], fontAsset);
+                            }
+                        }
+                    }
+                    if (fontAsset.material != null)
+                    {
+                        fontAsset.material.name = fontName + " Material";
+                        AssetDatabase.AddObjectToAsset(fontAsset.material, fontAsset);
+                    }
+
                     generatedAny = true;
                     Debug.Log($"[FontAssetGenerator] Successfully created: {assetPath}");
                 }
@@ -61,54 +102,6 @@ public class FontAssetGenerator
         {
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-        }
-
-        // Style the Credits text in Start_Scene if not already done
-        StyleStartSceneCredits();
-    }
-
-    private static void StyleStartSceneCredits()
-    {
-        string startScenePath = "Assets/_Project/Scenes/DevScenes/Start_Scene.unity";
-        if (!File.Exists(startScenePath)) return;
-
-        string fontAssetPath = "Assets/_Project/Fonts/Cinzel-Variable TMP.asset";
-        TMP_FontAsset fontAsset = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(fontAssetPath);
-        if (fontAsset == null) return;
-
-        string originalScenePath = EditorSceneManager.GetActiveScene().path;
-
-        // Open start scene
-        var scene = EditorSceneManager.OpenScene(startScenePath, OpenSceneMode.Single);
-        GameObject creditsGo = GameObject.Find("Credits");
-        bool modified = false;
-
-        if (creditsGo != null)
-        {
-            var tmp = creditsGo.GetComponent<TextMeshProUGUI>();
-            if (tmp != null)
-            {
-                // Check if we need to apply our beautiful styling
-                if (tmp.font != fontAsset || tmp.fontSize != 15f || tmp.characterSpacing != 6f)
-                {
-                    tmp.font = fontAsset;
-                    tmp.fontSize = 15f;
-                    tmp.characterSpacing = 6f; // Elegant wide letter spacing
-                    tmp.color = new Color(0.8f, 0.75f, 0.65f, 0.85f); // Soft warm platinum/silver color
-                    tmp.fontStyle = FontStyles.Normal; // Clean and classic
-                    
-                    EditorSceneManager.MarkSceneDirty(scene);
-                    EditorSceneManager.SaveScene(scene);
-                    modified = true;
-                    Debug.Log("[FontAssetGenerator] Styled Credits text in Start_Scene successfully!");
-                }
-            }
-        }
-
-        // Restore original scene if we switched
-        if (modified && !string.IsNullOrEmpty(originalScenePath) && originalScenePath != startScenePath && File.Exists(originalScenePath))
-        {
-            EditorSceneManager.OpenScene(originalScenePath, OpenSceneMode.Single);
         }
     }
 }
