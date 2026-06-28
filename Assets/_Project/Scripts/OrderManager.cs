@@ -275,7 +275,7 @@ public class OrderManager : MonoBehaviour
                     else if (nameLower.Contains("herb") || nameLower.Contains("leaf") || nameLower.Contains("tea"))
                         herbIndex = i;
                 }
-                if (waterIndex != -1 && herbIndex != -1 && waterIndex > herbIndex)
+                if (waterIndex != -1 && herbIndex != -1 && waterIndex < herbIndex)
                 {
                     ItemData temp = ings[waterIndex];
                     ings[waterIndex] = ings[herbIndex];
