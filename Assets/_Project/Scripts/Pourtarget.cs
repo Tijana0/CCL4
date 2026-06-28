@@ -95,16 +95,29 @@ public class PourTarget : MonoBehaviour
 
         Rigidbody rb = newItem.GetComponentInChildren<Rigidbody>();
         if (rb != null) rb.isKinematic = true;
-        foreach (Collider col in newItem.GetComponentsInChildren<Collider>())
-            col.enabled = false;
 
-        // If sitting on a station (like a counter), update the station's reference to point to the new filled cup!
+        // Make sure the NEW tea is grabbable (DON'T disable its colliders)
+        foreach (Collider col in newItem.GetComponentsInChildren<Collider>())
+            col.enabled = true;
+        PickupObject newPickup = newItem.GetComponent<PickupObject>();
+        if (newPickup != null) newPickup.enabled = true;
+
+        // If sitting on a station, update its reference to the new cup
         StationBase station = GetComponentInParent<StationBase>();
         if (station != null && station.itemOnStation == gameObject)
             station.itemOnStation = newItem;
 
         Debug.Log($"[PourTarget] Dynamic Filled! Became {resultItem.itemName} at {pos}");
+
+        // Kill the OLD teacup — disable its colliders/pickup immediately so it
+        // can't be grabbed in the frame before Destroy removes it.
+        foreach (var col in GetComponentsInChildren<Collider>(true)) col.enabled = false;
+        foreach (var mr in GetComponentsInChildren<Renderer>(true)) mr.enabled = false;
+        var pk = GetComponent<PickupObject>();
+        if (pk != null) pk.enabled = false;
+
         Destroy(gameObject);
+        return;
     }
 
     // ── Fixed Mode ───────────────────────────────────────────────────────────
@@ -126,18 +139,20 @@ public class PourTarget : MonoBehaviour
         wi.itemData = filledItem;
 
         newItem.transform.localPosition = transform.localPosition;
-        newItem.transform.localRotation = Quaternion.identity;
+        newItem.transform.localRotation = transform.localRotation;
 
         Rigidbody rb = newItem.GetComponentInChildren<Rigidbody>();
         if (rb != null) rb.isKinematic = true;
-        foreach (Collider col in newItem.GetComponentsInChildren<Collider>())
-            col.enabled = false;
+        //foreach (Collider col in newItem.GetComponentsInChildren<Collider>())
+            //col.enabled = false;
 
         StationBase station = GetComponentInParent<StationBase>();
         if (station != null && station.itemOnStation == gameObject)
             station.itemOnStation = newItem;
 
         Debug.Log($"[PourTarget] Filled! Became {filledItem.itemName}");
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayWaterPour(newItem);
         Destroy(gameObject);
     }
 

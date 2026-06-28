@@ -58,6 +58,9 @@ public class PourSource : MonoBehaviour
 
         // Trigger the pour on the target
         target.OnPoured(pourer, pouredItem);
+        
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayWaterPour(pourer.gameObject);
 
         // Reset or clear ourselves
         ResetSelf(pourer, cooker);

@@ -64,6 +64,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickupObject
   itemType: 0
   value: 0
+  startKinematic: 0
+  dropType: 2
   skipPivotCentering: 1
 --- !u!65 &8724639029749512110
 BoxCollider:
@@ -84,7 +86,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.450428, y: 0.3054396, z: 0.52727985}
+  m_Size: {x: 0.450428, y: 0.3054396, z: 0.93}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &5610171366330394621
 Rigidbody:

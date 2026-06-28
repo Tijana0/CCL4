@@ -127,8 +127,9 @@ public class PortableCooker : MonoBehaviour
         // Only cook when actually SET DOWN on the fire — not while a player carries it
         // near the stove. Held items are parented under the player.
         bool onFire = currentHeatSource != null && !IsHeld();
+        bool hasValidRecipe = FindMatchingRecipe() != null;
 
-        if (onFire && !isDone && ingredients.Count > 0)
+        if (onFire && !isDone && hasValidRecipe)
         {
             if (!isCooking)
                 StartCooking();
@@ -137,9 +138,8 @@ public class PortableCooker : MonoBehaviour
             if (cookProgress >= 1f)
                 CompleteCooking();
         }
-        else if (isCooking && !onFire)
+        else if (isCooking && (!onFire || !hasValidRecipe))
         {
-            // Taken off the fire mid-cook — halt progress, keep ingredients
             CancelCooking();
         }
 

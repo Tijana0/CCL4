@@ -58,8 +58,6 @@ public class TeapotPour : MonoBehaviour
             Debug.LogWarning("[TeapotPour] Teapot had no brewed result to pour.");
             return;
         }
-        if (AudioManager.Instance != null)
-            AudioManager.Instance.PlayWaterPour(gameObject);
 
         if (cupHeld)
         {
