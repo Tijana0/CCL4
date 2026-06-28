@@ -109,17 +109,17 @@ public class MultiIngredientStation : StationBase
     public override bool HasReadyResult => resultItem != null;
 
     // ── Runtime state ────────────────────────────────────────────────────────
-    private List<ItemData> ingredients = new List<ItemData>();
+    [HideInInspector] public List<ItemData> ingredients = new List<ItemData>();
     private readonly List<GameObject> ingredientVisuals = new List<GameObject>();
-    private StationState stationState = StationState.Empty;
+    [HideInInspector] public StationState stationState = StationState.Empty;
     private float cookingProgress = 0f;
     private float currentCookingTime = 5f;
     private float boilOverTimer = 0f;
     private SimplePlayerController cookingPlayer = null;
-    private GameObject resultItem = null;
+    [HideInInspector] public GameObject resultItem = null;
     private int lastProcessedFrame = -1;
 
-    private enum StationState { Empty, HasIngredients, Cooking, Done, Ruined }
+    public enum StationState { Empty, HasIngredients, Cooking, Done, Ruined }
 
     private void Start()
     {

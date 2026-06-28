@@ -51,7 +51,7 @@ public class ProcessingStation : StationBase
     private float processingDuration = 2f;
     private SimplePlayerController processingPlayer = null;
     private int lastProcessedFrame = -1;
-    private bool resultReady = false;
+    [HideInInspector] public bool resultReady = false;
     private float overcookTimer = 0f;
     private bool overcooked = false;
 
