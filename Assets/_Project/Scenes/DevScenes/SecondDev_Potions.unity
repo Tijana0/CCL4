@@ -4126,7 +4126,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ca8e4452df27fe746a3afd0c12ef7ba5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1061087443}
   m_SourcePrefab: {fileID: 100100000, guid: ca8e4452df27fe746a3afd0c12ef7ba5, type: 3}
 --- !u!4 &469935967 stripped
 Transform:
@@ -4649,7 +4652,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9cbc87c8508e4a20b1bb02f55a56190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  gameTime: 200
+  gameTime: 300
   timerText: {fileID: 0}
   scoreText: {fileID: 0}
   gameOverPanel: {fileID: 0}
@@ -9813,6 +9816,32 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &1061087440 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: ca8e4452df27fe746a3afd0c12ef7ba5, type: 3}
+  m_PrefabInstance: {fileID: 469935966}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1061087443
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1061087440}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.010076128, y: 0.009980517, z: 0.0051875976}
+  m_Center: {x: 0.07497004, y: 0.015061736, z: 0.0026187426}
 --- !u!1001 &1067677227
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10756,7 +10785,7 @@ MonoBehaviour:
   stationType: 7
   counterTopPoint: {fileID: 0}
   itemOnStation: {fileID: 0}
-  itemToDispense: {fileID: 0}
+  itemToDispense: {fileID: 11400000, guid: ea1f7837d4cb0bd479a85d7fd1ae2bff, type: 2}
   extractionMode: 0
   extractionTime: 2
   requiredItemSwaps: []
@@ -15207,6 +15236,22 @@ PrefabInstance:
     - target: {fileID: 6882122345812233893, guid: b42ae97e68a038a4c844ecdd9be3f96e, type: 3}
       propertyPath: m_Name
       value: Frog (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7802674267120802034, guid: b42ae97e68a038a4c844ecdd9be3f96e, type: 3}
+      propertyPath: m_Size.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7802674267120802034, guid: b42ae97e68a038a4c844ecdd9be3f96e, type: 3}
+      propertyPath: m_Size.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7802674267120802034, guid: b42ae97e68a038a4c844ecdd9be3f96e, type: 3}
+      propertyPath: m_Size.z
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7802674267120802034, guid: b42ae97e68a038a4c844ecdd9be3f96e, type: 3}
+      propertyPath: m_Center.x
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3577807020471662043, guid: b42ae97e68a038a4c844ecdd9be3f96e, type: 3}

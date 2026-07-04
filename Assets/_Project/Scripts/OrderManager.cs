@@ -81,7 +81,7 @@ public class OrderManager : MonoBehaviour
         {
             if (item == null) continue;
             if (!item.isDisposable) continue;
-            discoveredOrders.Add(new RoomRecipe { recipeName = item.itemName, requiredOutput = item, scoreValue = 5, timeLimit = 45f });
+            discoveredOrders.Add(new RoomRecipe { recipeName = item.itemName, requiredOutput = item, scoreValue = 5, timeLimit = 150f });
         }
         foreach (var item in items)
         {
